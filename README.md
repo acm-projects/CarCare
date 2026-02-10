@@ -141,9 +141,45 @@ Backend: Firebase + Google APIs
 
 ## Resource Links 🔗
 
-## GitHub Cheat Sheet ⚡️
+<strong> React Native + Expo </strong>
+- [React Native Basics](https://reactnative.dev/docs/tutorial?language=javascript)
+- [Environment Setup](https://reactnative.dev/docs/environment-setup)
+- [Environment Setup with Expo](https://docs.expo.dev/router/installation/)
+- [Build Full Stack App in React Native](https://www.youtube.com/watch?v=eYByUtXQbEo)
+- [React Native Course](https://www.youtube.com/watch?v=ZBCUegTZF7M&t=1396s)
+- [React Native Tutorial](https://www.youtube.com/watch?v=qmB6QCua3Uk&pp=ygUKTmF0aXZlV2luZA%3D%3D)
 
-General Use
+<strong> Tailwind (NativeWind) </strong>
+- [Tailwind CSS Tutorial for Beginners](https://www.youtube.com/watch?v=DenUCuq4G04)
+- [Tailwind CSS (NativeWind in React Native](https://www.youtube.com/watch?v=DenUCuq4G04)
+
+<strong> UI/UX Design </strong>
+- [Do's and Don'ts of Mobile App Design](https://realmonkey.co/mobile-app-design/the-dos-and-donts-of-mobile-app-design/)
+
+
+<strong> Backend </strong>
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [Firebase Authentication](https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbElYV09jRnZiM3pseW1hcXBSSlV0THlBaUJjQXxBQ3Jtc0tscXd1MkZKV0c4S3dqMmtkMktTdU9EV3M3cUo2OV9RVTNUUVQ5QjVGLWw5UEFwc2hjWFRHbTlIVWhyTjJWOXVFQWVNNzJYSnhhTVBJWDlMVVc1RFdKdm10WFFkSjBSd0VKT2xYck1uWVUxTzZtaVpoOA&q=https%3A%2F%2Ffirebase.google.com%2Fdocs%2Fauth%2F&v=Bj15-6rBHQw)
+- [Build a React Native App with Firebase Auth & Chat](https://www.youtube.com/watch?v=INxkJno2gIs&list=PLKWMD009Q4qRvrfjGotVfUbqGoLdvRDN4)
+
+<strong> APIs </strong>
+- [Fetching Data from an API in React Native](https://www.youtube.com/watch?v=KJhg761xb3c)
+- [React Native Tutorial - POST Request](https://www.youtube.com/watch?v=BecN2PxyR_0)
+- [React Native tutorial - API Call](https://www.youtube.com/watch?v=NuKQk7nbk0k) 
+
+- [Postman Tutorial](https://www.youtube.com/watch?v=MFxk5BZulVU)
+- Vehicle Data
+  - [VIN Decoder](https://www.nhtsa.gov/nhtsa-datasets-and-apis)
+  - [Vehicle API](https://vpic.nhtsa.dot.gov/api/)
+  - [OCR](https://docs.cloud.google.com/vision/docs/ocr)
+- Google Calendar
+  - [Google Calendar API](https://youtu.be/Bj15-6rBHQw?si=1O5VOYdq3883i62r)
+  - [Google Calendar API with Node.js](https://www.youtube.com/watch?v=2byT7fYT8UE)
+- Google Places
+  - [Google Places Overview](https://developers.google.com/maps/documentation/places/web-service/overview)
+  - [Google Places Javascript to Display Nearby Places](https://youtu.be/iOif0eHQbHY?si=0GR4GCqbxz93w-is)
+
+## GitHub Cheat Sheet ⚡️
 
 | Command | Description |
 | ------ | ------ |
@@ -164,6 +200,6 @@ General Use
 - Madailein Quinn
 - Vaishnavi Siravuri
 
-Project Manager: Jazmin Gutierrez  
-Industry Mentor: Sam Stegall  
-Codirectors: Adarsh Goura and Suhani Rana
+<strong> Project Manager: </strong> Jazmin Gutierrez  
+<strong> Industry Mentor: </strong> Sam Stegall  
+<strong> Codirectors: </strong> Adarsh Goura and Suhani Rana
