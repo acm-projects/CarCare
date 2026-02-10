@@ -134,6 +134,10 @@ CarCare is a smart, mobile companion designed to simplify vehicle maintenance fo
 </details>
 
 ## Tech Stack 💻
+IDE: VSCode
+Wireframing: Figma  
+Frontend: React Native + Expo + Tailwind (NativeWind)  
+Backend: Firebase + Google APIs
 
 ## Resource Links 🔗
 
@@ -160,6 +164,6 @@ General Use
 - Madailein Quinn
 - Vaishnavi Siravuri
 
-Project Manager: Jazmin Gutierrez
-Industry Mentor: Sam Stegall
+Project Manager: Jazmin Gutierrez  
+Industry Mentor: Sam Stegall  
 Codirectors: Adarsh Goura and Suhani Rana
