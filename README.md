@@ -21,7 +21,7 @@ CarCare is a smart, mobile companion designed to simplify vehicle maintenance fo
 
 ## Milestones 📆
 <details closed>
-<summary>  <strong> Week 1: Planning and Prep </strong> </summary>
+<summary>  <strong> Week 1: Planning and prep </strong> </summary>
 <br>
   
 - Assign frontend/backend roles and discuss tech stack
@@ -35,7 +35,7 @@ CarCare is a smart, mobile companion designed to simplify vehicle maintenance fo
 </details>
 
 <details closed>
-<summary>  <strong> Week 2: Development Setup </strong> </summary>
+<summary>  <strong> Week 2: Development setup </strong> </summary>
 <br>
   
 - Frontend:
@@ -50,7 +50,7 @@ CarCare is a smart, mobile companion designed to simplify vehicle maintenance fo
 </details>
 
 <details closed>
-<summary>  <strong> Week 3: Login/Sign Up & VIN Input </strong> </summary>
+<summary>  <strong> Week 3: Login/Sign up & VIN input </strong> </summary>
 <br>
   
 - Frontend:
@@ -134,7 +134,7 @@ CarCare is a smart, mobile companion designed to simplify vehicle maintenance fo
 </details>
 
 ## Tech Stack 💻
-IDE: VSCode
+IDE: VSCode  
 Wireframing: Figma  
 Frontend: React Native + Expo + Tailwind (NativeWind)  
 Backend: Firebase + Google APIs
