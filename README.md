@@ -154,7 +154,11 @@ Backend: Firebase + Google APIs
 - [Tailwind CSS (NativeWind in React Native](https://www.youtube.com/watch?v=DenUCuq4G04)
 
 <strong> UI/UX Design </strong>
+- [Figma Download](https://www.figma.com/downloads/)
+- [React Icons](https://react-icons.github.io/react-icons/)
+- [Coolors Color Palettes](https://coolors.co/)
 - [Do's and Don'ts of Mobile App Design](https://realmonkey.co/mobile-app-design/the-dos-and-donts-of-mobile-app-design/)
+- [Design Consistency](https://www.uxpin.com/studio/blog/guide-design-consistency-best-practices-ui-ux-designers/)
 
 
 <strong> Backend </strong>
@@ -166,7 +170,6 @@ Backend: Firebase + Google APIs
 - [Fetching Data from an API in React Native](https://www.youtube.com/watch?v=KJhg761xb3c)
 - [React Native Tutorial - POST Request](https://www.youtube.com/watch?v=BecN2PxyR_0)
 - [React Native tutorial - API Call](https://www.youtube.com/watch?v=NuKQk7nbk0k) 
-
 - [Postman Tutorial](https://www.youtube.com/watch?v=MFxk5BZulVU)
 - Vehicle Data
   - [VIN Decoder](https://www.nhtsa.gov/nhtsa-datasets-and-apis)
