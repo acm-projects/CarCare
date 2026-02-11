@@ -169,7 +169,7 @@ Backend: Firebase + Google APIs
 <strong> APIs </strong>
 - [Fetching Data from an API in React Native](https://www.youtube.com/watch?v=KJhg761xb3c)
 - [React Native Tutorial - POST Request](https://www.youtube.com/watch?v=BecN2PxyR_0)
-- [React Native tutorial - API Call](https://www.youtube.com/watch?v=NuKQk7nbk0k) 
+- [React Native Tutorial - API Call](https://www.youtube.com/watch?v=NuKQk7nbk0k) 
 - [Postman Tutorial](https://www.youtube.com/watch?v=MFxk5BZulVU)
 - Vehicle Data
   - [VIN Decoder](https://www.nhtsa.gov/nhtsa-datasets-and-apis)
