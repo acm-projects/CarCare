@@ -206,3 +206,5 @@ Backend: Firebase + Google APIs
 <strong> Project Manager: </strong> Jazmin Gutierrez  
 <strong> Industry Mentor: </strong> Sam Stegall  
 <strong> Codirectors: </strong> Adarsh Goura and Suhani Rana
+
+Maddy Quinn
