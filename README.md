@@ -207,4 +207,6 @@ Backend: Firebase + Google APIs
 <strong> Industry Mentor: </strong> Sam Stegall  
 <strong> Codirectors: </strong> Adarsh Goura and Suhani Rana
 
+Vaishnavi Siravuri
+
 Maddy Quinn
