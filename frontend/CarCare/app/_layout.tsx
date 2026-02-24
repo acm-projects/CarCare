@@ -1,5 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
@@ -10,6 +11,9 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
+  const [loaded] = useFonts({
+    'Onest Regular': require('../assets/font/Onest-VariableFont_wght.ttf')
+  });
   const colorScheme = useColorScheme();
 
   return (
