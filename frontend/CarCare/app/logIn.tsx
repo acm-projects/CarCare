@@ -4,6 +4,7 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import { globalStyles } from '../styles/global';
 
 export default function HomeScreen() {
 
@@ -12,8 +13,8 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style = {styles.headerText}>Log In</Text>
+    <View style={globalStyles.container}>
+      <Text style = {globalStyles.whiteTitle}>Log In</Text>
         <View style={styles.logInBox}>
           <TextInput style = {styles.logInText} placeholder="Enter email"></TextInput>
         </View>
@@ -27,20 +28,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-    gap: 15,
-    backgroundColor: '#386FA4',
-  },
-
-  headerText: {
-    color: '#ffffff',
-    fontSize: 50,
-  },
-
   logInBox: {
     borderColor: '#ffffff',
     borderRadius: 25,
