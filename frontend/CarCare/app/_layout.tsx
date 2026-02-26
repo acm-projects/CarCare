@@ -12,7 +12,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    'Onest Regular': require('../assets/font/Onest-VariableFont_wght.ttf')
+    'Onest': require('../assets/Onest-VariableFont_wght.ttf')
   });
   const colorScheme = useColorScheme();
 
