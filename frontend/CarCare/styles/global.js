@@ -7,7 +7,6 @@ export const globalStyles = StyleSheet.create ({
         textAlign: 'center',
         alignItems: 'center',
         gap: 15,
-        backgroundColor: '#386FA4',
     },
 
     whiteTitle: {
