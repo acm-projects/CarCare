@@ -3,12 +3,17 @@ import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, type TextSt
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-import { globalStyles } from '../styles/global';
+import { Link, useRouter } from 'expo-router';
+import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function HomeScreen() {
 
+  const router = useRouter();
+  const navigate = () => {
+    router.push("/vinEnter")
+  };
+  
   const handlePress = () => {
     Alert.alert('CarCare Log In', 'You have logged in successfully!');
   };
@@ -38,7 +43,8 @@ export default function HomeScreen() {
         />
       </View>
 
-      <Button onPress={handlePress} title="Log In" />
+      <Button onPress={() => router.push('/vinEnter')} title = "Log In"/>
+      <GradientText>Helo there</GradientText>
     </View>
   </LinearGradient>
   );
