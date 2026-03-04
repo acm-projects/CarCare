@@ -34,36 +34,75 @@ export function GradientText({ children }) {
 }
 
 export const globalStyles = StyleSheet.create ({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        textAlign: 'center',
-        alignItems: 'center',
-        gap: 15,
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 15,
+  },
 
-    containerWhite: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-        justifyContent: 'center',
-        textAlign: 'center',
-        alignItems: 'center',
-        gap: 15,
-    },
+  containerWhite: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 15,
+  },
 
-    whiteTitle: {
-        fontFamily: 'Onest',
-        fontSize: 50,
-        color: '#fff'
-    },
+  // Text styles
 
-    gradientTitle: {
-        fontFamily: 'Onest',
-        fontSize: 50,
-    },
+  whiteTitle: {
+    fontFamily: 'Onest',
+    fontSize: 50,
+    color: '#fff'
+  },
+
+  gradientTitle: {
+    fontFamily: 'Onest',
+    fontSize: 50,
+  },
     
-    gradientHeader: {
-        fontFamily: 'Onest',
-    },
+  gradientHeader: {
+    fontFamily: 'Onest',
+  },
 
+  whiteHeader:
+  {
+  fontFamily: 'Onest',
+  fontSize: 30,
+  color: '#fff',
+  textAlign: 'center',
+  width:250,
+  },
+  
+  whiteButtonText:
+  {
+    fontFamily: 'Onest',
+    fontSize: 20,
+    color: '#fff',
+    textAlign: 'center',
+  },
+
+  gradientButtonText:
+  {
+    fontFamily: 'Onest',
+    fontSize: 25,
+    textAlign: 'center',
+
+  },
+
+  // Button styles
+  
+  whiteButton:{
+    justifyContent: 'center',
+    paddingHorizontal:10,
+    paddingVertical:5,
+    borderRadius:50,
+    width: 300,
+    height: 60,
+    backgroundColor:'#fff'
+  }
+  
 });
