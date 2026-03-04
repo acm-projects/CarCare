@@ -1,9 +1,5 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, type TextStyle } from 'react-native';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { Button, StyleSheet, View } from 'react-native';
 
 export default function HomeScreen() {
 
