@@ -1,23 +1,28 @@
-import { Image } from 'expo-image';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { globalStyles, GradientText } from '@/styles/global';
-import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import AnimatedGradientBackground from '../components/animatedBackground';
 
-export default function index() {
-
-  const router = useRouter();
-
+const MyGarage = () => {
   return (
-    <View style = {globalStyles.container}>
-        <Text style = {globalStyles.grayP}>My garage</Text>
-        <TouchableOpacity onPress={() => router.push('../index')}>
-          <Text style = {globalStyles.grayH2}>Back</Text>
-        </TouchableOpacity>
+    <View style={styles.root}>
+      <AnimatedGradientBackground />
+
+      <View style={styles.content}>
+        {/* your MyGarage content */}
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-
+  root: {
+    flex: 1,
+    backgroundColor: '#05030F',
+  },
+  content: {
+    flex: 1,
+    padding: 24,
+  },
 });
+
+export default MyGarage;
