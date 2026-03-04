@@ -6,7 +6,7 @@ export default function VinEnter(){
 
     const router = useRouter();
     const handlePress = () => {
-        router.push("/myGarage");
+        router.push("/creation");
     };
 
     return (
