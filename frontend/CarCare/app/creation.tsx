@@ -2,13 +2,13 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import AnimatedGradientBackground from '../components/animatedBackground';
 
-const MyGarage = () => {
+const MyCarProfile = () => {
   return (
     <View style={styles.root}>
       <AnimatedGradientBackground />
 
       <View style={styles.content}>
-        {/* your MyGarage content */}
+        {/* your creation page content */}
       </View>
     </View>
   );
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyGarage;
+export default MyCarProfile;
