@@ -1,20 +1,18 @@
-import { Image } from 'expo-image';
-import { Text, View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { Button, View } from 'react-native';
 import { globalStyles, GradientText } from '../styles/global';
-import { LinearGradient } from 'expo-linear-gradient';
 
-export default function vinEnter(){
+export default function VinEnter(){
 
     const router = useRouter();
     const handlePress = () => {
-        router.push("/logIn")
+        router.push("/myGarage");
     };
-
 
     return (
         <View style = {globalStyles.containerWhite}>
             <GradientText>Vin Enter</GradientText>
+            <Button title="Enter" onPress={handlePress} />
         </View>
     )
 }
