@@ -3,13 +3,12 @@ import { Text, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 
-export function GradientText({ children }) {
+export function GradientText({ children, style }) {
   return (
     <MaskedView
-      style={{ alignSelf: 'flex-start' }}
       maskElement={
         <View>
-          <Text style={globalStyles.gradientTitle}>
+          <Text style={[globalStyles.gradientTitle, style]}>
             {children}
           </Text>
         </View>
@@ -22,7 +21,7 @@ export function GradientText({ children }) {
       >
         <Text
           style={[
-            globalStyles.gradientTitle,
+            globalStyles.gradientTitle, style,
             { opacity: 0 }
           ]}
         >
@@ -36,6 +35,7 @@ export function GradientText({ children }) {
 export const globalStyles = StyleSheet.create ({
   container: {
     flex: 1,
+    width: '100%',
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
@@ -56,33 +56,38 @@ export const globalStyles = StyleSheet.create ({
   whiteTitle: {
     fontFamily: 'Onest',
     fontSize: 50,
-    color: '#fff'
+    color: '#fff',
+    width: '100%',
   },
 
   gradientTitle: {
     fontFamily: 'Onest',
     fontSize: 50,
+    width: '100%',
   },
     
   gradientHeader: {
+    width: '100%',
     fontFamily: 'Onest',
   },
 
   whiteHeader:
   {
-  fontFamily: 'Onest',
-  fontSize: 30,
-  color: '#fff',
-  textAlign: 'center',
-  width:250,
+    fontFamily: 'Onest',
+    fontSize: 30,
+    color: '#fff',
+    textAlign: 'center',
+    padding: 10,
+    width: '100%'
   },
   
   whiteButtonText:
   {
     fontFamily: 'Onest',
-    fontSize: 20,
+    fontSize: 25,
     color: '#fff',
     textAlign: 'center',
+    width: '100%',
   },
 
   gradientButtonText:
@@ -90,7 +95,7 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     textAlign: 'center',
-
+    width: '100%',
   },
 
   // Button styles
@@ -103,6 +108,16 @@ export const globalStyles = StyleSheet.create ({
     width: 300,
     height: 60,
     backgroundColor:'#fff'
-  }
+  },
+
+  gradientButton: {
+    justifyContent: 'center',
+    paddingHorizontal:10,
+    paddingVertical:5,
+    borderRadius:50,
+    width: 300,
+    height: 60,
+    backgroundColor:'transparent',
+  },
   
 });
