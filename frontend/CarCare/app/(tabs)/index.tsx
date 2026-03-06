@@ -1,12 +1,10 @@
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
 
 export default function HomeScreen() {
-
 
   const router = useRouter();
   const handlePress = () => {
@@ -23,8 +21,8 @@ export default function HomeScreen() {
           <Image source = {require('../../assets/images/carCareLogoWhite.png')}
             style={{width: 250, height: 250}}></Image>
             <Text style = {globalStyles.whiteHeader}>The brain behind your vehicle's health.</Text>
-            <TouchableOpacity style={[globalStyles.whiteButton, {alignItems: 'center'}]} onPress={() => router.push('/logIn')}>
-              <GradientText style={{ fontSize: 25 }}>Get Started</GradientText>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 0, position: 'absolute'}]} onPress={() => router.push('/logIn')}>
+              <GradientText style={globalStyles.gradientButtonText}>Get Started</GradientText>
             </TouchableOpacity>
       </View>
     </LinearGradient>

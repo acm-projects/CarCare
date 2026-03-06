@@ -30,27 +30,31 @@ export default function HomeScreen() {
     <View style={globalStyles.container}>
       <View style =  {{position: 'absolute', top: 0, alignItems: 'center'}}>
         <Image source = {require('../assets/images/carCareLogoWhite.png')}
-              style={{width: 100, height: 100}}></Image>
+              style={{width: 100, height: 100, marginBottom: 50}}></Image>
         <Text style = {globalStyles.whiteTitle}>Welcome!</Text>
         <Text style = {globalStyles.whiteTitle}>Log in</Text>
       </View>
       <View style = {[styles.logInContainer, { height: .5 * height}]}>
-        <GradientText style={{ fontSize: 25 }}>Email</GradientText>
-        <TextInput
-          style={styles.logInBox}
-          placeholder="Enter email"
-          placeholderTextColor={'#8d8d8d'}/>
-        <GradientText style={{ fontSize: 25 }}>Password</GradientText>
-        <TextInput
-          style={styles.logInBox}
-          placeholder="Enter password"
-          placeholderTextColor={'#8d8d8d'}
-          />
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#386FA4', '#84D2F6']} style={styles.linearGradient}>
-            <Text style={globalStyles.whiteButtonText}>
-              Log in
-            </Text>
-          </LinearGradient>
+        <View style = {styles.subContainer}>
+          <GradientText style={globalStyles.gradientH2}>Email</GradientText>
+          <TextInput
+            style={styles.logInBox}
+            placeholder="Enter email"
+            placeholderTextColor={'#8d8d8d'}/>
+          <GradientText style={globalStyles.gradientH2}>Password</GradientText>
+          <TextInput
+            style={styles.logInBox}
+            placeholder="Enter password"
+            placeholderTextColor={'#8d8d8d'}
+            />
+            </View>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/vinEnter')}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                <Text style={globalStyles.whiteButtonText}>
+                  Log In
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
       </View>
     </View>
   </LinearGradient>
@@ -59,6 +63,11 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   
+  subContainer: {
+    width: 300,
+    gap: 20,
+  },
+
   logInContainer:{
     flex: 1,
     backgroundColor: '#fff',
@@ -68,9 +77,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 415,
     padding: 35,
-    gap: 10,
+    gap: 100,
     alignItems: 'center',
-
   },
 
   logInBox: {
@@ -80,21 +88,5 @@ const styles = StyleSheet.create({
     width: 300,
     paddingBottom: 5
   },
-  
-  linearGradient: {
-    flex: 1,
-    width: 300,
-    height:60,
-    borderRadius: 50
-  },
 
-  buttonText: {
-    fontSize: 18,
-    fontFamily: 'Gill Sans',
-    textAlign: 'center',
-    margin: 10,
-    color: '#ffffff',
-    backgroundColor: 'transparent',
-  },
-  
 });

@@ -15,7 +15,7 @@ export function GradientText({ children, style }) {
       }
     >
       <LinearGradient
-        colors={['#386FA4', '#84D2F6']}
+        colors={['#84D2F6', '#386FA4']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
@@ -57,18 +57,20 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 50,
     color: '#fff',
-    width: '100%',
+    fontWeight: 400,
   },
 
   gradientTitle: {
     fontFamily: 'Onest',
     fontSize: 50,
-    width: '100%',
+    fontWeight: 400,
   },
     
   gradientHeader: {
-    width: '100%',
     fontFamily: 'Onest',
+    fontSize: 30,
+    textAlign: 'center',
+    padding: 10,
   },
 
   whiteHeader:
@@ -78,7 +80,18 @@ export const globalStyles = StyleSheet.create ({
     color: '#fff',
     textAlign: 'center',
     padding: 10,
-    width: '100%'
+  },
+
+  gradientH2: {
+    fontFamily: 'Onest',
+    fontSize: 25,
+  },
+
+  whiteH2:
+  {
+    fontFamily: 'Onest',
+    fontSize: 25,
+    color: '#fff',
   },
   
   whiteButtonText:
@@ -87,7 +100,6 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 25,
     color: '#fff',
     textAlign: 'center',
-    width: '100%',
   },
 
   gradientButtonText:
@@ -95,15 +107,12 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     textAlign: 'center',
-    width: '100%',
   },
 
   // Button styles
   
   whiteButton:{
     justifyContent: 'center',
-    paddingHorizontal:10,
-    paddingVertical:5,
     borderRadius:50,
     width: 300,
     height: 60,
@@ -112,8 +121,6 @@ export const globalStyles = StyleSheet.create ({
 
   gradientButton: {
     justifyContent: 'center',
-    paddingHorizontal:10,
-    paddingVertical:5,
     borderRadius:50,
     width: 300,
     height: 60,
