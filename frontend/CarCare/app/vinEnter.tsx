@@ -14,7 +14,7 @@ export default function vinEnter(){
 
     return (
         <View style = {globalStyles.containerWhite}>
-            <GradientText>Vin Enter</GradientText>
+            <GradientText style={{ fontSize: 25 }}>Vin Enter</GradientText>
         </View>
     )
 }
