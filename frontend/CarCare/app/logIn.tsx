@@ -10,6 +10,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
 export default function HomeScreen() {
+  
   const { height } = useWindowDimensions();
   const router = useRouter();
   const navigate = () => {
@@ -28,13 +29,13 @@ export default function HomeScreen() {
     style={{ flex: 1 }}
   >
     <View style={globalStyles.container}>
-      <View style =  {{position: 'absolute', top: 0, alignItems: 'center'}}>
+      <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/carCareLogoWhite.png')}
-              style={{width: 100, height: 100, marginBottom: 50}}></Image>
+          style={{width: 100, height: 100}}></Image>
         <Text style = {globalStyles.whiteTitle}>Welcome!</Text>
         <Text style = {globalStyles.whiteTitle}>Log in</Text>
       </View>
-      <View style = {[styles.logInContainer, { height: .5 * height}]}>
+      <View style = {[styles.logInContainer, { height: .55 * height}]}>
         <View style = {styles.subContainer}>
           <GradientText style={globalStyles.gradientH2}>Email</GradientText>
           <TextInput
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 415,
     padding: 35,
-    gap: 100,
+    gap: 125,
     alignItems: 'center',
   },
 

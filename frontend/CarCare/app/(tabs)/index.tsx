@@ -19,9 +19,9 @@ export default function HomeScreen() {
       style={{ flex: 1 }}>
       <View style={globalStyles.container}>
           <Image source = {require('../../assets/images/carCareLogoWhite.png')}
-            style={{width: 250, height: 250}}></Image>
-            <Text style = {globalStyles.whiteHeader}>The brain behind your vehicle's health.</Text>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 0, position: 'absolute'}]} onPress={() => router.push('/logIn')}>
+            style={{width: 250, height: 250, top: 150, position: 'absolute'}}></Image>
+            <Text style = {[globalStyles.whiteHeader, {top: 425, position: 'absolute'}]}>The brain behind your vehicle's health.</Text>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 50, position: 'absolute'}]} onPress={() => router.push('/logIn')}>
               <GradientText style={globalStyles.gradientButtonText}>Get Started</GradientText>
             </TouchableOpacity>
       </View>

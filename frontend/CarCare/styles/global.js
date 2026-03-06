@@ -58,6 +58,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 50,
     color: '#fff',
     fontWeight: 400,
+    textAlign: 'center'
   },
 
   gradientTitle: {
@@ -93,6 +94,13 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 25,
     color: '#fff',
   },
+
+  grayH2:
+  {
+    fontFamily: 'Onest',
+    fontSize: 25,
+    color: '#8d8d8d',
+  },
   
   whiteButtonText:
   {
@@ -109,6 +117,11 @@ export const globalStyles = StyleSheet.create ({
     textAlign: 'center',
   },
 
+  grayP: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    color: '#8d8d8d'
+  },
   // Button styles
   
   whiteButton:{
