@@ -14,7 +14,7 @@ type Props = {
 
 const AnimatedGradientBackground: React.FC<Props> = ({
   style,
-  timeSpeed = 1.0,
+  timeSpeed = 2.5,
   color1 = '#84D2F6',
   color2 = '#386FA4',
   color3 = '#264E6B',
