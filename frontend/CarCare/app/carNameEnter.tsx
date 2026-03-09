@@ -42,7 +42,7 @@ export default function carNameEnter() {
             <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/myGarage')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
                     Done

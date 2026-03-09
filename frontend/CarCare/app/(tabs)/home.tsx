@@ -4,13 +4,13 @@ import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function index() {
+export default function home() {
 
   const router = useRouter();
 
   return (
     <View style = {globalStyles.container}>
-        <Text style = {globalStyles.grayP}>My garage</Text>
+        <Text style = {globalStyles.grayP}>Homepage</Text>
     </View>
   );
 }
