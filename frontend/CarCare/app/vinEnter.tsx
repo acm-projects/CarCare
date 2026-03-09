@@ -46,10 +46,10 @@ export default function HomeScreen() {
                 maintenance records, and manufacturing data.</Text>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/carNameEnter')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
-                    Log In
+                    Next
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>

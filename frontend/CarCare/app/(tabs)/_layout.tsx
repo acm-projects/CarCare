@@ -21,7 +21,6 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-          tabBarStyle: { display: 'none' }, // <-- hide tab bar here
         }}
       />
       <Tabs.Screen
