@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 backend/node_modules/dotenv/.env
 
 .env
 backend/node_modules/dotenv/.env
+=======
+node_modules
+>>>>>>> eec3d9f429abe5926bb973dd271809e24f29cd57

@@ -1,8 +1,9 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
@@ -12,7 +13,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    'Onest Regular': require('../assets/font/Onest-VariableFont_wght.ttf')
+    'Onest': require('../assets/Onest-VariableFont_wght.ttf')
   });
   const colorScheme = useColorScheme();
 
@@ -20,7 +21,47 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
+        <Stack.Screen name="logIn" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="vinEnter" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="createAccount" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="carNameEnter" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="index" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
