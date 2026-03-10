@@ -55,7 +55,7 @@ export default function HomeScreen() {
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/logIn')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/createAccount')}>
                 <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
             </TouchableOpacity>
         </View>

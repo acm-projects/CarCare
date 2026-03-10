@@ -64,7 +64,7 @@ export const globalStyles = StyleSheet.create ({
 
   whiteTitle: {
     fontFamily: 'Onest',
-    fontSize: 50,
+    fontSize: 40,
     color: '#fff',
     fontWeight: 400,
     textAlign: 'center'
@@ -90,6 +90,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     color: '#fff',
     textAlign: 'center',
+    width: 400,
     paddingHorizontal: 30,
   },
 

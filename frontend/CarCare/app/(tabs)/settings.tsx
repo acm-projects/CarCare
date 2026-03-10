@@ -17,12 +17,13 @@ export default function dashboard() {
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}
     >
-    <View style={globalStyles.container}>
+    <View style={[globalStyles.container, ]}>
       {}
         <View style={styles.topSection}>
+          <Text style = {[globalStyles.whiteTitle, {paddingBottom: 15}]}>Settings</Text>
           <View style = {[styles.whiteContainer, { height: .3 * height}]}>
             <View style = {styles.subContainer}>
-              <GradientText style={globalStyles.gradientH2}>Settings</GradientText>
+              <GradientText style={globalStyles.gradientH2}>Account</GradientText>
               <View style = {styles.settingsContainer}>
                 <Ionicons name="person-outline" size={30} color='#8d8d8d' />
                 <Text style = {globalStyles.grayP}>Profile</Text>
@@ -38,6 +39,19 @@ export default function dashboard() {
             </View>
           </View>
         </View>
+        {}
+        <View style={styles.bottomSection}>
+          <View style = {[styles.whiteContainer, { height: .17 * height}]}>
+            <View style = {styles.subContainer}>
+              <GradientText style={globalStyles.gradientH2}>More</GradientText>
+              <View style = {styles.settingsContainer}>
+                <Ionicons name="checkmark" size={30} color='#8d8d8d' />
+                <Text style = {globalStyles.grayP}>About</Text>
+              </View>
+              <View style = {styles.settingsContainer}></View>
+            </View>
+          </View>
+        </View>
       </View>
   </LinearGradient>
   );
@@ -46,47 +60,37 @@ export default function dashboard() {
 const styles = StyleSheet.create({
 
   topSection: {
-    flex: 3,
-    justifyContent: 'center',
+    flex: 0.9,
+    justifyContent: 'flex-end',
     alignItems: 'center',
+
   },
 
   settingsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+
   subContainer: {
     flex: 1,
     alignItems: 'flex-start',
     flexDirection: 'column',    
-    width: 300,
+    width: 350,
     gap: 15,
     paddingLeft: 20,
   },
 
-  middleSection: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-  },
-
   bottomSection: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    flex: 0.75,
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    gap: 15,
-    paddingBottom: 60,
   },
 
   whiteContainer:{
-    flex: 1,
     backgroundColor: '#fff',
-    position: 'absolute',
-    height: 50,
     borderRadius: 50,
     padding: 35,
-    width: 300,
+    width: 350,
     gap: 125,
     alignItems: 'center',
   },
