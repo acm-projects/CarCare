@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function carNameEnter() {
+export default function CarNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();

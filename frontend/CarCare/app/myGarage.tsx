@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function index() {
+export default function MyGarage() {
 
   const router = useRouter();
 
