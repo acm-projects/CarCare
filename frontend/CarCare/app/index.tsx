@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { globalStyles, GradientText } from '@/styles/global';
+import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import AnimatedGradientBackground from '../components/animatedBackground';
+//import AnimatedGradientBackground from '../components/animatedBackground';
 
-export default function index() {
+export default function Index() {
 
   const router = useRouter();
   const handlePress = () => {
@@ -19,16 +19,14 @@ export default function index() {
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
       <View style={styles.container}>
-        {}
         <View style={styles.topSection}>
           <Image
             source={require('../assets/images/carCareLogoWhite.png')}
             style={styles.logo}/>
-          <Text style={globalStyles.whiteHeader}>
+          <Text style={globalStyles.whiteTitle}>
             The brain behind your vehicle's health.
           </Text>
         </View>
-        {}
         <View style={styles.bottomSection}>
           <TouchableOpacity
             style={globalStyles.whiteButton}

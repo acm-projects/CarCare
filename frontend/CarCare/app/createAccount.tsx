@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function createAccount() {
+export default function CreateAccount() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
