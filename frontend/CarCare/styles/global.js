@@ -51,6 +51,15 @@ export const globalStyles = StyleSheet.create ({
     gap: 15,
   },
 
+  containerGradient: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 15,
+  },
+
   // Text styles
 
   whiteTitle: {
