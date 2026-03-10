@@ -72,6 +72,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     textAlign: 'center',
     padding: 10,
+    paddingHorizontal: 30,
   },
 
   whiteHeader:
@@ -80,7 +81,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     color: '#fff',
     textAlign: 'center',
-    padding: 10,
+    paddingHorizontal: 30,
   },
 
   gradientH2: {
@@ -93,6 +94,7 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     color: '#fff',
+    paddingHorizontal: 30,
   },
 
   grayH2:
@@ -120,7 +122,8 @@ export const globalStyles = StyleSheet.create ({
   grayP: {
     fontFamily: 'Onest',
     fontSize: 15,
-    color: '#8d8d8d'
+    color: '#8d8d8d',
+    height: 75,
   },
   // Button styles
   

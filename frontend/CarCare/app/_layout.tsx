@@ -38,6 +38,30 @@ export default function RootLayout() {
             headerTintColor: '#fff',    // back button color
           }}
         />
+        <Stack.Screen name="createAccount" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="carNameEnter" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
+        <Stack.Screen name="index" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '', 
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

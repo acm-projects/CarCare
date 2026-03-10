@@ -9,16 +9,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function HomeScreen() {
+export default function createAccount() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
-    router.push("/vinEnter")
-  };
   
   const handlePress = () => {
-    Alert.alert('CarCare Log In', 'You have logged in successfully!');
+    Alert.alert('CarCare create account', 'You have created an account successfully!');
   };
 
   return (
@@ -30,33 +27,32 @@ export default function HomeScreen() {
   >
     <View style={globalStyles.container}>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
-        <Text style = {globalStyles.whiteTitle}>Create your car profile</Text>
-        <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
-          style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
+        <Image source = {require('../assets/images/carCareLogoWhite.png')}
+          style={{width: 100, height: 100}}></Image>
+        <Text style = {globalStyles.whiteTitle}>Welcome!</Text>
+        <Text style = {globalStyles.whiteTitle}>Create account</Text>
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
         <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
+          <GradientText style={globalStyles.gradientH2}>Email</GradientText>
           <TextInput
             style={styles.logInBox}
-            placeholder="Enter VIN number"
+            placeholder="Enter email"
+            placeholderTextColor={'#8d8d8d'}/>
+          <GradientText style={globalStyles.gradientH2}>Password</GradientText>
+          <TextInput
+            style={styles.logInBox}
+            placeholder="Create password"
             placeholderTextColor={'#8d8d8d'}
             />
-            <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
-                maintenance records, and manufacturing data.</Text>
-        </View>
-        <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/carNameEnter')}>
-                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
-                    <Text style={globalStyles.whiteButtonText}>
-                    Next
-                    </Text>
-                </LinearGradient>
+            </View>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={() => router.push('/home')}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                <Text style={globalStyles.whiteButtonText}>
+                  Create Account
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/logIn')}>
-                <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
-            </TouchableOpacity>
-        </View>
       </View>
     </View>
   </LinearGradient>
