@@ -32,14 +32,16 @@ export default function carNameEnter() {
           style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
-        <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter car's name"
-            placeholderTextColor={'#8d8d8d'}
-            />
+        <View style = {styles.topSection}>
+          <View style = {styles.subContainer}>
+            <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
+            <TextInput
+              style={styles.logInBox}
+              placeholder="Enter car's name"
+              placeholderTextColor={'#8d8d8d'}
+              />
             <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
+          </View>
         </View>
         <View>
             <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/myGarage')}>
@@ -61,6 +63,20 @@ export default function carNameEnter() {
 
 const styles = StyleSheet.create({
   
+topSection: {
+  flex:3,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+bottomSection: {
+  flex: 1,
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  gap: 15,
+  paddingBottom: 60,
+},
+
   subContainer: {
     width: 300,
     gap: 20,

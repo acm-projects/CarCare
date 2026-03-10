@@ -35,7 +35,8 @@ export default function HomeScreen() {
           style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
-        <View style = {styles.subContainer}>
+        <View style = {styles.topSection}>
+          <View style = {styles.subContainer}>
           <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
           <TextInput
             style={styles.logInBox}
@@ -44,6 +45,7 @@ export default function HomeScreen() {
             />
             <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
                 maintenance records, and manufacturing data.</Text>
+        </View>
         </View>
         <View>
             <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/carNameEnter')}>
@@ -65,6 +67,12 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   
+  topSection: {
+    flex:3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   subContainer: {
     width: 300,
     gap: 20,

@@ -102,6 +102,8 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     color: '#8d8d8d',
+    paddingHorizontal: 30,
+
   },
   
   whiteButtonText:
@@ -123,7 +125,6 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 15,
     color: '#8d8d8d',
-    height: 75,
   },
   // Button styles
   

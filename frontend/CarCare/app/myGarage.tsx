@@ -11,6 +11,9 @@ export default function index() {
   return (
     <View style = {globalStyles.container}>
         <Text style = {globalStyles.grayP}>My garage</Text>
+        <TouchableOpacity onPress={() => router.push('../index')}>
+          <Text style = {globalStyles.grayH2}>Back</Text>
+        </TouchableOpacity>
     </View>
   );
 }
