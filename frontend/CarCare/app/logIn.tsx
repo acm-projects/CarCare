@@ -1,17 +1,20 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, type TextStyle } from 'react-native';
+import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link, useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function HomeScreen() {
-
+export default function logIn() {
+  
+  const { height } = useWindowDimensions();
   const router = useRouter();
   const navigate = () => {
-    router.push("/vinEnter")
+    router.push("../vinEnter")
   };
   
   const handlePress = () => {
@@ -26,25 +29,34 @@ export default function HomeScreen() {
     style={{ flex: 1 }}
   >
     <View style={globalStyles.container}>
-      <Text style={globalStyles.whiteTitle}>Log In</Text>
-
-      <View style={styles.logInBox}>
-        <TextInput
-          style={styles.logInText}
-          placeholder="Enter email"
-        />
+      <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
+        <Image source = {require('../assets/images/carCareLogoWhite.png')}
+          style={{width: 100, height: 100}}></Image>
+        <Text style = {globalStyles.whiteTitle}>Welcome back!</Text>
+        <Text style = {globalStyles.whiteTitle}>Log in</Text>
       </View>
-
-      <View style={styles.logInBox}>
-        <TextInput
-          style={styles.logInText}
-          placeholder="Enter password"
-          secureTextEntry
-        />
+      <View style = {[styles.logInContainer, { height: .55 * height}]}>
+        <View style = {styles.subContainer}>
+          <GradientText style={globalStyles.gradientH2}>Email</GradientText>
+          <TextInput
+            style={styles.logInBox}
+            placeholder="Enter email"
+            placeholderTextColor={'#8d8d8d'}/>
+          <GradientText style={globalStyles.gradientH2}>Password</GradientText>
+          <TextInput
+            style={styles.logInBox}
+            placeholder="Enter password"
+            placeholderTextColor={'#8d8d8d'}
+            />
+            </View>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../home')}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                <Text style={globalStyles.whiteButtonText}>
+                  Log In
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
       </View>
-
-      <Button onPress={() => router.push('/vinEnter')} title = "Log In"/>
-      <GradientText>Helo there</GradientText>
     </View>
   </LinearGradient>
   );
@@ -52,20 +64,30 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   
+  subContainer: {
+    width: 300,
+    gap: 20,
+  },
+
+  logInContainer:{
+    flex: 1,
+    backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 0,
+    height: 50,
+    borderRadius: 50,
+    width: 415,
+    padding: 35,
+    gap: 125,
+    alignItems: 'center',
+  },
+
   logInBox: {
-    borderColor: '#ffffff',
-    borderRadius: 25,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    padding: 5,
+    borderColor: 'transparent',
+    borderWidth: 0.75,
+    borderBottomColor: '#8d8d8d',
+    width: 300,
+    paddingBottom: 5
   },
 
-  logInText: {
-    color: '#ffffff',
-  },
-
-  logInButton: {
-    backgroundColor: '#ffffff',
-    color: '#386FA4'
-  }
 });

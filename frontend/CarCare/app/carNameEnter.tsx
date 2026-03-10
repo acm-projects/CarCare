@@ -9,13 +9,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function HomeScreen() {
+export default function carNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
-    router.push("/vinEnter")
-  };
   
   const handlePress = () => {
     Alert.alert('CarCare Log In', 'You have logged in successfully!');
@@ -36,24 +33,23 @@ export default function HomeScreen() {
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
         <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
+          <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
           <TextInput
             style={styles.logInBox}
-            placeholder="Enter VIN number"
+            placeholder="Enter car's name"
             placeholderTextColor={'#8d8d8d'}
             />
-            <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
-                maintenance records, and manufacturing data.</Text>
+            <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/carNameEnter')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/myGarage')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
-                    Next
+                    Done
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/logIn')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/vinEnter')}>
                 <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
             </TouchableOpacity>
         </View>
