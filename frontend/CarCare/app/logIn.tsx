@@ -49,7 +49,7 @@ export default function LogIn() {
             placeholderTextColor={'#8d8d8d'}
             />
             </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../vinEnter')}>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../dashboard')}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Log In

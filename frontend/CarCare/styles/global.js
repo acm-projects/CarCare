@@ -51,11 +51,20 @@ export const globalStyles = StyleSheet.create ({
     gap: 15,
   },
 
+  containerGradient: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 15,
+  },
+
   // Text styles
 
   whiteTitle: {
     fontFamily: 'Onest',
-    fontSize: 50,
+    fontSize: 40,
     color: '#fff',
     fontWeight: 400,
     textAlign: 'center'
@@ -81,6 +90,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     color: '#fff',
     textAlign: 'center',
+    width: 400,
     paddingHorizontal: 30,
   },
 
@@ -102,6 +112,8 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     color: '#8d8d8d',
+    paddingHorizontal: 30,
+
   },
   
   whiteButtonText:
@@ -123,7 +135,6 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 15,
     color: '#8d8d8d',
-    height: 75,
   },
   // Button styles
   

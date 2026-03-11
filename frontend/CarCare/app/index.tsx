@@ -52,7 +52,7 @@ container: {
 },
 
 topSection: {
-  flex: 2,
+  flex:3,
   justifyContent: 'center',
   alignItems: 'center',
 },
