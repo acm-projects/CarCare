@@ -42,15 +42,15 @@ export default function MyGarageScreen() {
   const router = useRouter();
 
   const handleViewCar = (carId: string) => {
-    router.push('../carNameEnter');
+    router.push('/dashboard');
   };
 
   const handleCreateNew = () => {
-    router.push('../vinEnter');
+    router.push('/vinEnter');
   };
 
   const handleLogout = () => {
-    router.replace('../logIn');
+    router.replace('/logIn');
   };
 
   return (
