@@ -7,7 +7,7 @@ const MyCarProfile = () => {
   const router = useRouter();
 
   const handleNext = () => {
-    router.push('/myGarage');
+    router.push('../myGarage');
   };
 
   return (

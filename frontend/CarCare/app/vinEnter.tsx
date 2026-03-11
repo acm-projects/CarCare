@@ -14,7 +14,7 @@ export default function HomeScreen() {
   const { height } = useWindowDimensions();
   const router = useRouter();
   const navigate = () => {
-    router.push("/vinEnter")
+    //router.push("../myGarage");
   };
   
   const handlePress = () => {
@@ -46,7 +46,7 @@ export default function HomeScreen() {
                 maintenance records, and manufacturing data.</Text>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/carNameEnter')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../carNameEnter')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
                     Next
