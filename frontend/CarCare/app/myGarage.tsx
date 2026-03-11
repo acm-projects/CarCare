@@ -24,8 +24,8 @@ type Car = {
 const MOCK_CARS: Car[] = [
   {
     id: '1',
-    name: 'My Honda Civic Type R',
-    subtitle: '2017 Honda Civic Type R',
+    name: 'My Honda Civic',
+    subtitle: '2017 Honda Civic',
     image: require('../assets/images/TypeR_HondaCivic_2017.png'),
     statuses: [],
   },
