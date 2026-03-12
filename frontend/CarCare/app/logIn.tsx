@@ -38,34 +38,13 @@ export default function logIn() {
       console.log("BACKEND ME (login):", me);
 
       Alert.alert('CarCare Log In', 'You have logged in successfully!');
-      router.push("/vinEnter");
+      router.push("../vinEnter");
     } catch (err: any) {
       Alert.alert("Login failed", err?.message ?? "Unknown error");
     }
   };
 
-  // SIGN UP (new user)
-  const handleSignUp = async () => {
-    if (!email || !password) {
-      Alert.alert('Missing info', 'Please enter email and password.');
-      return;
-    }
-
-    try {
-      const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
-
-      const token = await cred.user.getIdToken();
-      console.log("FIREBASE ID TOKEN (signup):", token);
-
-      const me = await apiFetch("/api/me");
-      console.log("BACKEND ME (signup):", me);
-
-      Alert.alert('Account created', 'Your account was created successfully!');
-      router.push("/vinEnter");
-    } catch (err: any) {
-      Alert.alert("Sign up failed", err?.message ?? "Unknown error");
-    }
-  };
+  
 
   return (
       <LinearGradient
@@ -95,7 +74,7 @@ export default function logIn() {
             placeholderTextColor={'#8d8d8d'}
             />
             </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../home')}>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={handleLogin}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Log In
