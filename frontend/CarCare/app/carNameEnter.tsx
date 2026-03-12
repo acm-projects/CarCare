@@ -9,13 +9,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function LogIn() {
+export default function CarNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
-    router.push("../vinEnter")
-  };
   
   const handlePress = () => {
     Alert.alert('CarCare Log In', 'You have logged in successfully!');
@@ -30,32 +27,34 @@ export default function LogIn() {
   >
     <View style={globalStyles.container}>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
-        <Image source = {require('../assets/images/carCareLogoWhite.png')}
-          style={{width: 100, height: 100}}></Image>
-        <Text style = {globalStyles.whiteTitle}>Welcome back!</Text>
-        <Text style = {globalStyles.whiteTitle}>Log in</Text>
+        <Text style = {globalStyles.whiteTitle}>Create your car profile</Text>
+        <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
+          style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
-        <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>Email</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter email"
-            placeholderTextColor={'#8d8d8d'}/>
-          <GradientText style={globalStyles.gradientH2}>Password</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter password"
-            placeholderTextColor={'#8d8d8d'}
-            />
-            </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../dashboard')}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
-                <Text style={globalStyles.whiteButtonText}>
-                  Log In
-                </Text>
-              </LinearGradient>
+        <View style = {styles.topSection}>
+          <View style = {styles.subContainer}>
+            <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
+            <TextInput
+              style={styles.logInBox}
+              placeholder="Enter car's name"
+              placeholderTextColor={'#8d8d8d'}
+              />
+            <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
+          </View>
+        </View>
+        <View>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../myGarage')}>
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                    <Text style={globalStyles.whiteButtonText}>
+                    Done
+                    </Text>
+                </LinearGradient>
             </TouchableOpacity>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../vinEnter')}>
+                <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
+            </TouchableOpacity>
+        </View>
       </View>
     </View>
   </LinearGradient>
@@ -64,6 +63,20 @@ export default function LogIn() {
 
 const styles = StyleSheet.create({
   
+topSection: {
+  flex:3,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+bottomSection: {
+  flex: 1,
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  gap: 15,
+  paddingBottom: 60,
+},
+
   subContainer: {
     width: 300,
     gap: 20,

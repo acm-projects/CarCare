@@ -9,16 +9,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function LogIn() {
+export default function CreateAccount() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
-    router.push("../vinEnter")
-  };
   
   const handlePress = () => {
-    Alert.alert('CarCare Log In', 'You have logged in successfully!');
+    Alert.alert('CarCare create account', 'You have created an account successfully!');
   };
 
   return (
@@ -32,8 +29,8 @@ export default function LogIn() {
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/carCareLogoWhite.png')}
           style={{width: 100, height: 100}}></Image>
-        <Text style = {globalStyles.whiteTitle}>Welcome back!</Text>
-        <Text style = {globalStyles.whiteTitle}>Log in</Text>
+        <Text style = {globalStyles.whiteTitle}>Welcome!</Text>
+        <Text style = {globalStyles.whiteTitle}>Create account</Text>
       </View>
       <View style = {[styles.logInContainer, { height: .55 * height}]}>
         <View style = {styles.subContainer}>
@@ -45,14 +42,14 @@ export default function LogIn() {
           <GradientText style={globalStyles.gradientH2}>Password</GradientText>
           <TextInput
             style={styles.logInBox}
-            placeholder="Enter password"
+            placeholder="Create password"
             placeholderTextColor={'#8d8d8d'}
             />
             </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../dashboard')}>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={() => router.push('/vinEnter')}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
-                  Log In
+                  Create Account
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
