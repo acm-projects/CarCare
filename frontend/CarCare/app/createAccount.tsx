@@ -13,6 +13,7 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "fire
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
+
 export default function CreateAccount() {
   
   const { height } = useWindowDimensions();

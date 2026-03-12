@@ -133,9 +133,17 @@ export const globalStyles = StyleSheet.create ({
 
   grayP: {
     fontFamily: 'Onest',
+    fontSize: 17,
+    color: '#8d8d8d',
+  },
+
+  grayP2: {
+    fontFamily: 'Onest',
     fontSize: 15,
     color: '#8d8d8d',
   },
+
+
   // Button styles
   
   whiteButton:{

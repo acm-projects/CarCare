@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@callstack/liquid-glass": "^0.7.0",
+    "@react-native-firebase/app": "^23.8.8",
+    "@react-native-firebase/auth": "^23.8.8",
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/stack": "^7.8.4",
     "expo": "^55.0.5",
