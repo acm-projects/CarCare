@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
   },
 
   screenOverride: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
 
   scrollContent: {
@@ -883,6 +883,14 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#5FA8D3',
     fontWeight: '500',
+  },
+
+  mechanicModalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
   },
 
   mechanicModalCard: {

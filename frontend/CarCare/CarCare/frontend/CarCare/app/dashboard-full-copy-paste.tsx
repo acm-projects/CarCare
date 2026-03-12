@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
   },
 
   screenOverride: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
 
   scrollContent: {
