@@ -5,6 +5,8 @@ import { HapticTab } from '@/components/haptic-tab';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Fonts } from '../../constants/theme';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -12,23 +14,46 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
         tabBarShowLabel: false,
+
+        tabBarStyle: {
+          height: 70,
+        },
+        tabBarIconStyle: {
+          marginTop: 10
+        },
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={['#386FA4', '#84D2F6']}
+            start={{ x: 1, y: 0.5 }}
+            end={{ x: 0, y: 0.5 }}
+            style={{ flex: 1 }}
+          />
+        ),
       }}>
+      <Tabs.Screen
+        name="timeline"
+        options={{
+          title: 'timeline',
+          tabBarIcon: ({ focused }) => <Ionicons 
+          name={focused ? "calendar" : "calendar-outline"} size={27} color='#fff' />,
+        }}
+      />
       <Tabs.Screen
         name="dashboard"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Ionicons name="car" size={30} color='#84D2F6' />,
+          tabBarIcon: ({ focused }) => <Ionicons 
+          name={focused ? "car" : "car-outline"}  size={27} color='#fff' />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: 'settings',
-          tabBarIcon: ({ color }) => <Ionicons name="settings" size={30} color='#84D2F6' />,
+          tabBarIcon: ({ focused }) => <Ionicons
+           name={focused ? "settings" : "settings-outline"}  size={27} color='#fff' />,
         }}
       />
     </Tabs>
