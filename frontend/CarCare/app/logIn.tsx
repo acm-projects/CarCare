@@ -6,20 +6,45 @@ import { ThemedView } from '@/components/themed-view';
 import { Link, useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from "react";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
 export default function LogIn() {
   
   const { height } = useWindowDimensions();
+
   const router = useRouter();
-  const navigate = () => {
-    router.push("../vinEnter")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // LOG IN (existing user)
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Missing info', 'Please enter email and password.');
+      return;
+    }
+
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+
+      const token = await cred.user.getIdToken();
+      console.log("FIREBASE ID TOKEN (login):", token);
+
+      const me = await apiFetch("/api/me");
+      console.log("BACKEND ME (login):", me);
+
+      Alert.alert('CarCare Log In', 'You have logged in successfully!');
+      router.push("../vinEnter");
+    } catch (err: any) {
+      Alert.alert("Login failed", err?.message ?? "Unknown error");
+    }
   };
+
   
-  const handlePress = () => {
-    Alert.alert('CarCare Log In', 'You have logged in successfully!');
-  };
 
   return (
       <LinearGradient
@@ -49,7 +74,7 @@ export default function LogIn() {
             placeholderTextColor={'#8d8d8d'}
             />
             </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={() => router.push('../dashboard')}>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={handleLogin}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Log In

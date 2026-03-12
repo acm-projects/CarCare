@@ -6,6 +6,10 @@ import { ThemedView } from '@/components/themed-view';
 import { Link, useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useState } from "react";
+import { auth } from "../firebase";
+import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
@@ -13,10 +17,31 @@ export default function CreateAccount() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
   
-  const handlePress = () => {
-    Alert.alert('CarCare create account', 'You have created an account successfully!');
-  };
+ // SIGN UP (new user)
+   const handleSignUp = async () => {
+     if (!email || !password) {
+       Alert.alert('Missing info', 'Please enter email and password.');
+       return;
+     }
+ 
+     try {
+       const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
+ 
+       const token = await cred.user.getIdToken();
+       console.log("FIREBASE ID TOKEN (signup):", token);
+ 
+       const me = await apiFetch("/api/me");
+       console.log("BACKEND ME (signup):", me);
+ 
+       Alert.alert('Account created', 'Your account was created successfully!');
+       router.push("/vinEnter");
+     } catch (err: any) {
+       Alert.alert("Sign up failed", err?.message ?? "Unknown error");
+     }
+   };
 
   return (
       <LinearGradient
@@ -38,15 +63,28 @@ export default function CreateAccount() {
           <TextInput
             style={styles.logInBox}
             placeholder="Enter email"
-            placeholderTextColor={'#8d8d8d'}/>
+            placeholderTextColor={'#8d8d8d'}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            />
+            
+
+          
+            
           <GradientText style={globalStyles.gradientH2}>Password</GradientText>
           <TextInput
             style={styles.logInBox}
             placeholder="Create password"
             placeholderTextColor={'#8d8d8d'}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+
             />
             </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={() => router.push('/vinEnter')}>
+            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={handleSignUp}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Create Account
