@@ -1,26 +1,23 @@
-import { Image } from 'expo-image';
-import { StyleSheet, Text, View, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
-import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function dashboard() {
+export default function Settings() {
 
   const router = useRouter();
   const { height } = useWindowDimensions();
 
   return (
-    <LinearGradient
-      colors={['#386FA4', '#84D2F6']}
-      start={{ x: 1, y: 0.5 }}
-      end={{ x: 0, y: 0.5 }}
-      style={{ flex: 1 }}
+    <ScrollView
+      contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
+      showsVerticalScrollIndicator={false}
     >
-    <View style={[globalStyles.container, ]}>
-      {}
+    <View style={[globalStyles.container]}>
+      {/*Settings container. Includes profile, password, and notificaiton settings*/}
         <View style={styles.topSection}>
-          <Text style = {[globalStyles.whiteTitle, {paddingBottom: 15}]}>Settings</Text>
+          <GradientText style = {[globalStyles.gradientTitle, {paddingBottom: 25}]}>Settings</GradientText>
           <View style = {[styles.whiteContainer, { height: .3 * height}]}>
             <View style = {styles.subContainer}>
               <GradientText style={globalStyles.gradientH2}>Account</GradientText>
@@ -39,7 +36,7 @@ export default function dashboard() {
             </View>
           </View>
         </View>
-        {}
+        {/*More container, includes "about" tab*/}
         <View style={styles.bottomSection}>
           <View style = {[styles.whiteContainer, { height: .17 * height}]}>
             <View style = {styles.subContainer}>
@@ -50,14 +47,23 @@ export default function dashboard() {
               </View>
               <View style = {styles.settingsContainer}></View>
             </View>
-          </View>
         </View>
       </View>
-  </LinearGradient>
+    </View>
+  </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+
+  scrollContent: {
+    paddingTop: 60,
+    paddingBottom: 120,
+  },
+
+  scrollContentOverride: {
+    paddingHorizontal: 0,
+  },
 
   topSection: {
     flex: 0.9,
@@ -93,6 +99,10 @@ const styles = StyleSheet.create({
     width: 350,
     gap: 125,
     alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 
 });

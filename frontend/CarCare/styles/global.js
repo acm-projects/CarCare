@@ -72,7 +72,7 @@ export const globalStyles = StyleSheet.create ({
 
   gradientTitle: {
     fontFamily: 'Onest',
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 400,
   },
     
