@@ -23,7 +23,7 @@ export default function Index() {
           <Image
             source={require('../assets/images/carCareLogoWhite.png')}
             style={styles.logo}/>
-          <Text style={globalStyles.whiteTitle}>
+          <Text style={globalStyles.whiteHeader}>
             The brain behind your vehicle's health.
           </Text>
         </View>
@@ -52,7 +52,7 @@ container: {
 },
 
 topSection: {
-  flex:3,
+  flex:4.5,
   justifyContent: 'center',
   alignItems: 'center',
 },

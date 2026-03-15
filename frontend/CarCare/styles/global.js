@@ -66,7 +66,7 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 40,
     color: '#fff',
-    fontWeight: 400,
+    fontWeight: 500,
     textAlign: 'center'
   },
 
@@ -121,6 +121,7 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     color: '#fff',
+    fontWeight: 500,
     textAlign: 'center',
   },
 
@@ -128,6 +129,7 @@ export const globalStyles = StyleSheet.create ({
   {
     fontFamily: 'Onest',
     fontSize: 25,
+    fontWeight: 500,
     textAlign: 'center',
   },
 
@@ -151,7 +153,11 @@ export const globalStyles = StyleSheet.create ({
     borderRadius:50,
     width: 300,
     height: 60,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    shadowColor: 'gray',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
 
   gradientButton: {
@@ -160,6 +166,10 @@ export const globalStyles = StyleSheet.create ({
     width: 300,
     height: 60,
     backgroundColor:'transparent',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    
   },
   
 });

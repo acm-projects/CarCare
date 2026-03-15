@@ -1,8 +1,6 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,7 +14,18 @@ import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
 export default function CreateAccount() {
   
+  {/*Frontend Functions*/}
   const { height } = useWindowDimensions();
+    const slideAnim = useRef(new Animated.Value(height)).current;
+    useEffect(() => {
+      Animated.timing(slideAnim, {
+      toValue: 0,
+      //Duration in ms
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, [slideAnim]);
+
   const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -53,12 +62,22 @@ export default function CreateAccount() {
   >
     <View style={globalStyles.container}>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
-        <Image source = {require('../assets/images/carCareLogoWhite.png')}
+        <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
           style={{width: 100, height: 100}}></Image>
         <Text style = {globalStyles.whiteTitle}>Welcome!</Text>
-        <Text style = {globalStyles.whiteTitle}>Create account</Text>
+        <Text style = {globalStyles.whiteTitle}>Sign up</Text>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height}]}>
+      <Animated.View
+        style={{
+          // Position the view at the bottom of its container
+          position: 'absolute',
+          bottom: 0, 
+          left: 0,
+          right: 0,
+          // Apply the animated translateY value
+          transform: [{ translateY: slideAnim }],
+      }}>
+      <View style = {[styles.logInContainer, { height: .6 * height}]}>
         <View style = {styles.subContainer}>
           <GradientText style={globalStyles.gradientH2}>Email</GradientText>
           <TextInput
@@ -70,10 +89,6 @@ export default function CreateAccount() {
             autoCapitalize="none"
             keyboardType="email-address"
             />
-            
-
-          
-            
           <GradientText style={globalStyles.gradientH2}>Password</GradientText>
           <TextInput
             style={styles.logInBox}
@@ -88,11 +103,12 @@ export default function CreateAccount() {
             <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={handleSignUp}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
-                  Create Account
+                  Sign up
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
       </View>
+      </Animated.View>
     </View>
   </LinearGradient>
   );
