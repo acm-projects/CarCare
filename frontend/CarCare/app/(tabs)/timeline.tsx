@@ -56,13 +56,13 @@ export default function Timeline() {
           {/*Service containers*/}
           <View style = {globalStyles.horizontalContainer}>
               <View style = {styles.serviceContainer}>
-                <View style = {[globalStyles.horizontalContainer, {width: 375}]}>
+                <View style = {[globalStyles.horizontalContainer]}>
                   <Ionicons name ="water" size ={40} color = "#FF6565"/>
                   <View style = {globalStyles.verticalContainer}>
                     <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
                     <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
                   </View>
-                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{justifyContent: 'flex-end'}}/>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{alignSelf: 'flex-end'}}/>
               </View>
             </View>
           </View>
@@ -74,6 +74,7 @@ export default function Timeline() {
                     <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
                     <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
                   </View>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{justifyContent: 'flex-end'}}/>
               </View>
             </View>
           </View>

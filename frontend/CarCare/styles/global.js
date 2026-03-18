@@ -45,7 +45,6 @@ export const globalStyles = StyleSheet.create ({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
   },
 
   verticalContainer: {
@@ -91,6 +90,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     textAlign: 'center',
     padding: 10,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
@@ -101,12 +101,14 @@ export const globalStyles = StyleSheet.create ({
     color: '#fff',
     textAlign: 'center',
     width: 400,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
   gradientH2: {
     fontFamily: 'Onest',
     fontSize: 25,
+    fontWeight: 500,
   },
   gradientH1: {
     fontFamily: 'Onest',
