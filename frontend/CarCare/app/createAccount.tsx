@@ -101,7 +101,7 @@ export default function CreateAccount() {
             />
             </View>
             <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position:'absolute'}]} onPress={handleSignUp}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Sign up
                 </Text>

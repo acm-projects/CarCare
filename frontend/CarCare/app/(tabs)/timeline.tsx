@@ -10,7 +10,6 @@ export default function Timeline() {
   // FUnctions
   const router = useRouter();
   const { height } = useWindowDimensions();
-  const GRADIENT_BORDER: readonly [string, string, string] = ['#84D2F6', '#5FA8D3', '#386FA4'];
 
   const handleScanPress = () => {
     router.push('/myGarage');
@@ -52,26 +51,31 @@ export default function Timeline() {
             <GradientText style = {[globalStyles.gradientHeader, {paddingHorizontal: 0, padding: 5}]}>Service Timeline</GradientText>
           </View>
           <View style = {globalStyles.horizontalContainer}>
-            <Text style = {[globalStyles.grayP, {padding: 1}]}>My 2017 Honda Civic</Text>
+            <Text style = {[globalStyles.grayP, {padding: 1, fontWeight: 500}]}>My 2017 Honda Civic</Text>
           </View>
           {/*Service containers*/}
           <View style = {globalStyles.horizontalContainer}>
-            <Ionicons name ="water" size ={40} color = "#FF6565"/>
-            <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-              <View style = {styles.subContainer}>
-                <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
-                <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
+              <View style = {styles.serviceContainer}>
+                <View style = {[globalStyles.horizontalContainer, {width: 375}]}>
+                  <Ionicons name ="water" size ={40} color = "#FF6565"/>
+                  <View style = {globalStyles.verticalContainer}>
+                    <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
+                    <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
+                  </View>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{justifyContent: 'flex-end'}}/>
               </View>
-            </LinearGradient>
+            </View>
           </View>
           <View style = {globalStyles.horizontalContainer}>
-            <Ionicons name ="flash" size ={40} color = "#FFA865"/>
-            <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-              <View style = {styles.subContainer}>
-                <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
-                <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
+              <View style = {styles.serviceContainer}>
+                <View style = {globalStyles.horizontalContainer}>
+                  <Ionicons name ="flash" size ={40} color = "#FFA865"/>
+                  <View style = {globalStyles.verticalContainer}>
+                    <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
+                    <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
+                  </View>
               </View>
-            </LinearGradient>
+            </View>
           </View>
         </View>
     </ScrollView>
@@ -99,20 +103,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
 
-  gradientCardWrap: {
-    padding: 2,
-    borderRadius: 25,
-    marginBottom: 14,
-    overflow: 'hidden',
-  },
-
-  subContainer: {
+  serviceContainer: {
     borderRadius: 24,
     paddingVertical: 25,
     paddingHorizontal: 10,
-    backgroundColor: '#f5f5f5',
-    width: 325,
+    backgroundColor: '#fff',
+    width: 375,
     height: 100,
+    shadowColor: 'black',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
 
   topRow: {

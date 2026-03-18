@@ -15,7 +15,7 @@ export function GradientText({ children, style }) {
       }
     >
       <LinearGradient
-        colors={['#84D2F6', '#386FA4']}
+        colors={['#53c1f3', '#3272ae']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
@@ -35,7 +35,6 @@ export function GradientText({ children, style }) {
 export const globalStyles = StyleSheet.create ({
   container: {
     flex: 1,
-    width: '100%',
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
@@ -43,11 +42,14 @@ export const globalStyles = StyleSheet.create ({
   },
 
   horizontalContainer: {
-    flex: 1,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+  },
+
+  verticalContainer: {
+    flexDirection: 'column',
   },
 
   containerWhite: {
