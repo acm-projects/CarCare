@@ -10,9 +10,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  
   return (
     <Tabs
+      initialRouteName="dashboard"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -59,6 +60,7 @@ export default function TabLayout() {
            name={focused ? "settings" : "settings-outline"}  size={32} color='#fff' />,
         }}
       />
+      
     </Tabs>
     
   );

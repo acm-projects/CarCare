@@ -56,29 +56,47 @@ export default function Timeline() {
           {/*Service containers*/}
           <View style = {globalStyles.horizontalContainer}>
               <View style = {styles.serviceContainer}>
-                <View style = {[globalStyles.horizontalContainer]}>
-                  <Ionicons name ="water" size ={40} color = "#FF6565"/>
-                  <View style = {globalStyles.verticalContainer}>
-                    <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
-                    <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
+                <View style = {styles.subContainer}>
+                  <View style = {[globalStyles.horizontalContainer]}>
+                    <Ionicons name ="water" size ={35} color = "#FF6565" style = {{paddingRight: 5}}/>
+                    <View style = {globalStyles.verticalContainer}>
+                      <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
+                      <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
+                    </View>
                   </View>
-                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{alignSelf: 'flex-end'}}/>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4"/>
               </View>
             </View>
           </View>
           <View style = {globalStyles.horizontalContainer}>
               <View style = {styles.serviceContainer}>
-                <View style = {globalStyles.horizontalContainer}>
-                  <Ionicons name ="flash" size ={40} color = "#FFA865"/>
-                  <View style = {globalStyles.verticalContainer}>
-                    <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
-                    <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
+                <View style = {styles.subContainer}>
+                  <View style = {[globalStyles.horizontalContainer]}>
+                    <Ionicons name ="flash" size ={35} color = "#FFA865" style = {{paddingRight: 5}}/>
+                    <View style = {globalStyles.verticalContainer}>
+                      <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
+                      <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
+                    </View>
                   </View>
-                <Ionicons name ="chevron-down" size ={30} color = "#386FA4" style = {{justifyContent: 'flex-end'}}/>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4"/>
               </View>
             </View>
           </View>
-        </View>
+          <View style = {globalStyles.horizontalContainer}>
+              <View style = {styles.serviceContainer}>
+                <View style = {styles.subContainer}>
+                  <View style = {[globalStyles.horizontalContainer]}>
+                    <Ionicons name ="folder" size ={35} color = "#9DE38F" style = {{paddingRight: 5}}/>
+                    <View style = {globalStyles.verticalContainer}>
+                      <GradientText style= {globalStyles.gradientH1}>Yearly Emissions Inspection</GradientText>
+                      <Text style = {globalStyles.grayP2}>Due April 29, 2027</Text>
+                    </View>
+                  </View>
+                <Ionicons name ="chevron-down" size ={30} color = "#386FA4"/>
+              </View>
+            </View>
+          </View>
+      </View>
     </ScrollView>
   </View>
   );
@@ -98,6 +116,14 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 60,
     paddingBottom: 120,
+  },
+
+  subContainer: {
+    width: 300,
+    justifyContent: 'space-evenly', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    
   },
 
   scrollContentOverride: {

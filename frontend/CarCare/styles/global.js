@@ -113,7 +113,7 @@ export const globalStyles = StyleSheet.create ({
   gradientH1: {
     fontFamily: 'Onest',
     fontWeight: 500,
-    fontSize: 22,
+    fontSize: 19,
   },
 
   whiteH2:
