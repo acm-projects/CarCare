@@ -52,13 +52,25 @@ export default function Timeline() {
             <GradientText style = {[globalStyles.gradientHeader, {paddingHorizontal: 0, padding: 5}]}>Service Timeline</GradientText>
           </View>
           <View style = {globalStyles.horizontalContainer}>
-            <Text style = {globalStyles.grayP}>My 2017 Honda Civic</Text>
+            <Text style = {[globalStyles.grayP, {padding: 1}]}>My 2017 Honda Civic</Text>
           </View>
           {/*Service containers*/}
           <View style = {globalStyles.horizontalContainer}>
             <Ionicons name ="water" size ={40} color = "#FF6565"/>
             <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-              <GradientText style= {globalStyles.gradientH2}>Oil change</GradientText>
+              <View style = {styles.subContainer}>
+                <GradientText style= {globalStyles.gradientH1}>Oil change</GradientText>
+                <Text style = {globalStyles.grayP2}>Due March 30, 2026</Text>
+              </View>
+            </LinearGradient>
+          </View>
+          <View style = {globalStyles.horizontalContainer}>
+            <Ionicons name ="flash" size ={40} color = "#FFA865"/>
+            <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
+              <View style = {styles.subContainer}>
+                <GradientText style= {globalStyles.gradientH1}>Spark plug replacement</GradientText>
+                <Text style = {globalStyles.grayP2}>Due April 16, 2026</Text>
+              </View>
             </LinearGradient>
           </View>
         </View>
@@ -92,6 +104,15 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 14,
     overflow: 'hidden',
+  },
+
+  subContainer: {
+    borderRadius: 24,
+    paddingVertical: 25,
+    paddingHorizontal: 10,
+    backgroundColor: '#f5f5f5',
+    width: 325,
+    height: 100,
   },
 
   topRow: {
@@ -154,16 +175,4 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 
-  serviceContainer:{
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    padding: 35,
-    width: 350,
-    alignItems: 'center',
-    borderColor: '',
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
 });

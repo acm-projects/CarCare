@@ -46,6 +46,7 @@ export const globalStyles = StyleSheet.create ({
     flex: 1,
     width: '100%',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
   },
 
@@ -105,6 +106,11 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
   },
+  gradientH1: {
+    fontFamily: 'Onest',
+    fontWeight: 500,
+    fontSize: 22,
+  },
 
   whiteH2:
   {
@@ -149,6 +155,7 @@ export const globalStyles = StyleSheet.create ({
   grayP2: {
     fontFamily: 'Onest',
     fontSize: 15,
+    fontWeight: 500,
     color: '#8d8d8d',
   },
 
