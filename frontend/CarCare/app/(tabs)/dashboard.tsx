@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
   },
 
   gradientCardWrap: {
-    padding: 2,
+    padding: 1,
     borderRadius: 26,
     marginBottom: 14,
     overflow: 'hidden',
