@@ -18,7 +18,6 @@ export default function Settings() {
     <View style={[globalStyles.container]}>
       {/*Settings container. Includes profile, password, and notificaiton settings*/}
         <View style={styles.topSection}>
-
           {/*header*/}
           <GradientText style = {[globalStyles.gradientHeader, {paddingBottom: 25}]}>Settings</GradientText>
           <View style = {[styles.whiteContainer, { height: .5 * height, padding:25}]}>
@@ -66,7 +65,7 @@ export default function Settings() {
               </TouchableOpacity>
             </View>
             {/* Button to log out */}
-              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+              <TouchableOpacity onPress={ () => router.push('/')}>
                   <View style = {styles.settingsContainer}>
                   <Ionicons name="log-out" size={30} color='#8d8d8d' />
                   <Text style = {globalStyles.grayP}>Log Out</Text>
@@ -84,11 +83,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 60,
     paddingBottom: 120,
-  },
-
-  divider:
-  {
-    alignItems: 'center',
   },
 
   scrollContentOverride: {

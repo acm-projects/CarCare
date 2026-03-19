@@ -10,22 +10,26 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  
   return (
     <Tabs
+      initialRouteName="dashboard"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
 
         tabBarStyle: {
           height: 70,
+          justifyContent: 'center',
         },
         tabBarIconStyle: {
-          marginTop: 10
+          width: '100%',
+          marginBottom: 10,
+          height: 55,
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={['#386FA4', '#84D2F6']}
+            colors={['#3272ae', '#53c1f3']}
             start={{ x: 1, y: 0.5 }}
             end={{ x: 0, y: 0.5 }}
             style={{ flex: 1 }}
@@ -37,7 +41,7 @@ export default function TabLayout() {
         options={{
           title: 'timeline',
           tabBarIcon: ({ focused }) => <Ionicons 
-          name={focused ? "calendar" : "calendar-outline"} size={27} color='#fff' />,
+          name={focused ? "calendar" : "calendar-outline"} size={32} color='#fff' />,
         }}
       />
       <Tabs.Screen
@@ -45,7 +49,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) => <Ionicons 
-          name={focused ? "car" : "car-outline"}  size={27} color='#fff' />,
+          name={focused ? "car" : "car-outline"}  size={32} color='#fff' />,
         }}
       />
       <Tabs.Screen
@@ -53,9 +57,10 @@ export default function TabLayout() {
         options={{
           title: 'settings',
           tabBarIcon: ({ focused }) => <Ionicons
-           name={focused ? "settings" : "settings-outline"}  size={27} color='#fff' />,
+           name={focused ? "settings" : "settings-outline"}  size={32} color='#fff' />,
         }}
       />
+      
     </Tabs>
     
   );

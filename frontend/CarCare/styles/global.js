@@ -15,7 +15,7 @@ export function GradientText({ children, style }) {
       }
     >
       <LinearGradient
-        colors={['#84D2F6', '#386FA4']}
+        colors={['#53c1f3', '#3272ae']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
@@ -35,11 +35,20 @@ export function GradientText({ children, style }) {
 export const globalStyles = StyleSheet.create ({
   container: {
     flex: 1,
-    width: '100%',
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
     gap: 15,
+  },
+
+  horizontalContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  verticalContainer: {
+    flexDirection: 'column',
   },
 
   containerWhite: {
@@ -81,6 +90,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     textAlign: 'center',
     padding: 10,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
@@ -91,12 +101,19 @@ export const globalStyles = StyleSheet.create ({
     color: '#fff',
     textAlign: 'center',
     width: 400,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
   gradientH2: {
     fontFamily: 'Onest',
     fontSize: 25,
+    fontWeight: 500,
+  },
+  gradientH1: {
+    fontFamily: 'Onest',
+    fontWeight: 500,
+    fontSize: 19,
   },
 
   whiteH2:
@@ -142,6 +159,7 @@ export const globalStyles = StyleSheet.create ({
   grayP2: {
     fontFamily: 'Onest',
     fontSize: 15,
+    fontWeight: 500,
     color: '#8d8d8d',
   },
 
