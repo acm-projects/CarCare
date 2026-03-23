@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Image } from 'expo-image';
 import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
@@ -90,13 +91,17 @@ export default function LogIn() {
               placeholderTextColor={'#8d8d8d'}
               />
               </View>
-              <TouchableOpacity style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]} onPress={handleLogin}>
+              <TouchableOpacity
+                style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]}
+                onPress={handleLogin}
+              >
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                   <Text style={globalStyles.whiteButtonText}>
                     Log In
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
+
           </View>
         </Animated.View>
       </View>
@@ -130,6 +135,23 @@ const styles = StyleSheet.create({
     borderBottomColor: '#8d8d8d',
     width: 300,
     paddingBottom: 5
+  },
+
+  tempGarageButton: {
+    marginTop: 16,
+    alignSelf: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: '#E8F6FF',
+    borderWidth: 1,
+    borderColor: '#5FA8D3',
+  },
+
+  tempGarageButtonText: {
+    color: '#3272ae',
+    fontSize: 14,
+    fontWeight: '600',
   },
 
 });

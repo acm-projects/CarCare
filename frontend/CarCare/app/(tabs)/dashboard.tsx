@@ -11,6 +11,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -18,10 +19,26 @@ import { Ionicons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+/** Scroll area width (screen has `paddingHorizontal: 20`) — required so top-row flex + absolute menu get real widths */
+const CONTENT_WIDTH = SCREEN_WIDTH - 40;
 const MODAL_MAP_WIDTH = Math.min(SCREEN_WIDTH - 24, 360 - 24);
 const GRADIENT_BORDER: readonly [string, string, string] = ['#84D2F6', '#5FA8D3', '#386FA4'];
+/** Gradient “border” thickness — shared by car dropdown, help tiles, general tips */
+const GRADIENT_FRAME = 2;
 const MODAL_MAP_HEIGHT = 220;
 
+/** Modal backdrop: lower = softer blur (was 80). Overlay stacks on top of BlurView. */
+const MODAL_BLUR_INTENSITY = 38;
+const MODAL_DIM_OVERLAY = 'rgba(0,0,0,0.1)';
+
+/** Single gray for dashboard labels, icons, and secondary text */
+const GRAY = '#8D8D8D';
+const TIP_TITLE_BLUE = '#5FA8D3';
+/** Upcoming service pill — red border / pale fill (Figma) */
+const SERVICE_ALERT_RED = '#E53935';
+const SERVICE_ALERT_BG = '#FFF5F5';
+/** Spark plug icon — same as timeline.tsx (Service Timeline → Spark plug replacement) */
+const SPARK_PLUG_ICON_COLOR = '#FFA865';
 type Mechanic = {
   id: string;
   name: string;
@@ -89,10 +106,28 @@ const MAP_REGION = {
   longitudeDelta: 0.12,
 };
 
+type GarageCar = {
+  id: string;
+  title: string;
+  subtitle: string;
+};
+
+/** Garage vehicles — switch selection here; all routes stay on this dashboard for now */
+const GARAGE_CARS: GarageCar[] = [
+  { id: 'civic', title: 'My Civic Type R', subtitle: '2017 Honda Civic' },
+  { id: 'bmw', title: 'My BMW 335i', subtitle: '2013 BMW 335i' },
+];
+
 export default function Dashboard() {
   const router = useRouter();
   const [showAAAModal, setShowAAAModal] = useState(false);
   const [showMechanicModal, setShowMechanicModal] = useState(false);
+  const [selectedCarId, setSelectedCarId] = useState<string>(GARAGE_CARS[0].id);
+  const [carMenuOpen, setCarMenuOpen] = useState(false);
+
+  const selectedCar = GARAGE_CARS.find((c) => c.id === selectedCarId) ?? GARAGE_CARS[0];
+  /** Strip leading model year from subtitle, e.g. "2017 Honda Civic" → "Honda Civic" */
+  const tipsVehicleLabel = selectedCar.subtitle.replace(/^\d{4}\s+/, '');
 
   const openLargerMap = () => {
     const url =
@@ -119,28 +154,78 @@ export default function Dashboard() {
   };
 
   return (
-    <View style={[styles.screen, styles.screenOverride]}>
+    <View style={styles.screen}>
       <ScrollView
-        contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Top car selector + scan */}
+        {/* Top: single car dropdown (garage) + scan */}
         <View style={styles.topRow}>
           <View style={styles.carSelectorGroup}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.carChipsRow}
-            >
-              <View style={[styles.carChip, styles.carChipActive]}>
-                <Text style={styles.carChipTitle}>My Civic Type R</Text>
-                <Text style={styles.carChipSubtitle}>2017 Honda Civic</Text>
-              </View>
-              <View style={styles.carChip}>
-                <Text style={styles.carChipTitle}>My BMW 335i</Text>
-                <Text style={styles.carChipSubtitle}>2013 BMW 335i</Text>
-              </View>
-            </ScrollView>
+            <View style={styles.carDropdownAnchor}>
+              <TouchableOpacity
+                style={styles.carDropdownHit}
+                activeOpacity={0.9}
+                onPress={() => setCarMenuOpen((o) => !o)}
+                accessibilityRole="button"
+                accessibilityLabel="Select vehicle"
+              >
+                <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownFrame}>
+                  <View style={styles.carDropdownInner}>
+                    <View style={styles.carDropdownTriggerRow}>
+                      <View style={styles.carDropdownTriggerText}>
+                        <Text style={styles.carDropdownTitle} numberOfLines={1}>
+                          {selectedCar.title}
+                        </Text>
+                        <Text style={styles.carDropdownSubtitle} numberOfLines={1}>
+                          {selectedCar.subtitle}
+                        </Text>
+                      </View>
+                      <Ionicons
+                        name={carMenuOpen ? 'chevron-up' : 'chevron-down'}
+                        size={20}
+                        color={TIP_TITLE_BLUE}
+                      />
+                    </View>
+                  </View>
+                </LinearGradient>
+              </TouchableOpacity>
+
+              {carMenuOpen && (
+                <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownMenuOuter}>
+                  <View style={styles.carDropdownMenuInner} accessibilityViewIsModal>
+                    {GARAGE_CARS.map((car) => {
+                      const isActive = car.id === selectedCarId;
+                      return (
+                        <TouchableOpacity
+                          key={car.id}
+                          style={[styles.carDropdownRow, isActive && styles.carDropdownRowActive]}
+                          activeOpacity={0.85}
+                          onPress={() => {
+                            setSelectedCarId(car.id);
+                            setCarMenuOpen(false);
+                          }}
+                        >
+                          <View style={styles.carDropdownRowText}>
+                            <Text style={styles.carDropdownRowTitle} numberOfLines={2}>
+                              {car.title}
+                            </Text>
+                            <Text style={styles.carDropdownRowSubtitle} numberOfLines={2}>
+                              {car.subtitle}
+                            </Text>
+                          </View>
+                          {isActive ? (
+                            <Ionicons name="checkmark-circle" size={22} color={TIP_TITLE_BLUE} />
+                          ) : (
+                            <View style={styles.carDropdownRowSpacer} />
+                          )}
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+                </LinearGradient>
+              )}
+            </View>
           </View>
 
           <TouchableOpacity
@@ -153,43 +238,49 @@ export default function Dashboard() {
           </TouchableOpacity>
         </View>
 
-        {/* Placeholder for car card image / dashboard graphic */}
-        <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-          <View style={styles.gradientCardInner}>
-            <View style={styles.heroCard}>
-              <View style={styles.heroImagePlaceholder}>
-                <Text style={styles.heroPlaceholderText}>Your car snapshot</Text>
-              </View>
+        {/* Car snapshot — grey block only on screen bg (no white wrapper) */}
+        <View style={styles.heroOuter}>
+          <View style={styles.heroImagePlaceholder}>
+            <Text style={styles.heroPlaceholderText}>
+              {selectedCar.title} — snapshot
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.dashSection}>
+          <View style={styles.dashSectionHeader}>
+            <View style={styles.dashSectionTitleRow}>
+              <Text style={styles.dashSectionTitle}>Upcoming Services</Text>
+              <Ionicons name="notifications-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
             </View>
           </View>
-        </LinearGradient>
+          <TouchableOpacity
+            style={styles.servicePill}
+            activeOpacity={0.85}
+            onPress={handleServiceTimelinePress}
+          >
+            <Ionicons
+              name="flash"
+              size={35}
+              color={SPARK_PLUG_ICON_COLOR}
+              style={styles.serviceSparkIcon}
+            />
+            <View style={styles.serviceTextBlock}>
+              <Text style={styles.serviceTitle}>Spark plug replacement</Text>
+              <Text style={styles.serviceSubtitle}>in 2 days</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={GRAY} />
+          </TouchableOpacity>
+        </View>
 
-        {/* Upcoming services card */}
-        <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-          <View style={styles.gradientCardInner}>
-            <View style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Upcoming Services</Text>
-              <TouchableOpacity
-                style={styles.servicePill}
-                activeOpacity={0.85}
-                onPress={handleServiceTimelinePress}
-              >
-                <View style={styles.serviceIconCircle}>
-                  <Ionicons name="flash-outline" size={20} color="#F16063" />
-                </View>
-                <View style={styles.serviceTextBlock}>
-                  <Text style={styles.serviceTitle}>Spark plug replacement</Text>
-                  <Text style={styles.serviceSubtitle}>Due in 2 days</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={18} color="#8D8D8D" />
-              </TouchableOpacity>
+        <View style={styles.dashSection}>
+          <View style={styles.dashSectionHeader}>
+            <View style={styles.dashSectionTitleRow}>
+              <Text style={styles.dashSectionTitle}>Need Help</Text>
+              <Ionicons name="chatbubble-ellipses-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
             </View>
           </View>
-        </LinearGradient>
-
-        {/* Need Help – title only, gradient box around each option */}
-        <Text style={[styles.sectionTitle, styles.needHelpTitle]}>Need Help</Text>
-        <View style={styles.helpRow}>
+          <View style={styles.helpRow}>
           <LinearGradient colors={GRADIENT_BORDER} style={styles.helpTileGradientWrap}>
             <View style={styles.helpTileGradientInner}>
               <TouchableOpacity
@@ -197,9 +288,16 @@ export default function Dashboard() {
                 activeOpacity={0.85}
                 onPress={() => setShowAAAModal(true)}
               >
-                <Ionicons name="call-outline" size={24} color="#5FA8D3" />
-                <Text style={styles.helpTitle}>Call AAA{'\n'}Helpline</Text>
-                <Text style={styles.helpSubtitle}>Connect to roadside assistance fast!</Text>
+                <View style={styles.helpTileTopRow}>
+                  <Text style={styles.helpCardTitle} numberOfLines={2}>
+                    Call AAA Helpline
+                  </Text>
+                  <Ionicons name="call-outline" size={22} color={GRAY} />
+                </View>
+                <Text style={styles.helpCardSubtitle}>Connect to roadside assistance fast !</Text>
+                <View style={styles.helpTileCornerArrow}>
+                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
+                </View>
               </TouchableOpacity>
             </View>
           </LinearGradient>
@@ -211,9 +309,16 @@ export default function Dashboard() {
                 activeOpacity={0.85}
                 onPress={() => setShowMechanicModal(true)}
               >
-                <Ionicons name="map-outline" size={24} color="#5FA8D3" />
-                <Text style={styles.helpTitle}>Nearby{'\n'}Mechanics</Text>
-                <Text style={styles.helpSubtitle}>Find trusted mechanics near you!</Text>
+                <View style={styles.helpTileTopRow}>
+                  <Text style={styles.helpCardTitle} numberOfLines={2}>
+                    Nearest Mechanic
+                  </Text>
+                  <Ionicons name="map-outline" size={22} color={GRAY} />
+                </View>
+                <Text style={styles.helpCardSubtitle}>Find trusted mechanics near you !</Text>
+                <View style={styles.helpTileCornerArrow}>
+                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
+                </View>
               </TouchableOpacity>
             </View>
           </LinearGradient>
@@ -225,30 +330,38 @@ export default function Dashboard() {
                 activeOpacity={0.85}
                 onPress={handleScanPress}
               >
-                <Ionicons name="scan-circle-outline" size={26} color="#5FA8D3" />
-                <Text style={styles.helpTitle}>Scan{'\n'}Vehicle</Text>
-                <Text style={styles.helpSubtitle}>Get smart suggestions for any car issue!</Text>
+                <View style={styles.helpTileTopRow}>
+                  <Text style={styles.helpCardTitle} numberOfLines={2}>
+                    Scan or Add Issue
+                  </Text>
+                  <Ionicons name="camera-outline" size={22} color={GRAY} />
+                </View>
+                <Text style={styles.helpCardSubtitle}>Get smart suggestions for any car issue !</Text>
+                <View style={styles.helpTileCornerArrow}>
+                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
+                </View>
               </TouchableOpacity>
             </View>
           </LinearGradient>
+          </View>
         </View>
 
-        {/* General Tips with icons and bullet lists */}
-        <LinearGradient colors={GRADIENT_BORDER} style={styles.gradientCardWrap}>
-          <View style={styles.gradientCardInner}>
-            <View style={styles.sectionCard}>
-              <View style={styles.tipsHeaderRow}>
-                <Text style={styles.sectionTitle}>General Tips for Your Honda Civic</Text>
-                <Ionicons name="chevron-forward" size={18} color="#5FA8D3" />
-              </View>
-
-              <View style={styles.tipsBlock}>
-                {/* Known Common Issues */}
+        <View style={styles.dashSection}>
+          <View style={styles.dashSectionHeader}>
+            <View style={styles.dashSectionTitleRow}>
+              <Text style={styles.dashSectionTitle}>
+                General Tips for Your {tipsVehicleLabel}
+              </Text>
+              <Ionicons name="information-circle-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
+            </View>
+          </View>
+          <LinearGradient colors={GRADIENT_BORDER} style={styles.tipsGradientWrap}>
+            <View style={styles.tipsGradientInner}>
                 <View style={styles.tipCategoryRow}>
                   <Ionicons
-                    name="alert-circle-outline"
+                    name="warning-outline"
                     size={18}
-                    color="#5FA8D3"
+                    color={GRAY}
                     style={styles.tipCategoryIcon}
                   />
                   <Text style={styles.tipCategoryTitle}>Known Common Issues</Text>
@@ -279,11 +392,11 @@ export default function Dashboard() {
                 </View>
 
                 {/* Wear & Performance Notes */}
-                <View style={[styles.tipCategoryRow, { marginTop: 16 }]}>
+                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
                   <Ionicons
                     name="build-outline"
                     size={18}
-                    color="#5FA8D3"
+                    color={GRAY}
                     style={styles.tipCategoryIcon}
                   />
                   <Text style={styles.tipCategoryTitle}>Wear & Performance Notes</Text>
@@ -308,11 +421,11 @@ export default function Dashboard() {
                 </View>
 
                 {/* Recommended Checks */}
-                <View style={[styles.tipCategoryRow, { marginTop: 16 }]}>
+                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
                   <Ionicons
-                    name="clipboard-outline"
+                    name="search-circle-outline"
                     size={18}
-                    color="#5FA8D3"
+                    color={GRAY}
                     style={styles.tipCategoryIcon}
                   />
                   <Text style={styles.tipCategoryTitle}>Recommended Checks</Text>
@@ -337,11 +450,11 @@ export default function Dashboard() {
                 </View>
 
                 {/* General Care Tips */}
-                <View style={[styles.tipCategoryRow, { marginTop: 16 }]}>
+                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
                   <Ionicons
-                    name="car-sport-outline"
+                    name="car-outline"
                     size={18}
-                    color="#5FA8D3"
+                    color={GRAY}
                     style={styles.tipCategoryIcon}
                   />
                   <Text style={styles.tipCategoryTitle}>General Care Tips</Text>
@@ -370,10 +483,9 @@ export default function Dashboard() {
                     Let engine warm up before aggressive driving to protect turbo.
                   </Text>
                 </View>
-              </View>
             </View>
-          </View>
-        </LinearGradient>
+          </LinearGradient>
+        </View>
       </ScrollView>
 
       {/* AAA popup - bg blur + gradient card + icons & text */}
@@ -384,13 +496,30 @@ export default function Dashboard() {
         onRequestClose={() => setShowAAAModal(false)}
       >
         <View style={styles.modalBackdropWrap}>
-          <BlurView intensity={80} style={styles.blurFill} tint="dark" />
+          <BlurView intensity={MODAL_BLUR_INTENSITY} style={styles.blurFill} tint="default" />
           <Pressable style={styles.modalBackdrop} onPress={() => setShowAAAModal(false)}>
             <Pressable onPress={() => {}}>
               <LinearGradient colors={GRADIENT_BORDER} style={styles.modalGradientWrap}>
                 <View style={styles.modalCard}>
                   <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>AAA Roadside Assistance</Text>
+                    <View style={styles.modalTitleRow}>
+                      <MaskedView
+                        maskElement={
+                          <Text style={[styles.modalTitle, styles.modalTitleMask]}>AAA</Text>
+                        }
+                      >
+                        <LinearGradient
+                          colors={GRADIENT_BORDER}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                        >
+                          <Text style={[styles.modalTitle, styles.modalTitleGradientPlaceholder]}>
+                            AAA
+                          </Text>
+                        </LinearGradient>
+                      </MaskedView>
+                      <Text style={styles.modalTitle}> Roadside Assistance</Text>
+                    </View>
                     <Pressable onPress={() => setShowAAAModal(false)} hitSlop={12}>
                       <Ionicons name="close" size={22} color="#5FA8D3" />
                     </Pressable>
@@ -415,9 +544,12 @@ export default function Dashboard() {
                   </View>
                   <View style={styles.aaaSection}>
                     <Ionicons name="warning-outline" size={20} color="#F16063" style={styles.aaaIcon} />
-                    <Text style={styles.modalBodyText}>
-                      Not a Member? AAA may offer pay-per-service roadside help depending on availability.
-                    </Text>
+                    <View>
+                      <Text style={styles.aaaLabel}>Not a Member?</Text>
+                      <Text style={styles.modalBodyText}>
+                        AAA may offer pay-per-service roadside help depending on availability.
+                      </Text>
+                    </View>
                   </View>
                   <View style={styles.aaaServicesRow}>
                     <Text style={styles.aaaServicesText}>Towing • Battery • Flat Tire • Fuel • Lockout</Text>
@@ -437,7 +569,7 @@ export default function Dashboard() {
         onRequestClose={() => setShowMechanicModal(false)}
       >
         <View style={styles.modalBackdropWrap}>
-          <BlurView intensity={80} style={styles.blurFill} tint="dark" />
+          <BlurView intensity={MODAL_BLUR_INTENSITY} style={styles.blurFill} tint="default" />
           <Pressable style={styles.modalBackdrop} onPress={() => setShowMechanicModal(false)}>
             <Pressable style={styles.mechanicModalCard} onPress={(e) => e.stopPropagation()}>
               <LinearGradient colors={GRADIENT_BORDER} style={styles.mechanicModalGradientWrap}>
@@ -560,33 +692,20 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#F3F3F3',
-  },
-
-  screenOverride: {
     paddingHorizontal: 20,
   },
 
   scrollContent: {
     paddingTop: 60,
-    paddingBottom: 120,
+    /** Tight bottom inset so scroll stops near the General Tips card + tab bar */
+    paddingBottom: 72,
+    /** Without this, rows inside ScrollView can shrink-wrap and the car menu collapses to ~0 width */
+    width: CONTENT_WIDTH,
+    alignSelf: 'center',
   },
 
-  scrollContentOverride: {
-    paddingHorizontal: 0,
-  },
-
-  gradientCardWrap: {
-    padding: 1,
-    borderRadius: 26,
-    marginBottom: 14,
-    overflow: 'hidden',
-  },
-
-  gradientCardInner: {
-    margin: 2,
-    borderRadius: 22,
-    backgroundColor: '#FFF',
-    overflow: 'hidden',
+  heroOuter: {
+    marginBottom: 0,
   },
 
   topRow: {
@@ -594,44 +713,127 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 12,
+    width: '100%',
   },
 
+  /**
+   * Fills space left of Scan. Min/max use CONTENT_WIDTH so the trigger + absolute menu stay readable.
+   */
   carSelectorGroup: {
     flex: 1,
+    flexShrink: 0,
+    minWidth: Math.round(CONTENT_WIDTH * 0.42),
+    maxWidth: Math.round(CONTENT_WIDTH * 0.78),
     marginRight: 10,
+    zIndex: 30,
   },
 
-  carChipsRow: {
+  carDropdownAnchor: {
+    position: 'relative',
+    width: '100%',
+  },
+
+  carDropdownHit: {
+    width: '100%',
+  },
+
+  carDropdownFrame: {
+    padding: GRADIENT_FRAME,
+    borderRadius: 999,
+    overflow: 'hidden',
+    width: '100%',
+  },
+
+  carDropdownInner: {
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    overflow: 'hidden',
+  },
+
+  carDropdownTriggerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    justifyContent: 'space-between',
+    gap: 8,
   },
 
-  carChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#D6D6D6',
-    backgroundColor: '#FFFFFF',
+  carDropdownTriggerText: {
+    flex: 1,
+    minWidth: 0,
   },
 
-  carChipActive: {
-    borderColor: '#84D2F6',
-    backgroundColor: '#E8F6FF',
-  },
-
-  carChipTitle: {
+  carDropdownTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#5FA8D3',
+    color: TIP_TITLE_BLUE,
   },
 
-  carChipSubtitle: {
+  carDropdownSubtitle: {
     fontSize: 11,
-    color: '#8D8D8D',
+    color: GRAY,
+    marginTop: 2,
   },
 
+  carDropdownMenuOuter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: '100%',
+    marginTop: 8,
+    padding: GRADIENT_FRAME,
+    borderRadius: 16,
+    overflow: 'hidden',
+    zIndex: 40,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+  },
+
+  carDropdownMenuInner: {
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 4,
+    overflow: 'hidden',
+  },
+
+  carDropdownRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+
+  carDropdownRowActive: {
+    backgroundColor: '#F5FAFF',
+  },
+
+  carDropdownRowText: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  carDropdownRowTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: TIP_TITLE_BLUE,
+  },
+
+  carDropdownRowSubtitle: {
+    fontSize: 11,
+    color: GRAY,
+    marginTop: 2,
+  },
+
+  carDropdownRowSpacer: {
+    width: 22,
+    height: 22,
+  },
+
+  /** Same as timeline.tsx — blue pill, white scan icon + label */
   scanButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -649,13 +851,8 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
 
-  heroCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
-    padding: 12,
-  },
-
   heroImagePlaceholder: {
+    width: '100%',
     height: 170,
     borderRadius: 18,
     backgroundColor: '#E8E8E8',
@@ -664,42 +861,51 @@ const styles = StyleSheet.create({
   },
 
   heroPlaceholderText: {
-    color: '#8D8D8D',
+    color: GRAY,
     fontSize: 14,
   },
 
-  sectionCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
-    padding: 12,
+  /** Upcoming / Need Help / General Tips — equal vertical rhythm */
+  dashSection: {
+    marginVertical: 20,
   },
 
-  sectionTitle: {
+  dashSectionHeader: {
+    marginBottom: 15,
+  },
+
+  dashSectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    maxWidth: '100%',
+  },
+
+  dashSectionTitle: {
     fontSize: 17,
-    fontWeight: '600',
-    color: '#5FA8D3',
-    marginBottom: 8,
+    fontWeight: '700',
+    color: GRAY,
+    flexShrink: 1,
+  },
+
+  dashSectionTitleIcon: {
+    marginLeft: 6,
   },
 
   servicePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF8F8',
+    backgroundColor: SERVICE_ALERT_BG,
     borderRadius: 999,
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: '#F7C5C5',
+    borderColor: SERVICE_ALERT_RED,
   },
 
-  serviceIconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#FFE5E5',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
+  serviceSparkIcon: {
+    paddingRight: 5,
+    marginRight: 5,
   },
 
   serviceTextBlock: {
@@ -708,77 +914,94 @@ const styles = StyleSheet.create({
 
   serviceTitle: {
     fontSize: 15,
-    fontWeight: '500',
-    color: '#F16063',
+    fontWeight: '700',
+    color: GRAY,
+    marginLeft: 1,
   },
 
   serviceSubtitle: {
     fontSize: 13,
-    color: '#8D8D8D',
+    fontWeight: '400',
+    color: GRAY,
+    marginTop: 2,
+    marginLeft: 1,
   },
 
-  needHelpTitle: {
-    marginBottom: 8,
-  },
+  /* Help section row with 3 tiles */
 
   helpRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 6,
-    marginBottom: 14,
   },
 
   helpTileGradientWrap: {
     flex: 1,
-    padding: 2,
-    borderRadius: 20,
+    padding: GRADIENT_FRAME,
+    borderRadius: 17,
     overflow: 'hidden',
   },
 
   helpTileGradientInner: {
     flex: 1,
-    margin: 2,
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     overflow: 'hidden',
   },
 
   helpTile: {
+    position: 'relative',
     flex: 1,
-    borderRadius: 16,
-    paddingVertical: 10,
+    minHeight: 118,
+    paddingVertical: 12,
     paddingHorizontal: 8,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingBottom: 28,
+    backgroundColor: 'transparent',
+    alignItems: 'stretch',
+    justifyContent: 'flex-start',
   },
 
-  helpTitle: {
-    marginTop: 4,
-    fontSize: 12,
-    textAlign: 'center',
-    color: '#5FA8D3',
-    fontWeight: '600',
-  },
-
-  helpSubtitle: {
-    marginTop: 2,
-    fontSize: 10,
-    textAlign: 'center',
-    color: '#8D8D8D',
-    paddingHorizontal: 2,
-  },
-
-  /* General Tips */
-  tipsHeaderRow: {
+  helpTileTopRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    gap: 6,
   },
 
-  tipsBlock: {
-    marginTop: 4,
+  helpCardTitle: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '700',
+    color: GRAY,
+    lineHeight: 16,
+  },
+
+  helpCardSubtitle: {
+    marginTop: 6,
+    fontSize: 10,
+    fontWeight: 500,
+    lineHeight: 14,
+    color: GRAY,
+    paddingRight: 4,
+  },
+
+  helpTileCornerArrow: {
+    position: 'absolute',
+    right: 6,
+    bottom: 6,
+  },
+
+  tipsGradientWrap: {
+    padding: GRADIENT_FRAME,
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+
+  tipsGradientInner: {
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    padding: 12,
+    overflow: 'hidden',
   },
 
   tipCategoryRow: {
@@ -786,14 +1009,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  tipCategoryRowAfterBlock: {
+    marginTop: 16,
+  },
+
   tipCategoryIcon: {
-    marginRight: 6,
+    marginRight: 4,
   },
 
   tipCategoryTitle: {
-    fontSize: 14,
+    flex: 1,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#5FA8D3',
+    color: TIP_TITLE_BLUE,
   },
 
   tipBulletRow: {
@@ -806,7 +1034,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#8D8D8D',
+    backgroundColor: GRAY,
     marginTop: 7,
     marginRight: 6,
   },
@@ -814,7 +1042,7 @@ const styles = StyleSheet.create({
   tipBulletText: {
     flex: 1,
     fontSize: 13,
-    color: '#8D8D8D',
+    color: GRAY,
     lineHeight: 18,
   },
 
@@ -833,14 +1061,14 @@ const styles = StyleSheet.create({
 
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: MODAL_DIM_OVERLAY,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 12,
   },
 
   modalGradientWrap: {
-    padding: 2,
+    padding: GRADIENT_FRAME,
     borderRadius: 24,
     overflow: 'hidden',
     width: '100%',
@@ -848,7 +1076,7 @@ const styles = StyleSheet.create({
   },
 
   modalCard: {
-    margin: 2,
+    margin: GRADIENT_FRAME,
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
     padding: 14,
@@ -893,14 +1121,14 @@ const styles = StyleSheet.create({
   },
 
   mechanicModalGradientWrap: {
-    padding: 2,
+    padding: GRADIENT_FRAME,
     borderRadius: 24,
     overflow: 'hidden',
     width: '100%',
   },
 
   mechanicModalInner: {
-    margin: 2,
+    margin: GRADIENT_FRAME,
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
     padding: 12,
@@ -916,7 +1144,7 @@ const styles = StyleSheet.create({
   },
 
   mapGradientWrap: {
-    padding: 2,
+    padding: GRADIENT_FRAME,
     borderRadius: 16,
     overflow: 'hidden',
     width: '100%',
@@ -1132,10 +1360,23 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
+  modalTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#5FA8D3',
+  },
+
+  modalTitleMask: {
+    color: '#000',
+  },
+
+  modalTitleGradientPlaceholder: {
+    opacity: 0,
   },
 
   modalBodyText: {
