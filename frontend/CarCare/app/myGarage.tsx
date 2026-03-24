@@ -2,26 +2,26 @@
  * My Garage — lists vehicles from `useGarage()`.
  */
 
+import AnimatedGradientBackground from '@/components/animatedBackground';
+import { useGarage } from '@/context/GarageContext';
+import { resolveVehicleImageSource } from '@/lib/garage/resolveVehicleImage';
+import { selectGarageTags } from '@/lib/garage/selectGarageTags';
+import { GradientText } from '@/styles/global';
+import type { GarageVehicle, ServiceSeverity, VehicleServiceItem } from '@/types/garage';
+import { Ionicons } from '@expo/vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
-import AnimatedGradientBackground from '@/components/animatedBackground';
-import { GradientText } from '@/styles/global';
-import { useGarage } from '@/context/GarageContext';
-import { selectGarageTags } from '@/lib/garage/selectGarageTags';
-import { resolveVehicleImageSource } from '@/lib/garage/resolveVehicleImage';
-import type { GarageVehicle, ServiceSeverity, VehicleServiceItem } from '@/types/garage';
 
 // =============================================================================
 // Constants & small helpers — tag colors/icons and gradient for “+” icon
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 14,
     marginLeft: 6,
-    marginTop: 0,
+    marginTop: 55,
     alignSelf: 'flex-start',
   },
 

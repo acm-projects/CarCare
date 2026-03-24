@@ -1,14 +1,13 @@
 
-import React, { useEffect, useRef } from 'react';
 import { Image } from 'expo-image';
-import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useRouter, Router } from 'expo-router';
-import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
+import { auth } from "../firebase";
+import { globalStyles, GradientText } from '../styles/global';
 
 export default function LogIn() {
   
@@ -81,7 +80,7 @@ export default function LogIn() {
             // Apply the animated translateY value
             transform: [{ translateY: slideAnim }],
           }}>
-        <View style = {[styles.logInContainer, { height: .6 * height}]}>
+        <View style = {[styles.logInContainer, { height: .6 * height,width: '100%'}]}>
           <View style = {styles.subContainer}>
             <GradientText style={globalStyles.gradientH2}>Email</GradientText>
             <TextInput
