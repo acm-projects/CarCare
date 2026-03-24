@@ -18,6 +18,8 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
 
+        
+
         tabBarStyle: {
           height: 70,
           justifyContent: 'center',

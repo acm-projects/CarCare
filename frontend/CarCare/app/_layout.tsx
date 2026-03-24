@@ -22,6 +22,7 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <JsStack
       screenOptions={{
+        headerShown: false,
         cardOverlayEnabled: true, // Enable card overlay for transitions
         gestureEnabled: true, // Enable gesture-based navigation
         cardStyleInterpolator: ({ current, next, layouts }) => {
@@ -64,14 +65,6 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
-        <Stack.Screen name="logIn" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '', 
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-        />
         <Stack.Screen name="vinEnter" options={{
             headerShown: true,
             headerTransparent: true,
@@ -92,6 +85,7 @@ export default function RootLayout() {
             headerShown: true,
             headerTransparent: true,
             headerTitle: '', 
+
             headerBackTitle: 'Back',
             headerTintColor: '#fff',    // back button color
           }}

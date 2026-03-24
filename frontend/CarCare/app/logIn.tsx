@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Image } from 'expo-image';
 import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, Router } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from "react";
@@ -60,7 +60,11 @@ export default function LogIn() {
       style={{ flex: 1 }}
     >
     <View style={globalStyles.container}>
-      <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
+      <TouchableOpacity style={{ alignSelf: 'flex-start',}}
+        onPress={() => { router.back() }}>
+        <Text style={globalStyles.whiteH2}>{`< Back`}</Text>
+      </TouchableOpacity>
+        <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
           style={{width: 100, height: 100}}></Image>
         <Text style = {globalStyles.whiteTitle}>Welcome back!</Text>
