@@ -9,6 +9,7 @@ import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.cloud.vision.v1.TextAnnotation;
 import com.google.protobuf.ByteString;
 import org.springframework.stereotype.Service;
+import com.example.demo.inspections.dto.OcrResult;
 
 import java.util.List;
 
@@ -45,5 +46,16 @@ public class InspectionOcrService {
             }
             return annotation.getText();
         }
+    }
+
+    public OcrResult extractOcrResult(byte[] bytes, String filename) throws Exception {
+        String text = extractTextFromBytes(bytes);
+
+        return new OcrResult(
+                true,
+                filename == null ? "upload" : filename,
+                text,
+                "OCR extraction completed"
+        );
     }
 }

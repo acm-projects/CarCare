@@ -1,48 +1,45 @@
 package com.example.demo.inspections.controller;
 
+import com.example.demo.VehicleDataService;
 import com.example.demo.inspections.dto.RepairVideoDto;
-import com.example.demo.inspections.dto.VehicleInfoDto;
-import com.example.demo.inspections.service.VinService;
 import com.example.demo.inspections.service.YouTubeService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/repair")
 public class RepairVideoController {
 
-    private final VinService vinService;
+    private final VehicleDataService vehicleDataService;
     private final YouTubeService youTubeService;
 
-    public RepairVideoController(VinService vinService, YouTubeService youTubeService) {
-        this.vinService = vinService;
+    public RepairVideoController(
+            VehicleDataService vehicleDataService,
+            YouTubeService youTubeService
+    ) {
+        this.vehicleDataService = vehicleDataService;
         this.youTubeService = youTubeService;
     }
 
-    @GetMapping("/videos")
-    public Map<String, Object> getRepairVideos(
-            @RequestParam String vin,
-            @RequestParam String repairType
-    ) {
-        VehicleInfoDto vehicle = vinService.decodeVin(vin);
-        List<RepairVideoDto> videos = youTubeService.searchRepairVideos(
-                vehicle.getYear(),
-                vehicle.getMake(),
-                vehicle.getModel(),
-                repairType
-        );
+    @GetMapping("/repair-videos")
+    public List<RepairVideoDto> getRepairVideos() {
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("vehicle", vehicle);
-        response.put("repairType", repairType);
-        response.put("videos", videos);
+        String userId = "AKIiy6bhptbENCSfwFiztG6D0zl1";
+        String vehicleId = "1HGCM82633A004352";
+        String repairType = "oil change";
 
-        return response;
+        Map<String, Object> car = vehicleDataService.getVehicleById(userId, vehicleId);
+
+        if (car == null) {
+            throw new RuntimeException("Car not found in Firestore");
+        }
+
+        String year = String.valueOf(car.get("year"));
+        String make = String.valueOf(car.get("make"));
+        String model = String.valueOf(car.get("model"));
+
+        return youTubeService.searchRepairVideos(year, make, model, repairType);
     }
 }
