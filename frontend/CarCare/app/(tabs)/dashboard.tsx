@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-  Pressable,
-  Linking,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import {
+  Dimensions,
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -146,7 +146,7 @@ export default function Dashboard() {
   };
 
   const handleScanPress = () => {
-    router.push('/myGarage');
+    router.push('/scanCamera');
   };
 
   const handleServiceTimelinePress = () => {
