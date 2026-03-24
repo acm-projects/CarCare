@@ -15,7 +15,7 @@ export function GradientText({ children, style }) {
       }
     >
       <LinearGradient
-        colors={['#84D2F6', '#386FA4']}
+        colors={['#53c1f3', '#3272ae']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
@@ -35,11 +35,20 @@ export function GradientText({ children, style }) {
 export const globalStyles = StyleSheet.create ({
   container: {
     flex: 1,
-    width: '100%',
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
     gap: 15,
+  },
+
+  horizontalContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  verticalContainer: {
+    flexDirection: 'column',
   },
 
   containerWhite: {
@@ -66,13 +75,13 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 40,
     color: '#fff',
-    fontWeight: 400,
+    fontWeight: 500,
     textAlign: 'center'
   },
 
   gradientTitle: {
     fontFamily: 'Onest',
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: 400,
   },
     
@@ -81,6 +90,7 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 30,
     textAlign: 'center',
     padding: 10,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
@@ -91,12 +101,19 @@ export const globalStyles = StyleSheet.create ({
     color: '#fff',
     textAlign: 'center',
     width: 400,
+    fontWeight: 500,
     paddingHorizontal: 30,
   },
 
   gradientH2: {
     fontFamily: 'Onest',
     fontSize: 25,
+    fontWeight: 500,
+  },
+  gradientH1: {
+    fontFamily: 'Onest',
+    fontWeight: 500,
+    fontSize: 19,
   },
 
   whiteH2:
@@ -121,6 +138,7 @@ export const globalStyles = StyleSheet.create ({
     fontFamily: 'Onest',
     fontSize: 25,
     color: '#fff',
+    fontWeight: 500,
     textAlign: 'center',
   },
 
@@ -128,14 +146,24 @@ export const globalStyles = StyleSheet.create ({
   {
     fontFamily: 'Onest',
     fontSize: 25,
+    fontWeight: 500,
     textAlign: 'center',
   },
 
   grayP: {
     fontFamily: 'Onest',
-    fontSize: 15,
+    fontSize: 17,
     color: '#8d8d8d',
   },
+
+  grayP2: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    fontWeight: 500,
+    color: '#8d8d8d',
+  },
+
+
   // Button styles
   
   whiteButton:{
@@ -143,7 +171,11 @@ export const globalStyles = StyleSheet.create ({
     borderRadius:50,
     width: 300,
     height: 60,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    shadowColor: 'gray',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
   },
 
   gradientButton: {
@@ -152,6 +184,10 @@ export const globalStyles = StyleSheet.create ({
     width: 300,
     height: 60,
     backgroundColor:'transparent',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
+    
   },
   
 });

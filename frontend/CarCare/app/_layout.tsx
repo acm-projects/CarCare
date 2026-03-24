@@ -7,6 +7,8 @@ import { JsStack } from '@/components/JsStack';
 import { Easing } from "react-native-reanimated";
 const ANIMATION_DURATION = 550;
 import { useColorScheme } from '@/hooks/use-color-scheme';
+// Backend integration: shared garage list + add/remove (see `context/GarageContext.tsx`).
+import { GarageProvider } from '@/context/GarageContext';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -20,8 +22,11 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GarageProvider>
+      {/* Navigation stack — garage state available in all routes below */}
       <JsStack
       screenOptions={{
+        headerShown: false,
         cardOverlayEnabled: true, // Enable card overlay for transitions
         gestureEnabled: true, // Enable gesture-based navigation
         cardStyleInterpolator: ({ current, next, layouts }) => {
@@ -64,14 +69,6 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
-        <Stack.Screen name="logIn" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '', 
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-        />
         <Stack.Screen name="vinEnter" options={{
             headerShown: true,
             headerTransparent: true,
@@ -92,6 +89,7 @@ export default function RootLayout() {
             headerShown: true,
             headerTransparent: true,
             headerTitle: '', 
+
             headerBackTitle: 'Back',
             headerTintColor: '#fff',    // back button color
           }}
@@ -106,6 +104,7 @@ export default function RootLayout() {
         />
       </JsStack>
       <StatusBar style="auto" />
+      </GarageProvider>
     </ThemeProvider>
   );
 }

@@ -1,74 +1,104 @@
-import { Image } from 'expo-image';
-import { StyleSheet, Text, View, TouchableOpacity, useWindowDimensions } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, ScrollView, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
-import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Divider from '@/styles/divider';
 
-export default function dashboard() {
+export default function Settings() {
 
   const router = useRouter();
   const { height } = useWindowDimensions();
 
   return (
-    <LinearGradient
-      colors={['#386FA4', '#84D2F6']}
-      start={{ x: 1, y: 0.5 }}
-      end={{ x: 0, y: 0.5 }}
-      style={{ flex: 1 }}
+    <ScrollView
+      contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
+      showsVerticalScrollIndicator={false}
     >
-    <View style={[globalStyles.container, ]}>
-      {}
+    <View style={[globalStyles.container]}>
+      {/*Settings container. Includes profile, password, and notificaiton settings*/}
         <View style={styles.topSection}>
-          <Text style = {[globalStyles.whiteTitle, {paddingBottom: 15}]}>Settings</Text>
-          <View style = {[styles.whiteContainer, { height: .3 * height}]}>
-            <View style = {styles.subContainer}>
+          {/*header*/}
+          <GradientText style = {[globalStyles.gradientHeader, {paddingBottom: 25}]}>Settings</GradientText>
+          <View style = {[styles.whiteContainer, { height: .5 * height, padding:25}]}>
+            <View style = {[styles.subContainer]}>
               <GradientText style={globalStyles.gradientH2}>Account</GradientText>
-              <View style = {styles.settingsContainer}>
-                <Ionicons name="person-outline" size={30} color='#8d8d8d' />
-                <Text style = {globalStyles.grayP}>Profile</Text>
-              </View>
-              <View style = {styles.settingsContainer}>
-                <Ionicons name="lock-closed-outline" size={30} color='#8d8d8d' />
-                <Text style = {globalStyles.grayP}>Password</Text>
-              </View>
-              <View style = {styles.settingsContainer}>
-                <Ionicons name="notifications-outline" size={30} color='#8d8d8d' />
-                <Text style = {globalStyles.grayP}>Notifications</Text>
-              </View>
+
+              {/* Nav to the profile settings */}
+              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+                  <View style = {styles.settingsContainer}>
+                    <Ionicons name="person-outline" size={30} color='#8d8d8d' />
+                    <Text style = {globalStyles.grayP}>Profile</Text>
+                  </View>
+              </TouchableOpacity>
+
+              {/* Nav to the password settings */}
+              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+                  <View style = {styles.settingsContainer}>
+                    <Ionicons name="lock-closed-outline" size={30} color='#8d8d8d' />
+                    <Text style = {globalStyles.grayP}>Password</Text>
+                  </View>
+              </TouchableOpacity>
+
+              {/* Nav to the notification settings */}
+              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+                  <View style = {styles.settingsContainer}>
+                  <Ionicons name="notifications-outline" size={30} color='#8d8d8d' />
+                  <Text style = {globalStyles.grayP}>Notifications</Text>
+                </View>
+              </TouchableOpacity>
+
             </View>
-          </View>
-        </View>
-        {}
-        <View style={styles.bottomSection}>
-          <View style = {[styles.whiteContainer, { height: .17 * height}]}>
-            <View style = {styles.subContainer}>
+
+            <Divider/>
+
+            <View style = {[styles.subContainer]}>
+
               <GradientText style={globalStyles.gradientH2}>More</GradientText>
-              <View style = {styles.settingsContainer}>
-                <Ionicons name="checkmark" size={30} color='#8d8d8d' />
-                <Text style = {globalStyles.grayP}>About</Text>
-              </View>
-              <View style = {styles.settingsContainer}></View>
+
+              {/*Nav to help page */}
+              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+                  <View style = {styles.settingsContainer}>
+                  <Ionicons name="help-circle-outline" size={30} color='#8d8d8d' />
+                  <Text style = {globalStyles.grayP}>Help</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </View>
+            {/* Button to log out */}
+              <TouchableOpacity onPress={ () => router.push('/')}>
+                  <View style = {styles.settingsContainer}>
+                  <Ionicons name="log-out" size={30} color='#8d8d8d' />
+                  <Text style = {globalStyles.grayP}>Log Out</Text>
+                </View>
+              </TouchableOpacity>
         </View>
       </View>
-  </LinearGradient>
+    </View>
+  </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
 
+  scrollContent: {
+    paddingTop: 60,
+    paddingBottom: 120,
+  },
+
+  scrollContentOverride: {
+    paddingHorizontal: 0,
+  },
+
   topSection: {
     flex: 0.9,
     justifyContent: 'flex-end',
     alignItems: 'center',
-
   },
 
   settingsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10
   },
 
   subContainer: {
@@ -76,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'column',    
     width: 350,
-    gap: 15,
+    gap: 20,
     paddingLeft: 20,
   },
 
@@ -91,8 +121,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 35,
     width: 350,
-    gap: 125,
     alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 
 });

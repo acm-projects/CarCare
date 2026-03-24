@@ -1,22 +1,31 @@
+
+import React, { useEffect, useRef } from 'react';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link, useRouter } from 'expo-router';
+import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { useRouter, Router } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from "react";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
-import MaskedView from '@react-native-masked-view/masked-view';
-import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
 export default function LogIn() {
   
+  {/*Frontend Functions*/}
   const { height } = useWindowDimensions();
+  const slideAnim = useRef(new Animated.Value(height)).current;
 
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      //Duration in ms
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, [slideAnim]);
+
+  {/*Backend Functions*/}
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,46 +52,63 @@ export default function LogIn() {
       Alert.alert("Login failed", err?.message ?? "Unknown error");
     }
   };
-
   
-
   return (
-      <LinearGradient
-    colors={['#386FA4', '#84D2F6']}
-    start={{ x: 1, y: 0.5 }}
-    end={{ x: 0, y: 0.5 }}
-    style={{ flex: 1 }}
-  >
+    <LinearGradient
+      colors={['#3272ae', '#53c1f3']}
+      start={{ x: 1, y: 0.5 }}
+      end={{ x: 0, y: 0.5 }}
+      style={{ flex: 1 }}
+    >
     <View style={globalStyles.container}>
-      <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
-        <Image source = {require('../assets/images/carCareLogoWhite.png')}
+      <TouchableOpacity style={{ alignSelf: 'flex-start',}}
+        onPress={() => { router.back() }}>
+        <Text style={globalStyles.whiteH2}>{`< Back`}</Text>
+      </TouchableOpacity>
+        <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
+        <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
           style={{width: 100, height: 100}}></Image>
         <Text style = {globalStyles.whiteTitle}>Welcome back!</Text>
         <Text style = {globalStyles.whiteTitle}>Log in</Text>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height}]}>
-        <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>Email</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter email"
-            placeholderTextColor={'#8d8d8d'}/>
-          <GradientText style={globalStyles.gradientH2}>Password</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter password"
-            placeholderTextColor={'#8d8d8d'}
-            />
-            </View>
-            <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]} onPress={handleLogin}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
-                <Text style={globalStyles.whiteButtonText}>
-                  Log In
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+      <Animated.View
+        style={{
+            // Position the view at the bottom of its container
+            position: 'absolute',
+            bottom: 0, 
+            left: 0,
+            right: 0,
+            // Apply the animated translateY value
+            transform: [{ translateY: slideAnim }],
+          }}>
+        <View style = {[styles.logInContainer, { height: .6 * height}]}>
+          <View style = {styles.subContainer}>
+            <GradientText style={globalStyles.gradientH2}>Email</GradientText>
+            <TextInput
+              style={styles.logInBox}
+              placeholder="Enter email"
+              placeholderTextColor={'#8d8d8d'}/>
+            <GradientText style={globalStyles.gradientH2}>Password</GradientText>
+            <TextInput
+              style={styles.logInBox}
+              placeholder="Enter password"
+              placeholderTextColor={'#8d8d8d'}
+              />
+              </View>
+              <TouchableOpacity
+                style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]}
+                onPress={handleLogin}
+              >
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
+                  <Text style={globalStyles.whiteButtonText}>
+                    Log In
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+          </View>
+        </Animated.View>
       </View>
-    </View>
   </LinearGradient>
   );
 }
@@ -113,6 +139,23 @@ const styles = StyleSheet.create({
     borderBottomColor: '#8d8d8d',
     width: 300,
     paddingBottom: 5
+  },
+
+  tempGarageButton: {
+    marginTop: 16,
+    alignSelf: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: '#E8F6FF',
+    borderWidth: 1,
+    borderColor: '#5FA8D3',
+  },
+
+  tempGarageButtonText: {
+    color: '#3272ae',
+    fontSize: 14,
+    fontWeight: '600',
   },
 
 });

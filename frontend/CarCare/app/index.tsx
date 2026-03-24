@@ -14,7 +14,7 @@ export default function Index() {
 
   return (
     <LinearGradient
-      colors={['#386FA4', '#84D2F6']}
+      colors={['#3272ae', '#53c1f3']}
       start={{ x: 1, y: 0.5 }}
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
@@ -23,7 +23,7 @@ export default function Index() {
           <Image
             source={require('../assets/images/carCareLogoWhite.png')}
             style={styles.logo}/>
-          <Text style={globalStyles.whiteTitle}>
+          <Text style={globalStyles.whiteHeader}>
             The brain behind your vehicle's health.
           </Text>
         </View>
@@ -52,7 +52,7 @@ container: {
 },
 
 topSection: {
-  flex:3,
+  flex:4.5,
   justifyContent: 'center',
   alignItems: 'center',
 },
