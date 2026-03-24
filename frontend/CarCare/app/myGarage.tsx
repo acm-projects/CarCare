@@ -1,6 +1,11 @@
+/**
+ * My Garage — lists vehicles from `useGarage()`.
+ */
+
 import { Image } from 'expo-image';
 import React from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   View,
@@ -9,39 +14,54 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { globalStyles } from '@/styles/global';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { LinearGradient } from 'expo-linear-gradient';
+import AnimatedGradientBackground from '@/components/animatedBackground';
+import { GradientText } from '@/styles/global';
+import { useGarage } from '@/context/GarageContext';
+import { selectGarageTags } from '@/lib/garage/selectGarageTags';
+import { resolveVehicleImageSource } from '@/lib/garage/resolveVehicleImage';
+import type { GarageVehicle, ServiceSeverity, VehicleServiceItem } from '@/types/garage';
 
-type CarStatus = 'serviceNeeded' | 'oilChangeNeeded';
+// =============================================================================
+// Constants & small helpers — tag colors/icons and gradient for “+” icon
+// =============================================================================
 
-type Car = {
-  id: string;
-  name: string;
-  subtitle: string;
-  image: any;
-  statuses: CarStatus[];
+const CAR_NAME_GRADIENT: readonly [string, string] = ['#53c1f3', '#3272ae'];
+
+// Severity → badge color mapping for service tags on car cards
+const SEVERITY_BADGE: Record<ServiceSeverity, string> = {
+  red: '#FF6565',
+  orange: '#FFA865',
+  green: '#9DE38F',
 };
 
-const MOCK_CARS: Car[] = [
-  {
-    id: '1',
-    name: 'My Honda Civic',
-    subtitle: '2017 Honda Civic',
-    image: require('../assets/images/TypeR_HondaCivic_2017.png'),
-    statuses: [],
-  },
-  {
-    id: '2',
-    name: 'My BMW 335i',
-    subtitle: '2013 BMW 335i',
-    image: require('../assets/images/335i_BMW.png'),
-    statuses: ['serviceNeeded', 'oilChangeNeeded'],
-  },
-];
+// Icons for each case of severity (using Ionicons names)
+function iconForSeverity(severity: ServiceSeverity): React.ComponentProps<typeof Ionicons>['name'] {
+  switch (severity) {
+    case 'red':
+      return 'water';
+    case 'orange':
+      return 'flash';
+    case 'green':
+      return 'folder';
+  }
+}
+
+//displays shortLabels/tiles for car services from the timeline page. If a shortLabel exists, it will be used; otherwise, the title will be shown.
+function pillLabel(item: VehicleServiceItem): string {
+  return item.shortLabel ?? item.title;
+}
+
+// =============================================================================
+// Screen — scrollable list, loading/error, fixed log out
+// =============================================================================
 
 export default function MyGarageScreen() {
   const router = useRouter();
+  const { vehicles, loading, error } = useGarage();
 
-  const handleViewCar = (carId: string) => {
+  const handleViewCar = () => {
     router.push('/dashboard');
   };
 
@@ -54,48 +74,67 @@ export default function MyGarageScreen() {
   };
 
   return (
-    <View style={[globalStyles.container, styles.screen]}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>My Garage</Text>
+    <View style={styles.root}>
+      {/* Subtle animated gradient behind content */}
+      <View style={styles.bgWrap} pointerEvents="none">
+        <AnimatedGradientBackground timeSpeed={2.5} />
+      </View>
 
-        {MOCK_CARS.map((car) => (
-          <CarCard
-            key={car.id}
-            car={car}
-            onPressView={() => handleViewCar(car.id)}
-          />
-        ))}
+      <View style={styles.screen}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <GradientText style={styles.titleGradient}>My Garage</GradientText>
 
-        <NewCarCard onPress={handleCreateNew} />
-      </ScrollView>
+          {loading && (
+            <View style={styles.loadingRow}>
+              <ActivityIndicator color="#5FA8D3" />
+            </View>
+          )}
 
-      <TouchableOpacity style={styles.logoutContainer} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={26} color="#8D8D8D" />
-        <Text style={styles.logoutText}>Log out</Text>
-      </TouchableOpacity>
+          {error != null && <Text style={styles.errorText}>{error.message}</Text>}
+
+          {!loading &&
+            vehicles.map((car) => (
+              <CarCard key={car.id} car={car} onPressView={handleViewCar} />
+            ))}
+
+          <NewCarCard onPress={handleCreateNew} />
+        </ScrollView>
+
+        <TouchableOpacity style={styles.logoutContainer} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={26} color="#8D8D8D" />
+          <Text style={styles.logoutText}>Log out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
+// =============================================================================
+// Car card — name, subtitle, service pills, image, View CTA
+// =============================================================================
+
 type CarCardProps = {
-  car: Car;
+  car: GarageVehicle;
   onPressView: () => void;
 };
 
 function CarCard({ car, onPressView }: CarCardProps) {
+  const tags = selectGarageTags(car.services, 2);
+  const imageSource = resolveVehicleImageSource(car);
+
   return (
     <View style={styles.card}>
       <View style={styles.cardLeft}>
-        <Text style={styles.carName}>{car.name}</Text>
+        <GradientText style={styles.carNameGradient}>{car.displayName}</GradientText>
         <Text style={styles.carSubtitle}>{car.subtitle}</Text>
 
-        {car.statuses.length > 0 && (
+        {tags.length > 0 && (
           <View style={styles.statusRow}>
-            {car.statuses.map((status) => (
-              <StatusPill key={status} status={status} />
+            {tags.map((item) => (
+              <StatusPill key={item.id} item={item} />
             ))}
           </View>
         )}
@@ -105,62 +144,137 @@ function CarCard({ car, onPressView }: CarCardProps) {
         </TouchableOpacity>
       </View>
 
-      <Image source={car.image} style={styles.carImage} contentFit="contain" />
+      <Image source={imageSource} style={styles.carImage} contentFit="contain" />
     </View>
   );
 }
 
+// =============================================================================
+// Status pill — one timeline service as a compact tag (severity → color/icon)
+// =============================================================================
+
 type StatusPillProps = {
-  status: CarStatus;
+  item: VehicleServiceItem;
 };
 
-function StatusPill({ status }: StatusPillProps) {
-  const label =
-    status === 'serviceNeeded' ? 'service needed' : 'oil change needed';
-
-  const iconName =
-    status === 'serviceNeeded' ? 'warning' : 'construct-outline';
+function StatusPill({ item }: StatusPillProps) {
+  const badgeColor = SEVERITY_BADGE[item.severity];
+  const iconName = iconForSeverity(item.severity);
 
   return (
     <View style={styles.statusPill}>
-      <Ionicons name={iconName} size={12} color="#F16063" />
-      <Text style={styles.statusText}>{label}</Text>
+      <View style={[styles.statusIconBadge, { backgroundColor: badgeColor }]}>
+        <Ionicons name={iconName} size={14} color="#FFFFFF" />
+      </View>
+      <Text style={styles.statusText}>{pillLabel(item)}</Text>
     </View>
   );
 }
+
+// =============================================================================
+// “Create new car profile” row — gradient title + masked gradient plus
+// =============================================================================
 
 type NewCarCardProps = {
   onPress: () => void;
 };
 
+function NewCarGradientPlus({ size }: { size: number }) {
+  return (
+    <MaskedView style={{ width: size, height: size }} maskElement={<PlusMask size={size} />}>
+      <LinearGradient
+        colors={CAR_NAME_GRADIENT}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={{ width: size, height: size }}
+      >
+        <View style={{ width: size, height: size, opacity: 0 }} />
+      </LinearGradient>
+    </MaskedView>
+  );
+}
+
+function PlusMask({ size }: { size: number }) {
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+      }}
+    >
+      <Ionicons name="add" size={size} color="#000000" />
+    </View>
+  );
+}
+
 function NewCarCard({ onPress }: NewCarCardProps) {
   return (
     <TouchableOpacity style={styles.newCard} onPress={onPress} activeOpacity={0.8}>
-      <Text style={styles.newCardText}>Create new{'\n'}car profile</Text>
-      <Ionicons name="add" size={54} color="#84D2F6" />
+      <View style={styles.newCardTextWrap}>
+        <GradientText style={styles.newCardText}>
+          Create new{'\n'}car profile
+        </GradientText>
+      </View>
+      <NewCarGradientPlus size={44} />
     </TouchableOpacity>
   );
 }
 
+// =============================================================================
+// Styles
+// =============================================================================
+
+const cardElevation = {
+  shadowColor: '#000' as const,
+  shadowOpacity: 0.12,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 5,
+};
+
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+
+  bgWrap: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
+  },
+
   screen: {
     flex: 1,
-    backgroundColor: '#F3F3F3',
+    backgroundColor: 'rgba(243, 243, 243, 0.94)',
+    zIndex: 1,
   },
 
   scrollContent: {
-    paddingTop: 90,
+    paddingTop: 12,
     paddingHorizontal: 22,
-    paddingBottom: 140,
+    paddingBottom: 120,
   },
 
-  title: {
-    marginTop: -80,
-    fontSize: 52,
-    fontWeight: '300',
-    color: '#5FA8D3',
-    marginBottom: 26,
+  titleGradient: {
+    fontSize: 38,
+    fontWeight: '400',
+    marginBottom: 14,
+    marginLeft: 6,
+    marginTop: 0,
     alignSelf: 'flex-start',
+  },
+
+  loadingRow: {
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+
+  errorText: {
+    color: '#E53935',
+    fontSize: 14,
+    marginBottom: 12,
   },
 
   card: {
@@ -168,18 +282,13 @@ const styles = StyleSheet.create({
     minHeight: 190,
     backgroundColor: '#FFFFFF',
     borderRadius: 28,
-    marginBottom: 24,
+    marginBottom: 18,
     paddingLeft: 16,
     paddingRight: 8,
     paddingVertical: 18,
     flexDirection: 'row',
     alignItems: 'center',
-
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
+    ...cardElevation,
   },
 
   cardLeft: {
@@ -188,43 +297,52 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
 
-  carName: {
-    fontSize: 27,
-    fontWeight: '400',
-    color: '#5FA8D3',
-    lineHeight: 34,
+  carNameGradient: {
+    fontSize: 22,
+    fontWeight: '600',
+    lineHeight: 28,
   },
 
   carSubtitle: {
     fontSize: 14,
     color: '#8D8D8D',
     marginTop: 4,
-    marginBottom: 10,
+    marginBottom: 8,
   },
 
   statusRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 14,
+    marginBottom: 12,
   },
 
   statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: 8,
     borderWidth: 1,
-    borderColor: '#D6D6D6',
+    borderColor: '#BDBDBD',
     borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    backgroundColor: '#FFF8F8',
+    paddingLeft: 8,
+    paddingRight: 12,
+    paddingVertical: 8,
+    backgroundColor: '#FFFFFF',
+  },
+
+  statusIconBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   statusText: {
-    fontSize: 11,
+    fontSize: 12,
     color: '#8D8D8D',
     fontWeight: '500',
+    lineHeight: 14,
   },
 
   viewButton: {
@@ -258,18 +376,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    ...cardElevation,
+  },
 
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
+  newCardTextWrap: {
+    flex: 1,
+    paddingRight: 8,
   },
 
   newCardText: {
     fontSize: 30,
-    fontWeight: '300',
-    color: '#84D2F6',
+    fontWeight: '500',
     lineHeight: 38,
   },
 

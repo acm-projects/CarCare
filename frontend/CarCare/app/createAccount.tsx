@@ -142,4 +142,21 @@ const styles = StyleSheet.create({
     paddingBottom: 5
   },
 
+  tempGarageButton: {
+    marginTop: 16,
+    alignSelf: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: '#E8F6FF',
+    borderWidth: 1,
+    borderColor: '#5FA8D3',
+  },
+
+  tempGarageButtonText: {
+    color: '#3272ae',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
 });
