@@ -124,6 +124,29 @@ export const globalStyles = StyleSheet.create ({
     paddingHorizontal: 30,
   },
 
+  whiteH1:
+  {
+    fontFamily: 'Onest',
+    fontSize: 19,
+    color: '#fff',
+    paddingHorizontal: 30,
+  },
+
+  whiteBackButton:
+  {
+    fontFamily: 'Onest',
+    fontSize: 21,
+    color: '#fff',
+    paddingHorizontal: 30,
+  },
+  gradientBackButton:
+  {
+    fontFamily: 'Onest',
+    fontSize: 21,
+    color: 'transparent',
+    paddingHorizontal: 30,
+  },
+
   grayH2:
   {
     fontFamily: 'Onest',

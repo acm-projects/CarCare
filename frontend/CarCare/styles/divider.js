@@ -19,7 +19,7 @@ const Divider = ({ color = '#8d8d8d', height = 1, margin = 15 }) => {
 const styles = StyleSheet.create({
   lineStyle: {
     width: '100%',
-    padding: 25,
+    padding: 10
   },
 });
 

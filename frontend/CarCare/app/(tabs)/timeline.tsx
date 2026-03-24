@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    width: 375,
+    width: '98%',
     height: 100,
     shadowColor: 'black',
     shadowOffset: { width: 1, height: 2 },

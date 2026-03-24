@@ -60,9 +60,9 @@ export default function LogIn() {
       style={{ flex: 1 }}
     >
     <View style={globalStyles.container}>
-      <TouchableOpacity style={{ alignSelf: 'flex-start',}}
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
         onPress={() => { router.back() }}>
-        <Text style={globalStyles.whiteH2}>{`< Back`}</Text>
+        <Text style={globalStyles.whiteH1}>{`< Back`}</Text>
       </TouchableOpacity>
         <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
@@ -80,7 +80,7 @@ export default function LogIn() {
             // Apply the animated translateY value
             transform: [{ translateY: slideAnim }],
           }}>
-        <View style = {[styles.logInContainer, { height: .6 * height,width: '100%'}]}>
+        <View style = {[styles.logInContainer, { height: .6 * height, width: '100%'}]}>
           <View style = {styles.subContainer}>
             <GradientText style={globalStyles.gradientH2}>Email</GradientText>
             <TextInput

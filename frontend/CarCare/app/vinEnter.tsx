@@ -29,12 +29,16 @@ export default function HomeScreen() {
     style={{ flex: 1 }}
   >
     <View style={globalStyles.container}>
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
+              onPress={() => { router.back() }}>
+              <Text style={globalStyles.whiteBackButton}>{`< Back`}</Text>
+      </TouchableOpacity>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Text style = {globalStyles.whiteTitle}>Create your car profile</Text>
         <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
           style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height}]}>
+      <View style = {[styles.logInContainer, { height: .55 * height, width: '100%'}]}>
         <View style = {styles.topSection}>
           <View style = {styles.subContainer}>
           <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
@@ -54,9 +58,6 @@ export default function HomeScreen() {
                     Next
                     </Text>
                 </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('/createAccount')}>
-                <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
             </TouchableOpacity>
         </View>
       </View>

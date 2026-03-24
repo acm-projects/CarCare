@@ -8,9 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function Index() {
 
   const router = useRouter();
-  const handlePress = () => {
-    router.push("/logIn")
-  };
+
 
   return (
     <LinearGradient
