@@ -13,8 +13,7 @@ export default function Settings() {
   return (
     <ScrollView
       contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
-      showsVerticalScrollIndicator={false}
-    >
+      showsVerticalScrollIndicator={false}>
     <View style={[globalStyles.container]}>
       {/*Settings container. Includes profile, password, and notificaiton settings*/}
         <View style={styles.topSection}>
@@ -49,10 +48,7 @@ export default function Settings() {
               </TouchableOpacity>
 
             </View>
-
-            <Divider/>
-
-            <View style = {[styles.subContainer]}>
+            <View style = {[styles.subContainer, {paddingTop: 25}]}>
 
               <GradientText style={globalStyles.gradientH2}>More</GradientText>
 

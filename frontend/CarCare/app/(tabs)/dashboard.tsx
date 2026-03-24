@@ -328,7 +328,7 @@ export default function Dashboard() {
               <TouchableOpacity
                 style={styles.helpTile}
                 activeOpacity={0.85}
-                onPress={handleScanPress}
+                onPress={() => router.push('../scanResults')}
               >
                 <View style={styles.helpTileTopRow}>
                   <Text style={styles.helpCardTitle} numberOfLines={2}>

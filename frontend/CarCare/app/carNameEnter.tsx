@@ -31,7 +31,7 @@ export default function CarNameEnter() {
         <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
           style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height}]}>
+      <View style = {[styles.logInContainer, { height: .55 * height, width: '100%'}]}>
         <View style = {styles.topSection}>
           <View style = {styles.subContainer}>
             <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
