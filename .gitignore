@@ -3,4 +3,8 @@ backend/node_modules/dotenv/.env
 .env
 backend/node_modules/dotenv/.env
 node_modules
+/.idea/
+/out/
+/node_modules/
+*.iml
 *.class

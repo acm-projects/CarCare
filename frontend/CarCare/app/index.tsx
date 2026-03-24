@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { globalStyles, GradientText } from '@/styles/global';
+import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import AnimatedGradientBackground from '../components/animatedBackground';
+//import AnimatedGradientBackground from '../components/animatedBackground';
 
-export default function index() {
+export default function Index() {
 
   const router = useRouter();
   const handlePress = () => {
@@ -14,12 +14,11 @@ export default function index() {
 
   return (
     <LinearGradient
-      colors={['#386FA4', '#84D2F6']}
+      colors={['#3272ae', '#53c1f3']}
       start={{ x: 1, y: 0.5 }}
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
       <View style={styles.container}>
-        {}
         <View style={styles.topSection}>
           <Image
             source={require('../assets/images/carCareLogoWhite.png')}
@@ -28,7 +27,6 @@ export default function index() {
             The brain behind your vehicle's health.
           </Text>
         </View>
-        {}
         <View style={styles.bottomSection}>
           <TouchableOpacity
             style={globalStyles.whiteButton}
@@ -54,7 +52,7 @@ container: {
 },
 
 topSection: {
-  flex: 2,
+  flex:4.5,
   justifyContent: 'center',
   alignItems: 'center',
 },
