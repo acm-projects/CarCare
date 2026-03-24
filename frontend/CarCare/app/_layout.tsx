@@ -7,6 +7,8 @@ import { JsStack } from '@/components/JsStack';
 import { Easing } from "react-native-reanimated";
 const ANIMATION_DURATION = 550;
 import { useColorScheme } from '@/hooks/use-color-scheme';
+// Backend integration: shared garage list + add/remove (see `context/GarageContext.tsx`).
+import { GarageProvider } from '@/context/GarageContext';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -20,6 +22,8 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GarageProvider>
+      {/* Navigation stack — garage state available in all routes below */}
       <JsStack
       screenOptions={{
         cardOverlayEnabled: true, // Enable card overlay for transitions
@@ -106,6 +110,7 @@ export default function RootLayout() {
         />
       </JsStack>
       <StatusBar style="auto" />
+      </GarageProvider>
     </ThemeProvider>
   );
 }
