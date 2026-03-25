@@ -1,4 +1,3 @@
-import { uploadScanForAnalysis, type ScanAnalyzeResponse } from '@/api';
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Image } from 'expo-image';
@@ -25,8 +24,6 @@ export default function ScanCamera() {
   const camRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [previewUri, setPreviewUri] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [result, setResult] = useState<ScanAnalyzeResponse | null>(null);
 
   const promptForCamera = useCallback(async () => {
     try {
@@ -58,20 +55,13 @@ export default function ScanCamera() {
     }
   }, []);
 
-  const onUpload = useCallback(async () => {
+  const onGoToResults = useCallback(() => {
     if (!previewUri) return;
-    setUploading(true);
-    setResult(null);
-    try {
-      const data = await uploadScanForAnalysis(previewUri);
-      setResult(data);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Upload failed';
-      Alert.alert('Upload failed', msg);
-    } finally {
-      setUploading(false);
-    }
-  }, [previewUri]);
+    router.replace({
+      pathname: '/scanResults',
+      params: { imageUri: previewUri },
+    });
+  }, [previewUri, router]);
 
   const onClose = () => {
     router.back();
@@ -136,22 +126,6 @@ export default function ScanCamera() {
         </View>
       </SafeAreaView>
 
-      {result && (
-        <View style={styles.resultPanel}>
-          <Text style={styles.resultTitle}>Analysis</Text>
-          <Text style={styles.resultBody}>{result.summary}</Text>
-          {result.suggestions && result.suggestions.length > 0 && (
-            <View style={styles.suggestions}>
-              {result.suggestions.map((s) => (
-                <Text key={s} style={styles.suggestionLine}>
-                  • {s}
-                </Text>
-              ))}
-            </View>
-          )}
-        </View>
-      )}
-
       <SafeAreaView style={styles.bottomBar} edges={['bottom']}>
         {previewUri ? (
           <View style={styles.actionsRow}>
@@ -159,22 +133,15 @@ export default function ScanCamera() {
               style={({ pressed }) => [styles.secondaryBtn, pressed && styles.btnPressed]}
               onPress={() => {
                 setPreviewUri(null);
-                setResult(null);
               }}
-              disabled={uploading}
             >
               <Text style={styles.secondaryBtnText}>Retake</Text>
             </Pressable>
             <Pressable
               style={({ pressed }) => [styles.primaryBtnWide, pressed && styles.btnPressed]}
-              onPress={onUpload}
-              disabled={uploading}
+              onPress={onGoToResults}
             >
-              {uploading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.primaryBtnText}>Upload for analysis</Text>
-              )}
+              <Text style={styles.primaryBtnText}>Upload for analysis</Text>
             </Pressable>
           </View>
         ) : (
@@ -259,40 +226,6 @@ const styles = StyleSheet.create({
   },
   iconBtnPressed: {
     opacity: 0.8,
-  },
-  resultPanel: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    top: '18%',
-    zIndex: 1,
-    backgroundColor: 'rgba(11,18,32,0.92)',
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(95,168,211,0.35)',
-  },
-  resultTitle: {
-    color: ACCENT,
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 0.6,
-  },
-  resultBody: {
-    color: TEXT,
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  suggestions: {
-    marginTop: 12,
-    gap: 6,
-  },
-  suggestionLine: {
-    color: SUB,
-    fontSize: 14,
-    lineHeight: 20,
   },
   bottomBar: {
     position: 'absolute',

@@ -96,7 +96,7 @@ export default function LogIn() {
               </View>
               <TouchableOpacity
                 style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]}
-                onPress={router.push("../vinEnter")}
+                onPress={handleLogin}
               >
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                   <Text style={globalStyles.whiteButtonText}>
