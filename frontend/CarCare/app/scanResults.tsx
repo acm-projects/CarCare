@@ -53,6 +53,7 @@ export default function ScanResults() {
   const router = useRouter();
   const params = useLocalSearchParams<{
     imageUri?: string | string[];
+    payloadJson?: string | string[];
   }>();
   const scanImageUri = useMemo(() => {
     const raw = paramToString(params.imageUri);
@@ -63,6 +64,29 @@ export default function ScanResults() {
       return raw;
     }
   }, [params.imageUri]);
+
+  const payload = useMemo(() => {
+    const raw = paramToString(params.payloadJson);
+    if (!raw) return emptyScanResult();
+    try {
+      const decoded = decodeURIComponent(raw);
+      const parsed = JSON.parse(decoded) as ScanResultPayload;
+      if (
+        parsed &&
+        typeof parsed === 'object' &&
+        parsed.llm &&
+        typeof parsed.llm === 'object' &&
+        parsed.ocr &&
+        typeof parsed.ocr === 'object' &&
+        Array.isArray(parsed.youtube)
+      ) {
+        return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return emptyScanResult();
+  }, [params.payloadJson]);
 
   const [manualDescription, setManualDescription] = useState('');
   const [descriptionSubmitted, setDescriptionSubmitted] = useState(false);
@@ -87,8 +111,6 @@ export default function ScanResults() {
   }, [scanImageUri]);
 
   /** `payload.ocr` is for backend / internal use only — not shown in the UI. */
-  const payload = useMemo(() => emptyScanResult(), []);
-
   const llm = payload.llm;
   const youtube = payload.youtube;
 

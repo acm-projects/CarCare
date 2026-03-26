@@ -13,6 +13,7 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import type { ScanResultPayload } from '@/types/scanResult';
 
 const BG = '#0B1220';
 const ACCENT = '#5FA8D3';
@@ -22,8 +23,10 @@ const SUB = '#8D8D8D';
 export default function ScanCamera() {
   const router = useRouter();
   const camRef = useRef<CameraView>(null);
+  const analyzingRef = useRef(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [previewUri, setPreviewUri] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const promptForCamera = useCallback(async () => {
     try {
@@ -55,12 +58,28 @@ export default function ScanCamera() {
     }
   }, []);
 
-  const onGoToResults = useCallback(() => {
-    if (!previewUri) return;
-    router.replace({
-      pathname: '/scanResults',
-      params: { imageUri: previewUri },
-    });
+  const onGoToResults = useCallback(async () => {
+    if (!previewUri || analyzingRef.current) return;
+    analyzingRef.current = true;
+    setIsAnalyzing(true);
+    try {
+      // --- BEGIN: temporary scan delay (replace with backend scan when ready) ---
+      await new Promise<void>((resolve) => setTimeout(resolve, 10_000));
+      const payload: ScanResultPayload = {
+        ocr: { headline: '', observations: [] },
+        llm: { summary: '', suggestions: [], cautionNotes: [] },
+        youtube: [],
+      };
+      // --- END: temporary scan delay (replace with backend scan when ready) ---
+      const payloadJson = encodeURIComponent(JSON.stringify(payload));
+      router.replace({
+        pathname: '/scanResults',
+        params: { imageUri: previewUri, payloadJson },
+      });
+    } finally {
+      analyzingRef.current = false;
+      setIsAnalyzing(false);
+    }
   }, [previewUri, router]);
 
   const onClose = () => {
@@ -130,18 +149,32 @@ export default function ScanCamera() {
         {previewUri ? (
           <View style={styles.actionsRow}>
             <Pressable
-              style={({ pressed }) => [styles.secondaryBtn, pressed && styles.btnPressed]}
+              style={({ pressed }) => [
+                styles.secondaryBtn,
+                (pressed || isAnalyzing) && styles.btnPressed,
+                isAnalyzing && styles.secondaryBtnDisabled,
+              ]}
               onPress={() => {
                 setPreviewUri(null);
               }}
+              disabled={isAnalyzing}
             >
               <Text style={styles.secondaryBtnText}>Retake</Text>
             </Pressable>
             <Pressable
-              style={({ pressed }) => [styles.primaryBtnWide, pressed && styles.btnPressed]}
-              onPress={onGoToResults}
+              style={({ pressed }) => [
+                styles.primaryBtnWide,
+                (pressed || isAnalyzing) && styles.btnPressed,
+                isAnalyzing && styles.primaryBtnWideDisabled,
+              ]}
+              onPress={() => void onGoToResults()}
+              disabled={isAnalyzing}
             >
-              <Text style={styles.primaryBtnText}>Upload for analysis</Text>
+              {isAnalyzing ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.primaryBtnText}>Upload for analysis</Text>
+              )}
             </Pressable>
           </View>
         ) : (
@@ -155,6 +188,16 @@ export default function ScanCamera() {
           </View>
         )}
       </SafeAreaView>
+
+      {isAnalyzing ? (
+        <View style={styles.analyzingOverlay} pointerEvents="auto">
+          <ActivityIndicator color={ACCENT} size="large" />
+          <Text style={styles.analyzingTitle}>Analyzing your photo</Text>
+          <Text style={styles.analyzingSub}>
+            Preparing your results…
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -270,6 +313,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.12)',
   },
+  secondaryBtnDisabled: {
+    opacity: 0.45,
+  },
   secondaryBtnText: {
     color: TEXT,
     fontSize: 16,
@@ -328,5 +374,29 @@ const styles = StyleSheet.create({
   },
   btnPressed: {
     opacity: 0.85,
+  },
+  primaryBtnWideDisabled: {
+    opacity: 0.75,
+  },
+  analyzingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(11,18,32,0.92)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 32,
+    gap: 16,
+    zIndex: 10,
+  },
+  analyzingTitle: {
+    color: TEXT,
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  analyzingSub: {
+    color: SUB,
+    fontSize: 15,
+    textAlign: 'center',
+    lineHeight: 22,
   },
 });
