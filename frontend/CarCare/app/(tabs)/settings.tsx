@@ -25,48 +25,62 @@ export default function Settings() {
 
               {/* Nav to the profile settings */}
               <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
-                  <View style = {styles.settingsContainer}>
-                    <Ionicons name="person-outline" size={30} color='#8d8d8d' />
-                    <Text style = {globalStyles.grayP}>Profile</Text>
+                  <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                      <Ionicons name="person-outline" size={30} color="#8d8d8d" />
+                      <Text style={globalStyles.grayP}>Profile</Text>
+                    </View>
+                    <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                   </View>
               </TouchableOpacity>
 
               {/* Nav to the password settings */}
               <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
-                  <View style = {styles.settingsContainer}>
-                    <Ionicons name="lock-closed-outline" size={30} color='#8d8d8d' />
-                    <Text style = {globalStyles.grayP}>Password</Text>
+                  <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                      <Ionicons name="lock-closed-outline" size={30} color="#8d8d8d" />
+                      <Text style={globalStyles.grayP}>Password</Text>
+                    </View>
+                    <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                   </View>
               </TouchableOpacity>
 
               {/* Nav to the notification settings */}
               <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
-                  <View style = {styles.settingsContainer}>
-                  <Ionicons name="notifications-outline" size={30} color='#8d8d8d' />
-                  <Text style = {globalStyles.grayP}>Notifications</Text>
+                <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <Ionicons name="notifications-outline" size={30} color="#8d8d8d" />
+                    <Text style={globalStyles.grayP}>Notifications</Text>
+                  </View>
+                  <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                 </View>
               </TouchableOpacity>
 
             </View>
             <View style = {[styles.subContainer, {paddingTop: 25}]}>
 
-              <GradientText style={globalStyles.gradientH2}>More</GradientText>
+              <GradientText style={[globalStyles.gradientH2, {paddingTop: 15}]}>More</GradientText>
 
               {/*Nav to help page */}
               <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
-                  <View style = {styles.settingsContainer}>
-                  <Ionicons name="help-circle-outline" size={30} color='#8d8d8d' />
-                  <Text style = {globalStyles.grayP}>Help</Text>
+                <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <Ionicons name="help-circle-outline" size={30} color="#8d8d8d" />
+                    <Text style={globalStyles.grayP}>Help</Text>
+                  </View>
+                <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                 </View>
               </TouchableOpacity>
             </View>
-            {/* Button to log out */}
-              <TouchableOpacity onPress={ () => router.push('/')}>
-                  <View style = {styles.settingsContainer}>
-                  <Ionicons name="log-out" size={30} color='#8d8d8d' />
-                  <Text style = {globalStyles.grayP}>Log Out</Text>
-                </View>
-              </TouchableOpacity>
+          {/* Button to log out */}
+          <TouchableOpacity onPress={ () => router.push('/')}>
+            <View style={[styles.settingsContainer, {justifyContent: 'center', width: 'auto', alignSelf: 'center' }]}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Ionicons name="log-out" size={30} color="#8d8d8d" />
+                <Text style={globalStyles.grayP}>Log Out</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -93,7 +107,9 @@ const styles = StyleSheet.create({
 
   settingsContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    width: 300,
     gap: 10
   },
 

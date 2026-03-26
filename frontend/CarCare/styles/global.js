@@ -116,6 +116,11 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 19,
   },
 
+  gradientH3: {
+    fontFamily: 'Onest',
+    fontSize: 20,
+    fontWeight: 500,
+  },
   whiteH2:
   {
     fontFamily: 'Onest',
@@ -143,7 +148,6 @@ export const globalStyles = StyleSheet.create ({
   {
     fontFamily: 'Onest',
     fontSize: 21,
-    color: 'transparent',
     paddingHorizontal: 30,
   },
 
@@ -184,6 +188,19 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 15,
     fontWeight: 500,
     color: '#8d8d8d',
+  },
+
+  redP: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    fontWeight: 500,
+    color: '#FF6565',
+  },
+
+  gradientP2: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    fontWeight: 500,
   },
 
 

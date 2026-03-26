@@ -22,14 +22,13 @@ export default function HomeScreen() {
   };
 
   return (
-      <LinearGradient
-    colors={['#386FA4', '#84D2F6']}
-    start={{ x: 1, y: 0.5 }}
-    end={{ x: 0, y: 0.5 }}
-    style={{ flex: 1 }}
-  >
+    <LinearGradient
+      colors={['#386FA4', '#84D2F6']}
+      start={{ x: 1, y: 0.5 }}
+      end={{ x: 0, y: 0.5 }}
+      style={{ flex: 1 }}>
     <View style={globalStyles.container}>
-      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
+      <TouchableOpacity style={{ alignSelf: 'flex-start', top: 25, right: 10}}
               onPress={() => { router.back() }}>
               <Text style={globalStyles.whiteBackButton}>{`< Back`}</Text>
       </TouchableOpacity>
