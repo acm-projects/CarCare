@@ -23,87 +23,87 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <GarageProvider>
-      {/* Navigation stack — garage state available in all routes below */}
-      <JsStack
-      screenOptions={{
-        headerShown: false,
-        cardOverlayEnabled: true, // Enable card overlay for transitions
-        gestureEnabled: true, // Enable gesture-based navigation
-        cardStyleInterpolator: ({ current, next, layouts }) => {
-          const INITIAL_TRANSLATE_X_MULTIPLIER = 1.6;
-          const NEXT_TRANSLATE_X_MULTIPLIER = -0.3;
+        {/* Navigation stack — garage state available in all routes below */}
+        <JsStack
+          screenOptions={{
+            headerShown: false,
+            cardOverlayEnabled: true, // Enable card overlay for transitions
+            gestureEnabled: true, // Enable gesture-based navigation
+            cardStyleInterpolator: ({ current, next, layouts }) => {
+              const INITIAL_TRANSLATE_X_MULTIPLIER = 1.6;
+              const NEXT_TRANSLATE_X_MULTIPLIER = -0.3;
 
-          // Calculate translateX for the current screen
-          const translateX = current.progress.interpolate({
-            inputRange: [0, 1],
-            outputRange: [
-              INITIAL_TRANSLATE_X_MULTIPLIER * layouts.screen.width,
-              0,
-            ],
-            extrapolate: "clamp",
-          });
-
-          
-          // Calculate translateX for the next screen (if exists)
-          const nextTranslateX = next
-            ? next.progress.interpolate({
+              // Calculate translateX for the current screen
+              const translateX = current.progress.interpolate({
                 inputRange: [0, 1],
                 outputRange: [
+                  INITIAL_TRANSLATE_X_MULTIPLIER * layouts.screen.width,
                   0,
-                  NEXT_TRANSLATE_X_MULTIPLIER * layouts.screen.width,
                 ],
                 extrapolate: "clamp",
-              })
-            : 0;
+              });
 
-          const transform = [
-            { translateX },
-            { translateX: nextTranslateX },
-          ];
 
-          return {
-            cardStyle: { transform },
-          };
-        },
-      }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
-        <Stack.Screen name="vinEnter" options={{
+              // Calculate translateX for the next screen (if exists)
+              const nextTranslateX = next
+                ? next.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [
+                    0,
+                    NEXT_TRANSLATE_X_MULTIPLIER * layouts.screen.width,
+                  ],
+                  extrapolate: "clamp",
+                })
+                : 0;
+
+              const transform = [
+                { translateX },
+                { translateX: nextTranslateX },
+              ];
+
+              return {
+                cardStyle: { transform },
+              };
+            },
+          }}
+        >
+          <Stack.Screen name="index" options={{
             headerShown: true,
             headerTransparent: true,
-            headerTitle: '', 
+            headerTitle: '',
             headerBackTitle: 'Back',
             headerTintColor: '#fff',    // back button color
           }}
-        />
-        <Stack.Screen name="createAccount" options={{
+          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
+          <Stack.Screen name="vinEnter" options={{
             headerShown: true,
             headerTransparent: true,
-            headerTitle: '', 
+            headerTitle: '',
             headerBackTitle: 'Back',
             headerTintColor: '#fff',    // back button color
           }}
-        />
-        <Stack.Screen name="carNameEnter" options={{
+          />
+          <Stack.Screen name="createAccount" options={{
             headerShown: true,
             headerTransparent: true,
-            headerTitle: '', 
+            headerTitle: '',
+            headerBackTitle: 'Back',
+            headerTintColor: '#fff',    // back button color
+          }}
+          />
+          <Stack.Screen name="carNameEnter" options={{
+            headerShown: true,
+            headerTransparent: true,
+            headerTitle: '',
 
             headerBackTitle: 'Back',
             headerTintColor: '#fff',    // back button color
           }}
-        />
-        <Stack.Screen name="index" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '', 
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-        />
-      </JsStack>
-      <StatusBar style="auto" />
+          />
+        </JsStack>
+        <StatusBar style="auto" />
       </GarageProvider>
     </ThemeProvider>
   );

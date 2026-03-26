@@ -87,12 +87,19 @@ export default function LogIn() {
             <TextInput
               style={styles.logInBox}
               placeholder="Enter email"
-              placeholderTextColor={'#8d8d8d'}/>
+              placeholderTextColor={'#8d8d8d'}
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              />
             <GradientText style={globalStyles.gradientH2}>Password</GradientText>
             <TextInput
               style={styles.logInBox}
               placeholder="Enter password"
               placeholderTextColor={'#8d8d8d'}
+              value={password}
+              onChangeText={setPassword}
               />
               </View>
               <TouchableOpacity

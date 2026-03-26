@@ -8,13 +8,39 @@ import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
+import {useState } from 'react';
+import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
 
 export default function HomeScreen() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
+  const [vin, setVin] = useState("");
+  //const navigate = () => {
     //router.push("../myGarage");
+
+    const handleVinSubmit = async () => {
+      const cleanedVin = vin.trim().toUpperCase();
+
+      if (!cleanedVin) {
+        Alert.alert("Missing VIN", "Please enter a VIN number.");
+        return;
+      }
+
+      try {
+        const savedCar = await apiFetch(`/api/cars/${cleanedVin}`,{
+          method: "POST",
+        });
+
+        console.log("Saved car:", savedCar);
+        Alert.alert("Car added");
+        router.push("../carNameEnter");
+      } catch (err: any) {
+        Alert.alert("error adding car", err?.message ?? "unkown")
+      }
+    
+
+
   };
   
   const handlePress = () => {
@@ -42,13 +68,16 @@ export default function HomeScreen() {
             style={styles.logInBox}
             placeholder="Enter VIN number"
             placeholderTextColor={'#8d8d8d'}
+            value={vin}
+            onChangeText={setVin}
+            autoCapitalize="characters"
             />
             <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
                 maintenance records, and manufacturing data.</Text>
         </View>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../carNameEnter')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={handleVinSubmit}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
                     Next
