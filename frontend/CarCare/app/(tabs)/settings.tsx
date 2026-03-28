@@ -35,18 +35,18 @@ export default function Settings() {
               </TouchableOpacity>
 
               {/* Nav to the password settings */}
-              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+              <TouchableOpacity onPress={ () => router.push('/privacy')}>
                   <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                       <Ionicons name="lock-closed-outline" size={30} color="#8d8d8d" />
-                      <Text style={globalStyles.grayP}>Password</Text>
+                      <Text style={globalStyles.grayP}>Privacy</Text>
                     </View>
                     <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                   </View>
               </TouchableOpacity>
 
               {/* Nav to the notification settings */}
-              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+              <TouchableOpacity onPress={ () => router.push('/notifications')}>
                 <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Ionicons name="notifications-outline" size={30} color="#8d8d8d" />
@@ -62,7 +62,7 @@ export default function Settings() {
               <GradientText style={[globalStyles.gradientH2, {paddingTop: 15}]}>More</GradientText>
 
               {/*Nav to help page */}
-              <TouchableOpacity onPress={ () => router.push('/profileSettings')}>
+              <TouchableOpacity onPress={ () => router.push('/help')}>
                 <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Ionicons name="help-circle-outline" size={30} color="#8d8d8d" />

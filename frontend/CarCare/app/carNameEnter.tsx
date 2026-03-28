@@ -51,9 +51,6 @@ export default function CarNameEnter() {
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../vinEnter')}>
-                <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
-            </TouchableOpacity>
         </View>
       </View>
     </View>
