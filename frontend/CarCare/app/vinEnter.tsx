@@ -22,7 +22,7 @@ export default function vinEnter() {
 
   return (
     <LinearGradient
-      colors={['#386FA4', '#84D2F6']}
+      colors={['#3272ae', '#53c1f3']}
       start={{ x: 1, y: 0.5 }}
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
@@ -65,7 +65,7 @@ export default function vinEnter() {
           </View>
           <View>
             <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../carNameEnter')}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Next
                 </Text>
