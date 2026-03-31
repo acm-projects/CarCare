@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     gap: 125,
     alignItems: 'center',
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },

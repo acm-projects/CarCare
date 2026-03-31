@@ -63,7 +63,7 @@ export default function carNameEnter() {
           </View>
           </View>
           <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../dashboard')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../myGarage')}>
               <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                 <Text style={globalStyles.whiteButtonText}>
                   Done

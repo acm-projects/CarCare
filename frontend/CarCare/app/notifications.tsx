@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '@/styles/global';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function ProfileSettings() {
+export default function notifications() {
 
   const router = useRouter();
   const { height } = useWindowDimensions();
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     gap: 125,
     alignItems: 'center',
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
