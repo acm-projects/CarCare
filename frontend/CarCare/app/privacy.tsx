@@ -24,11 +24,12 @@ export default function privacy() {
       <View style = {[styles.whiteContainer, { height: .5 * height, padding:25}]}>
         <View style = {[styles.subContainer]}>
           <GradientText style={[globalStyles.gradientH2, {paddingVertical: 15}]}>Privacy Policy</GradientText>  
-          <Text style = {globalStyles.grayP}>CarCare takes its users privacy with the utmost . We use third-party tools to improve
-            our service. 
+          <Text style = {globalStyles.grayP}>CarCare needs your car's VIN number to display accurage information 
+            regarding your vehicle. CarCare also collects user location data to display your 
+            local mechanics. CarCare uses third-party tools to store data. 
           </Text>
-          <Text style={{color: 'blue'}}
-            onPress={() => Linking.openURL('http://google.com')}>
+          <Text style={[globalStyles.grayP, {color: '#3272ae'}]}
+            onPress={() => Linking.openURL('https://firebase.google.com/support/privacy')}>
             View Firebase's privacy policy
             </Text>
         </View>

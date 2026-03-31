@@ -1,25 +1,24 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link, useRouter } from 'expo-router';
+import { StyleSheet, Text, TextInput, Alert, View, TouchableOpacity, useWindowDimensions, Animated } from 'react-native';
+import { useRef, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 
-export default function HomeScreen() {
+export default function vinEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
-  const navigate = () => {
-    //router.push("../myGarage");
-  };
+  const slideAnim = useRef(new Animated.Value(height)).current;
   
-  const handlePress = () => {
-    Alert.alert('CarCare Log In', 'You have logged in successfully!');
-  };
+    useEffect(() => {
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        //Duration in ms
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }, [slideAnim]);
 
   return (
     <LinearGradient
@@ -28,38 +27,53 @@ export default function HomeScreen() {
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
     <View style={globalStyles.container}>
-      <TouchableOpacity style={{ alignSelf: 'flex-start', top: 25, right: 10}}
-              onPress={() => { router.back() }}>
-              <Text style={globalStyles.whiteBackButton}>{`< Back`}</Text>
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
+        onPress={() => { router.back() }}>
+        <Text style={globalStyles.whiteH1}>{`< Back`}</Text>
       </TouchableOpacity>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Text style = {globalStyles.whiteTitle}>Create your car profile</Text>
-        <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
-          style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height, width: '100%'}]}>
-        <View style = {styles.topSection}>
-          <View style = {styles.subContainer}>
-          <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
-          <TextInput
-            style={styles.logInBox}
-            placeholder="Enter VIN number"
-            placeholderTextColor={'#8d8d8d'}
+      <Animated.View
+        style={{
+          // Position the view at the bottom of its container
+          position: 'absolute',
+          bottom: 0, 
+          left: 0,
+          right: 0,
+          // Apply the animated translateY value
+          transform: [{ translateY: slideAnim }],
+        }}>
+          <View style={{ alignItems: 'center', marginBottom: -125 }}>
+            <Image
+              source={require('../assets/images/CarCareLogoGearWhite.png')}
+              style={{ width: 250, height: 250 }}
             />
-            <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
-                maintenance records, and manufacturing data.</Text>
-        </View>
-        </View>
-        <View>
+          </View>
+        <View style = {[styles.logInContainer, { height: .55 * height, width: '100%'}]}>
+          <View style = {styles.topSection}>
+            <View style = {styles.subContainer}>
+            <GradientText style={globalStyles.gradientH2}>VIN Number</GradientText>
+            <TextInput
+              style={styles.logInBox}
+              placeholder="Enter VIN number"
+              placeholderTextColor={'#8d8d8d'}
+              />
+              <Text style = {globalStyles.grayP}>CarCare needs your car’s VIN number to access accurate technical specifications, 
+                  maintenance records, and manufacturing data.</Text>
+          </View>
+          </View>
+          <View>
             <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../carNameEnter')}>
-                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
-                    <Text style={globalStyles.whiteButtonText}>
-                    Next
-                    </Text>
-                </LinearGradient>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                <Text style={globalStyles.whiteButtonText}>
+                  Next
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </Animated.View>
     </View>
   </LinearGradient>
   );
@@ -81,7 +95,6 @@ const styles = StyleSheet.create({
   logInContainer:{
     flex: 1,
     backgroundColor: '#fff',
-    position: 'absolute',
     bottom: 0,
     height: 50,
     borderRadius: 50,
