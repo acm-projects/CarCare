@@ -27,6 +27,12 @@ export default function HomeScreen() {
         return;
       }
 
+    if (cleanedVin.length !== 17) {
+      Alert.alert("Invalid VIN", "VIN must be 17 characters.");
+      return;
+      }
+
+
       try {
         const savedCar = await apiFetch(`/api/cars/${cleanedVin}`,{
           method: "POST",
@@ -34,7 +40,12 @@ export default function HomeScreen() {
 
         console.log("Saved car:", savedCar);
         Alert.alert("Car added");
-        router.push("../carNameEnter");
+        
+        router.push({
+            pathname: "../carNameEnter",
+            params: { vin: cleanedVin },
+            });
+
       } catch (err: any) {
         Alert.alert("error adding car", err?.message ?? "unkown")
       }

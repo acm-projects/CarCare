@@ -43,7 +43,7 @@ export default function LogIn() {
       const token = await cred.user.getIdToken();
       console.log("FIREBASE ID TOKEN (login):", token);
 
-      const me = await apiFetch("/api/me");
+      const me = await apiFetch("/api/users/me");
       console.log("BACKEND ME (login):", me);
 
       Alert.alert('CarCare Log In', 'You have logged in successfully!');
