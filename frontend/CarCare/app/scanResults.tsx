@@ -268,7 +268,9 @@ const styles = StyleSheet.create({
   screenContent: {
     width: '100%',
     alignItems: 'center',
+    backgroundColor: '#f5f5f5',
     gap: 15,
+    flex: 1,
     paddingBottom: 48,
   },
   scrollContent: {

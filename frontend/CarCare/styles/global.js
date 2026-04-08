@@ -116,6 +116,11 @@ export const globalStyles = StyleSheet.create ({
     fontSize: 19,
   },
 
+  gradientH3: {
+    fontFamily: 'Onest',
+    fontSize: 20,
+    fontWeight: 500,
+  },
   whiteH2:
   {
     fontFamily: 'Onest',
@@ -143,7 +148,6 @@ export const globalStyles = StyleSheet.create ({
   {
     fontFamily: 'Onest',
     fontSize: 21,
-    color: 'transparent',
     paddingHorizontal: 30,
   },
 
@@ -186,6 +190,24 @@ export const globalStyles = StyleSheet.create ({
     color: '#8d8d8d',
   },
 
+  redP: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    fontWeight: 500,
+    color: '#FF6565',
+  },
+
+  gradientP: {
+    fontFamily: 'Onest',
+    fontSize: 17,
+  },
+
+  gradientP2: {
+    fontFamily: 'Onest',
+    fontSize: 15,
+    fontWeight: 500,
+  },
+
 
   // Button styles
   
@@ -196,7 +218,7 @@ export const globalStyles = StyleSheet.create ({
     height: 60,
     backgroundColor:'#fff',
     shadowColor: 'gray',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 2,
   },
@@ -207,10 +229,17 @@ export const globalStyles = StyleSheet.create ({
     width: 300,
     height: 60,
     backgroundColor:'transparent',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 2,
     
   },
   
+  gradientViewButton: {
+    justifyContent: 'center',
+    borderRadius:50,
+    width: 85,
+    height: 35,
+    backgroundColor:'transparent',
+  },
 });

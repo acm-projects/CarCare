@@ -94,17 +94,14 @@ export default function LogIn() {
               placeholderTextColor={'#8d8d8d'}
               />
               </View>
-              <TouchableOpacity
-                style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]}
-                onPress={handleLogin}
-              >
+              <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]}
+                onPress={() => router.push('/vinEnter')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                   <Text style={globalStyles.whiteButtonText}>
                     Log In
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
-
           </View>
         </Animated.View>
       </View>
