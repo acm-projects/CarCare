@@ -64,7 +64,7 @@ export default function ScanCamera() {
     setIsAnalyzing(true);
     try {
       // --- BEGIN: temporary scan delay (replace with backend scan when ready) ---
-      await new Promise<void>((resolve) => setTimeout(resolve, 10_000));
+      await new Promise<void>((resolve) => setTimeout(resolve, 1_000));
       const payload: ScanResultPayload = {
         ocr: { headline: '', observations: [] },
         llm: { summary: '', suggestions: [], cautionNotes: [] },
