@@ -228,7 +228,7 @@ export default function ScanResults() {
           <TextInput
             style={styles.textInput}
             placeholder="e.g. The orange engine-shaped light is flashing on the dash…"
-            placeholderTextColor="#666"
+            placeholderTextColor="rgba(0,0,0,0.45)"
             multiline
             value={manualDescription}
             onChangeText={(t) => {
@@ -260,7 +260,7 @@ export default function ScanResults() {
 const styles = StyleSheet.create({
   safeRoot: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#FFFFFF',
   },
   scrollView: {
     flex: 1,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     width: '95%',
     height: 200,
     borderRadius: 25,
-    backgroundColor: '#111',
+    backgroundColor: '#FFFFFF',
   },
   sectionHeader: {
     paddingHorizontal: 15,
@@ -362,10 +362,10 @@ const styles = StyleSheet.create({
     minHeight: 100,
     padding: 14,
     borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(95,168,211,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-    color: '#F2F4F8',
+    borderColor: 'rgba(95,168,211,0.35)',
+    color: '#000000',
     fontFamily: 'Onest',
     fontSize: 16,
     lineHeight: 22,
