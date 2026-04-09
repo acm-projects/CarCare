@@ -23,7 +23,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "CarCare uses your location to find nearby mechanics and show them on the map."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
