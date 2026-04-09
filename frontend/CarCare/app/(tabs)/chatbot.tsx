@@ -14,6 +14,7 @@ import {
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GradientText } from '@/styles/global';
+import { chatBaseUrl } from '@/lib/chatApi';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,10 +30,36 @@ type ChatbotProps = {
   };
 };
 
+function formatChatError(status: number, raw: string, fetchErr: string | null): string {
+  if (fetchErr) {
+    return (
+      `Could not reach the chat server at ${chatBaseUrl()}.\n\n` +
+      `Start VinChatBotServer on port 8080. On a physical phone, set EXPO_PUBLIC_CHAT_API_URL to your computer’s IP (same Wi‑Fi).\n\n` +
+      `Details: ${fetchErr}`
+    );
+  }
+  try {
+    const parsed = JSON.parse(raw) as { error?: string };
+    const err = (parsed.error ?? raw).trim();
+    if (err.includes('OpenAI') || err.toLowerCase().includes('openai')) {
+      return (
+        `The chat server could not complete the OpenAI request.\n\n` +
+        `On the machine running Java: set a valid OPENAI_API_KEY, ensure the account has billing/quota, and that outbound HTTPS to api.openai.com is allowed (no blocking firewall/VPN).\n\n` +
+        `Server said: ${err}`
+      );
+    }
+    return `Chat server error (${status}): ${err || raw}`;
+  } catch {
+    return `Chat server error (${status}): ${raw || '(empty body)'}`;
+  }
+}
+
 export default function Chatbot({ navigation }: ChatbotProps) {
   const flatListRef = useRef<FlatList<Message>>(null);
 
   const [input, setInput] = useState('');
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -69,17 +96,65 @@ export default function Chatbot({ navigation }: ChatbotProps) {
     return () => clearTimeout(timer);
   }, [messages]);
 
-  const sendMessage = (): void => {
+  const sendMessage = async (): Promise<void> => {
     if (!input.trim()) return;
+    if (isSending) return;
 
+    const userText = input.trim();
     const newMessage: Message = {
       id: Date.now().toString(),
       sender: 'user',
-      text: input.trim(),
+      text: userText,
     };
 
     setMessages((prev) => [...prev, newMessage]);
     setInput('');
+
+    setIsSending(true);
+    const base = chatBaseUrl();
+    try {
+      const res = await fetch(`${base}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText, sessionId }),
+      });
+
+      const raw = await res.text();
+      if (!res.ok) {
+        const text = formatChatError(res.status, raw, null);
+        setMessages((prev) => [
+          ...prev,
+          { id: (Date.now() + 1).toString(), sender: 'assistant', text },
+        ]);
+        return;
+      }
+
+      const data = JSON.parse(raw) as { reply?: string; sessionId?: string };
+      const replyText = (data.reply ?? '').trim() || 'Sorry — I could not generate a response.';
+      if (data.sessionId) setSessionId(data.sessionId);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          sender: 'assistant',
+          text: replyText,
+        },
+      ]);
+    } catch (e) {
+      const fetchErr = e instanceof Error ? e.message : String(e);
+      const text = formatChatError(0, '', fetchErr);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          sender: 'assistant',
+          text,
+        },
+      ]);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
@@ -163,10 +238,19 @@ export default function Chatbot({ navigation }: ChatbotProps) {
             placeholderTextColor="#8D8D8D"
             value={input}
             onChangeText={setInput}
+            editable={!isSending}
           />
 
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Ionicons name="paper-plane-outline" size={28} color="#386FA4" />
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={sendMessage}
+            disabled={isSending}
+          >
+            <Ionicons
+              name={isSending ? 'hourglass-outline' : 'paper-plane-outline'}
+              size={28}
+              color={isSending ? '#8D8D8D' : '#386FA4'}
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
