@@ -3,19 +3,48 @@ import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOp
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
+import { useState } from 'react';
+import { apiFetch } from '../api';
+
 
 export default function CarNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
+  const { vin } = useLocalSearchParams<{ vin: string }>();
+  const [carName, setCarName] = useState("");
   
-  const handlePress = () => {
-    Alert.alert('CarCare Log In', 'You have logged in successfully!');
+  const handleDone = async () => {
+    const cleanedName = carName.trim();
+
+    if (!vin) {
+      Alert.alert("Missing VIN", "No saved car was found for naming.");
+      return;
+    }
+
+    if (!cleanedName) {
+      Alert.alert("Missing car name", "Please enter a name for your car.");
+      return;
+    }
+
+    try {
+      await apiFetch(`/api/cars/${vin}/name`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          displayName: cleanedName,
+        }),
+      });
+
+      Alert.alert("Success", "Car name saved.");
+      router.push("../myGarage");
+    } catch (err: any) {
+      Alert.alert("Error saving car name", err?.message ?? "Unknown error");
+    }
   };
 
   return (
@@ -39,12 +68,14 @@ export default function CarNameEnter() {
               style={styles.logInBox}
               placeholder="Enter car's name"
               placeholderTextColor={'#8d8d8d'}
+              value={carName}
+              onChangeText={setCarName}
               />
             <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
           </View>
         </View>
         <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../myGarage')}>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={handleDone}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
                     <Text style={globalStyles.whiteButtonText}>
                     Done
