@@ -87,16 +87,18 @@ export default function Chatbot({ navigation }: ChatbotProps) {
 
     if (isUser) {
       return (
-        <View style={[styles.messageRow, styles.userRow]}>
+       <View style={[styles.messageRow, styles.userRow]}>
+        <View style={styles.userShadowWrapper}>
           <LinearGradient
             colors={['#84D2F6', '#386FA4']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={[styles.messageBubble, styles.userBubble]}
+            style={[styles.userBubble, styles.messageBubble]}
           >
             <Text style={styles.userMessageText}>{item.text}</Text>
           </LinearGradient>
         </View>
+      </View>
       );
     }
 
@@ -116,12 +118,6 @@ export default function Chatbot({ navigation }: ChatbotProps) {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation?.goBack?.()}
-          >
-            <Ionicons name="chevron-back" size={24} color="#84D2F6" />
-          </TouchableOpacity>
 
           <GradientText style={styles.headerTitle}>
             CarCare Assistant
@@ -129,11 +125,6 @@ export default function Chatbot({ navigation }: ChatbotProps) {
         </View>
 
         <View style={styles.chatArea}>
-          <View pointerEvents="none" style={styles.watermarkContainer}>
-            <Text style={styles.watermarkGear}>⚙</Text>
-            <Text style={styles.watermarkText}>CarCare</Text>
-          </View>
-
           <FlatList
             ref={flatListRef}
             data={messages}
@@ -156,18 +147,20 @@ export default function Chatbot({ navigation }: ChatbotProps) {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input}
-            placeholder="Ask anything"
-            placeholderTextColor="#8D8D8D"
-            value={input}
-            onChangeText={setInput}
-          />
+        <View style = {styles.paddingView}>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              placeholder="Ask anything"
+              placeholderTextColor="#8D8D8D"
+              value={input}
+              onChangeText={setInput}
+            />
 
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Ionicons name="paper-plane-outline" size={28} color="#386FA4" />
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+              <Ionicons name="paper-plane-outline" size={28} color="#8d8d8d" />
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -185,10 +178,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
     paddingTop: 10,
     paddingHorizontal: 16,
-    paddingBottom: 14,
   },
 
   header: {
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
@@ -210,36 +203,13 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Onest',
     fontSize: 28,
+    alignSelf: 'center',
     fontWeight: '400',
   },
 
   chatArea: {
     flex: 1,
     position: 'relative',
-  },
-
-  watermarkContainer: {
-    position: 'absolute',
-    top: height * 0.12,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    opacity: 0.12,
-  },
-
-  watermarkGear: {
-    fontSize: width * 0.45,
-    color: '#84D2F6',
-    lineHeight: width * 0.45,
-  },
-
-  watermarkText: {
-    marginTop: -10,
-    fontSize: 56,
-    fontFamily: 'Onest',
-    color: '#386FA4',
-    fontWeight: '600',
   },
 
   messagesContent: {
@@ -250,6 +220,7 @@ const styles = StyleSheet.create({
   messageRow: {
     width: '100%',
     marginVertical: 8,
+    paddingHorizontal: 5,
   },
 
   assistantRow: {
@@ -265,12 +236,23 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 24,
-    shadowColor: '#000',
-    shadowOpacity: 0.14,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
+    shadowColor: 'black',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2.5,
     elevation: 4,
   },
+
+  userShadowWrapper: {
+  maxWidth: '100%',
+  borderRadius: 24,
+  backgroundColor: 'white',
+  shadowColor: 'black',
+  shadowOffset: { width: 1, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 2.5,
+  elevation: 4,
+},
 
   assistantBubble: {
     backgroundColor: '#DADADA',
@@ -278,6 +260,7 @@ const styles = StyleSheet.create({
 
   userBubble: {
     backgroundColor: 'transparent',
+    overflow: 'hidden',
   },
 
   assistantMessageText: {
@@ -292,7 +275,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: '#FFFFFF',
-    textAlign: 'center',
+    textAlign: 'right',
   },
 
   feedbackRow: {
@@ -319,10 +302,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     minHeight: 60,
-    borderWidth: 3,
-    borderColor: '#84D2F6',
+    borderWidth: 1,
+    borderColor: '#8d8d8d',
     borderRadius: 32,
-    backgroundColor: '#F8F8F8',
     paddingLeft: 16,
     paddingRight: 10,
   },
@@ -335,6 +317,9 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'ios' ? 14 : 10,
   },
 
+  paddingView: {
+    paddingBottom:10,
+  },
   sendButton: {
     width: 42,
     height: 42,
