@@ -1,17 +1,17 @@
-package com.example.demo;
+ package com.example.demo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
-import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CarStoreService {
@@ -39,6 +39,7 @@ public class CarStoreService {
         data.put("plantState", car.getPlantState());
         data.put("plantCountry", car.getPlantCountry());
         data.put("createdAt", System.currentTimeMillis());
+        data.put("displayName", car.getDisplayName());
 
         try {
             ApiFuture<?> write = doc.set(data);

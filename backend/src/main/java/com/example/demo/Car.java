@@ -12,6 +12,7 @@ public class Car {
     private String plantCity;
     private String plantState;
     private String plantCountry;
+    private String displayName;
 
     public Car() {}
 
@@ -46,4 +47,7 @@ public class Car {
 
     public String getPlantCountry() { return plantCountry; }
     public void setPlantCountry(String plantCountry) { this.plantCountry = plantCountry; }
+
+    public String getDisplayName() { return displayName; }
+    public void setDisplayName(String displayName) { this.displayName = displayName; }
 }
