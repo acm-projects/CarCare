@@ -1,16 +1,21 @@
+import { Ionicons } from '@expo/vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
 import React, { useEffect, useState } from 'react';
 import {
+  Dimensions,
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ScrollView,
-  Modal,
-  Pressable,
-  Linking,
-  Platform,
-  Dimensions,
-  ActivityIndicator,
+  View,
 } from 'react-native';
 import * as Location from 'expo-location';
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -187,7 +192,7 @@ export default function Dashboard() {
   };
 
   const handleScanPress = () => {
-    router.push('/myGarage');
+    router.push('/scanCamera');
   };
 
   const handleServiceTimelinePress = () => {
@@ -369,7 +374,7 @@ export default function Dashboard() {
               <TouchableOpacity
                 style={styles.helpTile}
                 activeOpacity={0.85}
-                onPress={handleScanPress}
+                onPress={() => router.push('../scanCamera')}
               >
                 <View style={styles.helpTileTopRow}>
                   <Text style={styles.helpCardTitle} numberOfLines={2}>

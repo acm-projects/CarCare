@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { apiFetch } from '../api';
 
 
-export default function CarNameEnter() {
+export default function carNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
@@ -48,30 +48,47 @@ export default function CarNameEnter() {
   };
 
   return (
-      <LinearGradient
-    colors={['#386FA4', '#84D2F6']}
-    start={{ x: 1, y: 0.5 }}
-    end={{ x: 0, y: 0.5 }}
-    style={{ flex: 1 }}
-  >
+    <LinearGradient
+      colors={['#386FA4', '#53c1f3']}
+      start={{ x: 1, y: 0.5 }}
+      end={{ x: 0, y: 0.5 }}
+      style={{ flex: 1 }}>
     <View style={globalStyles.container}>
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
+        onPress={() => { router.back() }}>
+        <Text style={globalStyles.whiteH1}>{`< Back`}</Text>
+      </TouchableOpacity>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Text style = {globalStyles.whiteTitle}>Create your car profile</Text>
-        <Image source = {require('../assets/images/CarCareLogoGearWhite.png')}
-          style={{width: 250, height:250, top: 150, position: 'absolute'}}></Image>
       </View>
-      <View style = {[styles.logInContainer, { height: .55 * height}]}>
-        <View style = {styles.topSection}>
-          <View style = {styles.subContainer}>
-            <GradientText style={globalStyles.gradientH2}>Car Name</GradientText>
+      <Animated.View
+        style={{
+          // Position the view at the bottom of its container
+          position: 'absolute',
+          bottom: 0, 
+          left: 0,
+          right: 0,
+          // Apply the animated translateY value
+          transform: [{ translateY: slideAnim }],
+        }}>
+          <View style={{ alignItems: 'center', marginBottom: -125 }}>
+            <Image
+              source={require('../assets/images/CarCareLogoGearWhite.png')}
+              style={{ width: 250, height: 250 }}
+            />
+          </View>
+        <View style = {[styles.logInContainer, { height: .55 * height, width: '100%'}]}>
+          <View style = {styles.topSection}>
+            <View style = {styles.subContainer}>
+            <GradientText style={globalStyles.gradientH2}>Enter your car's name</GradientText>
             <TextInput
               style={styles.logInBox}
-              placeholder="Enter car's name"
+              placeholder="Enter car name"
               placeholderTextColor={'#8d8d8d'}
               value={carName}
               onChangeText={setCarName}
               />
-            <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car.</Text>
+              <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car(s)</Text>
           </View>
         </View>
         <View>
@@ -82,11 +99,9 @@ export default function CarNameEnter() {
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../vinEnter')}>
-                <Text style = {[globalStyles.grayH2, {textAlign: 'center'}]}>Back</Text>
-            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </Animated.View>
     </View>
   </LinearGradient>
   );
@@ -94,19 +109,11 @@ export default function CarNameEnter() {
 
 const styles = StyleSheet.create({
   
-topSection: {
-  flex:3,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-
-bottomSection: {
-  flex: 1,
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-  gap: 15,
-  paddingBottom: 60,
-},
+  topSection: {
+    flex:3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   subContainer: {
     width: 300,
@@ -116,7 +123,6 @@ bottomSection: {
   logInContainer:{
     flex: 1,
     backgroundColor: '#fff',
-    position: 'absolute',
     bottom: 0,
     height: 50,
     borderRadius: 50,
