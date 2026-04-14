@@ -1,23 +1,30 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions, Animated } from 'react-native';
 import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { apiFetch } from '../api';
-
 
 export default function carNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
+  const slideAnim = useRef(new Animated.Value(height)).current;
+
   const { vin } = useLocalSearchParams<{ vin: string }>();
   const [carName, setCarName] = useState("");
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+        toValue: 0,
+        //Duration in ms
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }, [slideAnim]);
   
   const handleDone = async () => {
     const cleanedName = carName.trim();

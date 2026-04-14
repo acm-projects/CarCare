@@ -143,43 +143,6 @@ export default function vinEnter() {
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            <View style={[styles.logInContainer, { height: 0.55 * height }]}>
-              <View style={styles.topSection}>
-                <View style={styles.subContainer}>
-                  <GradientText style={globalStyles.gradientH2}>
-                    VIN Number
-                  </GradientText>
-                  <TextInput
-                    style={styles.logInBox}
-                    placeholder="Enter VIN number"
-                    placeholderTextColor={"#8d8d8d"}
-                    value={vin}
-                    onChangeText={setVin}
-                    autoCapitalize="characters"
-                  />
-                  <Text style={globalStyles.grayP}>
-                    CarCare needs your car’s VIN number to access accurate
-                    technical specifications, maintenance records, and
-                    manufacturing data.
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={globalStyles.whiteButton}
-                onPress={handleVinSubmit}
-              >
-                <LinearGradient
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={["#84D2F6", "#386FA4"]}
-                  style={globalStyles.gradientButton}
-                >
-                  <Text style={globalStyles.whiteButtonText}>Next</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
           </View>
         </Animated.View>
       </View>
