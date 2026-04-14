@@ -1,24 +1,58 @@
 import { Image } from 'expo-image';
-import { StyleSheet, Text, TextInput, Alert, View, TouchableOpacity, useWindowDimensions, Animated } from 'react-native';
-import { useRef, useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { Platform, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions, Animated } from 'react-native';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
+import { useState, useRef, useEffect } from 'react';
+import { apiFetch } from '../api';
 
 export default function carNameEnter() {
   
   const { height } = useWindowDimensions();
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(height)).current;
-  
-    useEffect(() => {
-      Animated.timing(slideAnim, {
+
+  const { vin } = useLocalSearchParams<{ vin: string }>();
+  const [carName, setCarName] = useState("");
+
+  useEffect(() => {
+    Animated.timing(slideAnim, {
         toValue: 0,
         //Duration in ms
         duration: 400,
         useNativeDriver: true,
       }).start();
     }, [slideAnim]);
+  
+  const handleDone = async () => {
+    const cleanedName = carName.trim();
+
+    if (!vin) {
+      Alert.alert("Missing VIN", "No saved car was found for naming.");
+      return;
+    }
+
+    if (!cleanedName) {
+      Alert.alert("Missing car name", "Please enter a name for your car.");
+      return;
+    }
+
+    try {
+      await apiFetch(`/api/cars/${vin}/name`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          displayName: cleanedName,
+        }),
+      });
+
+      Alert.alert("Success", "Car name saved.");
+      router.push("../myGarage");
+    } catch (err: any) {
+      Alert.alert("Error saving car name", err?.message ?? "Unknown error");
+    }
+  };
 
   return (
     <LinearGradient
@@ -58,17 +92,19 @@ export default function carNameEnter() {
               style={styles.logInBox}
               placeholder="Enter car name"
               placeholderTextColor={'#8d8d8d'}
+              value={carName}
+              onChangeText={setCarName}
               />
               <Text style = {globalStyles.grayP}>Create a unique name for your car to easily keep track of your car(s)</Text>
           </View>
-          </View>
-          <View>
-            <TouchableOpacity style={globalStyles.whiteButton} onPress={() => router.push('../myGarage')}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#386FA4']} style={globalStyles.gradientButton}>
-                <Text style={globalStyles.whiteButtonText}>
-                  Done
-                </Text>
-              </LinearGradient>
+        </View>
+        <View>
+            <TouchableOpacity style={globalStyles.whiteButton} onPress={handleDone}>
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientButton}>
+                    <Text style={globalStyles.whiteButtonText}>
+                    Done
+                    </Text>
+                </LinearGradient>
             </TouchableOpacity>
           </View>
         </View>

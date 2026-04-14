@@ -1,43 +1,38 @@
 package com.example.demo;
 
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import com.google.cloud.firestore.Firestore;
 
 @Service
 public class FirestoreService {
 
+    private final Firestore firestore;
+
+    public FirestoreService(Firestore firestore) {
+        this.firestore = firestore;
+    }
+
     public Firestore db() {
-        return FirestoreClient.getFirestore();
+        return firestore;
     }
 
     public Map<String, Object> getCar(String userId, String carId) {
         try {
-            var userDoc = db().collection("users")
-                    .document(userId)
-                    .get()
-                    .get();
-
-            System.out.println("USER EXISTS = " + userDoc.exists());
-
-            var carDoc = db().collection("users")
+            var carDoc = firestore.collection("users")
                     .document(userId)
                     .collection("cars")
                     .document(carId)
                     .get()
                     .get();
 
-            System.out.println("CAR EXISTS = " + carDoc.exists());
-
             if (!carDoc.exists()) {
                 return null;
             }
 
             return carDoc.getData();
-
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch car", e);
         }

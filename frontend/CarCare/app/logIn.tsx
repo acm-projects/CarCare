@@ -42,7 +42,7 @@ export default function LogIn() {
       const token = await cred.user.getIdToken();
       console.log("FIREBASE ID TOKEN (login):", token);
 
-      const me = await apiFetch("/api/me");
+      const me = await apiFetch("/api/users/me");
       console.log("BACKEND ME (login):", me);
 
       Alert.alert('CarCare Log In', 'You have logged in successfully!');
@@ -86,12 +86,19 @@ export default function LogIn() {
             <TextInput
               style={styles.logInBox}
               placeholder="Enter email"
-              placeholderTextColor={'#8d8d8d'}/>
+              placeholderTextColor={'#8d8d8d'}
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              />
             <GradientText style={globalStyles.gradientH2}>Password</GradientText>
             <TextInput
               style={styles.logInBox}
               placeholder="Enter password"
               placeholderTextColor={'#8d8d8d'}
+              value={password}
+              onChangeText={setPassword}
               />
               </View>
               <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]}

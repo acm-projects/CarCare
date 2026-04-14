@@ -6,6 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    private final FirestoreService firestoreService;
+    private final VehicleDataService vehicleDataService;
+
+    public TestController(FirestoreService firestoreService, VehicleDataService vehicleDataService) {
+        this.firestoreService = firestoreService;
+        this.vehicleDataService = vehicleDataService;
+    }
+
     @GetMapping("/start")
     public String Start() {
         return "Hey I am working fine.";
@@ -13,8 +21,6 @@ public class TestController {
 
     @GetMapping("/test-car")
     public String testCar() {
-        FirestoreService firestoreService = new FirestoreService();
-
         Object car = firestoreService.getCar(
                 "AKIiy6bhptbENCSfwFiztG6D0zl1",
                 "1HGCM82633A004352"
@@ -27,9 +33,6 @@ public class TestController {
 
     @GetMapping("/youtube-query")
     public String youtubeQuery() {
-
-        VehicleDataService vehicleDataService = new VehicleDataService(new FirestoreService());
-
         return vehicleDataService.buildYoutubeSearchQuery(
                 "AKIiy6bhptbENCSfwFiztG6D0zl1",
                 "1HGCM82633A004352",
@@ -37,5 +40,3 @@ public class TestController {
         );
     }
 }
-
-
