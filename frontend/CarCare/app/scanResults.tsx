@@ -8,8 +8,10 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
+import YoutubePlayer from 'react-native-youtube-iframe';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +20,37 @@ import Divider from '@/styles/divider';
 import type { ScanResultPayload } from '@/types/scanResult';
 
 const PLACEHOLDER = require('../assets/images/checkEngine.jpg');
+
+/**
+ * Dev fallback when `payload.youtube` has no URL. Set to '' to hide the embed until the API returns a link.
+ * Embeds use the first `payload.youtube` entry with a non-empty `url` when present.
+ */
+const HARDCODED_SUGGESTION_VIDEO_URL =
+  'https://youtu.be/TFkf3PHV3a4?si=G-jXvL_dQQP2TuSh';
+
+function youtubeUrlToVideoId(url: string): string | null {
+  try {
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+    const u = new URL(withScheme);
+    if (u.hostname === 'youtu.be') {
+      const id = u.pathname.replace(/^\//, '').split('/')[0];
+      return id || null;
+    }
+    if (u.hostname.includes('youtube.com')) {
+      const v = u.searchParams.get('v');
+      if (v) return v;
+      const embed = u.pathname.match(/\/embed\/([^/?]+)/);
+      if (embed?.[1]) return embed[1];
+      const shorts = u.pathname.match(/\/shorts\/([^/?]+)/);
+      if (shorts?.[1]) return shorts[1];
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 function emptyScanResult(): ScanResultPayload {
   return {
@@ -50,6 +83,7 @@ function EmptyLine() {
 }
 
 export default function ScanResults() {
+  const { width: windowWidth } = useWindowDimensions();
   const router = useRouter();
   const params = useLocalSearchParams<{
     imageUri?: string | string[];
@@ -114,11 +148,24 @@ export default function ScanResults() {
   const llm = payload.llm;
   const youtube = payload.youtube;
 
+  const suggestionVideoUrl = useMemo(() => {
+    const fromApi = youtube.find((v) => typeof v.url === 'string' && v.url.trim().length > 0)?.url?.trim();
+    return fromApi || HARDCODED_SUGGESTION_VIDEO_URL.trim();
+  }, [youtube]);
+
+  const suggestionVideoId = youtubeUrlToVideoId(suggestionVideoUrl);
+  const hasSuggestionVideo = suggestionVideoId !== null;
+
+  const suggestionPlayerWidth = Math.min(windowWidth * 0.95, 720);
+  const suggestionPlayerHeight = suggestionPlayerWidth * (9 / 16);
+
   const hasLlmContent = Boolean(
     (llm?.summary && llm.summary.length > 0) ||
       (llm?.suggestions && llm.suggestions.length > 0) ||
       (llm?.cautionNotes && llm.cautionNotes.length > 0),
   );
+
+  const showSuggestionsEmpty = !hasLlmContent && !hasSuggestionVideo;
 
   return (
     <SafeAreaView style={styles.safeRoot} edges={['bottom']}>
@@ -158,19 +205,27 @@ export default function ScanResults() {
 
         <SectionHeader title="Suggestions" />
         <View style={[globalStyles.horizontalContainer, styles.bodyCol]}>
+          {hasSuggestionVideo && suggestionVideoId ? (
+            <View style={styles.suggestionPlayerWrap}>
+              <YoutubePlayer
+                height={suggestionPlayerHeight}
+                width={suggestionPlayerWidth}
+                videoId={suggestionVideoId}
+                play={false}
+              />
+            </View>
+          ) : null}
           {llm?.summary ? (
             <Text style={globalStyles.grayP}>{llm.summary}</Text>
           ) : null}
-          {llm?.suggestions && llm.suggestions.length > 0 ? (
-            llm.suggestions.map((line, i) => (
-              <Text key={i} style={globalStyles.grayP}>
-                {'\u25E6 '}
-                {line}
-              </Text>
-            ))
-          ) : !hasLlmContent ? (
-            <EmptyLine />
-          ) : null}
+          {llm?.suggestions && llm.suggestions.length > 0
+            ? llm.suggestions.map((line, i) => (
+                <Text key={i} style={globalStyles.grayP}>
+                  {'\u25E6 '}
+                  {line}
+                </Text>
+              ))
+            : null}
           {llm?.cautionNotes && llm.cautionNotes.length > 0 ? (
             <>
               <Text style={[globalStyles.grayP, styles.cautionLabel]}>Notes</Text>
@@ -181,6 +236,7 @@ export default function ScanResults() {
               ))}
             </>
           ) : null}
+          {showSuggestionsEmpty ? <EmptyLine /> : null}
         </View>
 
         <View style={{ width: '90%' }}>
@@ -297,6 +353,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingHorizontal: 15,
     gap: 8,
+  },
+  suggestionPlayerWrap: {
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 720,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#111',
+    marginBottom: 4,
   },
   emptyLine: {
     fontStyle: 'italic',
