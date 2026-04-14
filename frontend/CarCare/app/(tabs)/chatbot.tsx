@@ -68,27 +68,7 @@ export default function Chatbot({ navigation }: ChatbotProps) {
     {
       id: "1",
       sender: "assistant",
-      text: "How can I help you with today?",
-    },
-    {
-      id: "2",
-      sender: "user",
-      text: "I could really use some help",
-    },
-    {
-      id: "3",
-      sender: "assistant",
-      text: "OK. Please describe your problem.",
-    },
-    {
-      id: "4",
-      sender: "user",
-      text: "How do I change the oil on my vehicle?",
-    },
-    {
-      id: "5",
-      sender: "assistant",
-      text: "Warm engine. Lift and secure car. Remove drain plug; drain oil. Replace plug, remove and replace the oil filter, add the correct oil type, then check the level and inspect for leaks.",
+      text: "Hi! I'm your personal assistant. What can I help you with today?",
     },
   ]);
 
@@ -369,6 +349,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 6,
+    gap: 15,
     marginBottom: 12,
   },
 
