@@ -3,9 +3,9 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Linking,
   Modal,
@@ -18,13 +18,9 @@ import {
   View,
 } from 'react-native';
 import * as Location from 'expo-location';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { MechanicMapPreview } from '@/components/MechanicMapPreview';
 import { fetchMapBundle, type MapMechanic } from '@/lib/mapApi';
+import { MechanicMapPreview } from '@/components/MechanicMapPreview.native';
+// import MechanicMapPreview from './MechanicMapPreview';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 /** Scroll area width (screen has `paddingHorizontal: 20`) — required so top-row flex + absolute menu get real widths */
@@ -717,7 +713,6 @@ export default function Dashboard() {
                       </View>
                     ))}
                   </ScrollView>
-
                   <Text style={[styles.mapCardLabel, styles.mapCardLabelAfterList]}>Map</Text>
                   <LinearGradient colors={GRADIENT_BORDER} style={styles.mapGradientWrap}>
                     <View style={styles.mapWrap} collapsable={false}>
