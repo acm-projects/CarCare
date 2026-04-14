@@ -216,23 +216,14 @@ export default function Chatbot({ navigation }: ChatbotProps) {
         <View style={styles.feedbackRow}>
           <Text style={styles.feedbackText}>Did this response help?</Text>
 
-          <TouchableOpacity style={styles.feedbackButton}>
-            <Feather name="thumbs-up" size={24} color="#7F7F7F" />
-          </TouchableOpacity>
+          <View style={styles.HStack}>
+            <TouchableOpacity style={styles.feedbackButton}>
+              <Feather name="thumbs-up" size={24} color="#7F7F7F" />
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.feedbackButton}>
-            <Feather name="thumbs-down" size={24} color="#7F7F7F" />
-          </TouchableOpacity>
-          <View style={styles.paddingView}>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.input}
-                placeholder="Ask anything"
-                placeholderTextColor="#8D8D8D"
-                value={input}
-                onChangeText={setInput}
-              />
-            </View>
+            <TouchableOpacity style={styles.feedbackButton}>
+              <Feather name="thumbs-down" size={24} color="#7F7F7F" />
+            </TouchableOpacity>
           </View>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -374,11 +365,17 @@ const styles = StyleSheet.create({
   },
 
   feedbackRow: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 6,
     marginBottom: 12,
+  },
+
+  HStack: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   feedbackText: {
