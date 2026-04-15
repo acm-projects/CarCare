@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import org.springframework.stereotype.Service;
+
 import java.util.Map;
 
 @Service
@@ -17,7 +18,6 @@ public class VehicleDataService {
     }
 
     public String buildYoutubeSearchQuery(String userId, String vehicleId, String repairTopic) {
-
         Map<String, Object> car = firestoreService.getCar(userId, vehicleId);
 
         if (car == null) {
@@ -30,5 +30,4 @@ public class VehicleDataService {
 
         return year + " " + make + " " + model + " " + repairTopic + " repair";
     }
-
 }

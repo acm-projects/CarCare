@@ -4,10 +4,10 @@ import com.example.demo.VehicleDataService;
 import com.example.demo.inspections.dto.RepairVideoDto;
 import com.example.demo.inspections.service.YouTubeService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class RepairVideoController {
@@ -15,31 +15,38 @@ public class RepairVideoController {
     private final VehicleDataService vehicleDataService;
     private final YouTubeService youTubeService;
 
-    public RepairVideoController(
-            VehicleDataService vehicleDataService,
-            YouTubeService youTubeService
-    ) {
+    public RepairVideoController(VehicleDataService vehicleDataService, YouTubeService youTubeService) {
         this.vehicleDataService = vehicleDataService;
         this.youTubeService = youTubeService;
     }
 
     @GetMapping("/repair-videos")
-    public List<RepairVideoDto> getRepairVideos() {
+    public List<RepairVideoDto> getRepairVideos(
+            @RequestParam String userId,
+            @RequestParam String vehicleId,
+            @RequestParam String repairType
+    ) {
+        System.out.println("REPAIR VIDEOS HIT");
+        System.out.println("userId = " + userId);
+        System.out.println("vehicleId = " + vehicleId);
+        System.out.println("repairType = " + repairType);
 
-        String userId = "AKIiy6bhptbENCSfwFiztG6D0zl1";
-        String vehicleId = "1HGCM82633A004352";
-        String repairType = "oil change";
+        String query = vehicleDataService.buildYoutubeSearchQuery(userId, vehicleId, repairType);
+        System.out.println("built query = " + query);
 
-        Map<String, Object> car = vehicleDataService.getVehicleById(userId, vehicleId);
-
-        if (car == null) {
-            throw new RuntimeException("Car not found in Firestore");
+        if (query == null) {
+            throw new RuntimeException("Vehicle not found or query could not be built");
         }
 
-        String year = String.valueOf(car.get("year"));
-        String make = String.valueOf(car.get("make"));
-        String model = String.valueOf(car.get("model"));
+        String[] parts = query.split(" ", 4);
+        String year = parts.length > 0 ? parts[0] : "";
+        String make = parts.length > 1 ? parts[1] : "";
+        String model = parts.length > 2 ? parts[2] : "";
+        String finalRepairType = repairType;
 
-        return youTubeService.searchRepairVideos(year, make, model, repairType);
+        List<RepairVideoDto> videos = youTubeService.searchRepairVideos(year, make, model, finalRepairType);
+        System.out.println("videos returned = " + videos.size());
+
+        return videos;
     }
 }
