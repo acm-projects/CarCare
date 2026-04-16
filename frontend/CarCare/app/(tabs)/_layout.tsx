@@ -61,13 +61,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chatbot"
+        name="mapbot"
         options={{
-          title: 'chatbot',
-          tabBarIcon: ({ focused }) => <Ionicons 
-          name={focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} size={32} color='#fff' />,
+          title: 'mapbot',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons name={focused ? "map" : "map-outline"} size={32} color="#fff" />
+          ),
         }}
       />
+      
     </Tabs>
     
   );
