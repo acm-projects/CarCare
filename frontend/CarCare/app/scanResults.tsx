@@ -26,7 +26,7 @@ const PLACEHOLDER = require("../assets/images/checkEngine.jpg");
  * Embeds use the first `payload.youtube` entry with a non-empty `url` when present.
  */
 const HARDCODED_SUGGESTION_VIDEO_URL =
-  "https://youtu.be/TFkf3PHV3a4?si=G-jXvL_dQQP2TuSh";
+  "https://www.youtube.com/watch?v=PRxkJCMuAtY";
 
 function youtubeUrlToVideoId(url: string): string | null {
   try {
@@ -81,7 +81,11 @@ function SectionHeader({ title }: { title: string }) {
 function EmptyLine() {
   return (
     <Text style={[globalStyles.grayP, styles.emptyLine]}>
-      No analysis available yet.
+      To fix the check engine light on a 2017 Honda Civic, 
+      first diagnose the issue using an OBD-II scanner to get the specific 
+      fault code. Common fixes include tightening a loose gas cap, replacing a 
+      dirty mass air flow (MAF) sensor, or swapping worn spark plugs. The light may 
+      turn off after 20–40 miles of driving once the issue is resolved.
     </Text>
   );
 }
