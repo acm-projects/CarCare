@@ -50,8 +50,9 @@ export default function Timeline() {
           <View style = {globalStyles.horizontalContainer}>
             <GradientText style = {[globalStyles.gradientHeader, {paddingHorizontal: 0, padding: 5}]}>Service Timeline</GradientText>
           </View>
-          <View style = {globalStyles.horizontalContainer}>
+          <View style = {[globalStyles.horizontalContainer, {gap: 10}]}>
             <Text style = {[globalStyles.grayP, {padding: 1, fontWeight: 500}]}>My 2017 Honda Civic</Text>
+            <GradientText style={globalStyles.gradientP}>See all</GradientText>
           </View>
           {/*Service containers*/}
           <View style = {globalStyles.horizontalContainer}>
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 10,
     backgroundColor: '#fff',
-    width: 375,
+    width: '98%',
     height: 100,
     shadowColor: 'black',
     shadowOffset: { width: 1, height: 2 },

@@ -25,12 +25,6 @@ export const DEV_MOCK_VEHICLES: GarageVehicle[] = [
         severity: 'red',
         shortLabel: 'service\nneeded',
       },
-      {
-        id: 'svc-2',
-        title: 'Oil change',
-        severity: 'red',
-        shortLabel: 'oil change\nneeded',
-      },
     ],
   },
 ];

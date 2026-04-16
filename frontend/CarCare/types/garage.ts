@@ -8,10 +8,6 @@ export interface VehicleServiceItem {
   id: string;
   title: string;
   severity: ServiceSeverity;
-  /**
-   * Short copy for garage pills (use `\n` for two lines), e.g. `oil change\nneeded`.
-   * If omitted, UI may derive from `title`.
-   */
   shortLabel?: string;
 }
 
@@ -28,7 +24,6 @@ export interface GarageVehicle {
   /** Signed URL or CDN path from API; null until backend returns an image. */
   imageUrl: string | null;
   /**
-   * Dev-only: `require()` for static PNG while `imageUrl` is null.
    * Remove when all images come from API.
    */
   imageAsset?: number;

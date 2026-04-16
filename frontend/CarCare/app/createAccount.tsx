@@ -61,6 +61,10 @@ export default function CreateAccount() {
     style={{ flex: 1 }}
   >
     <View style={globalStyles.container}>
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
+              onPress={() => { router.back() }}>
+              <Text style={globalStyles.whiteBackButton}>{`< Back`}</Text>
+      </TouchableOpacity>
       <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
           style={{width: 100, height: 100}}></Image>
@@ -77,7 +81,7 @@ export default function CreateAccount() {
           // Apply the animated translateY value
           transform: [{ translateY: slideAnim }],
       }}>
-      <View style = {[styles.logInContainer, { height: .6 * height}]}>
+      <View style = {[styles.logInContainer, { height: .6 * height, width: '100%'}]}>
         <View style = {styles.subContainer}>
           <GradientText style={globalStyles.gradientH2}>Email</GradientText>
           <TextInput

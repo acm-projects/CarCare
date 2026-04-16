@@ -77,31 +77,6 @@ export default function RootLayout() {
           />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ headerShown: true, headerTransparent: true, }} />
-          <Stack.Screen name="vinEnter" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '',
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-          />
-          <Stack.Screen name="createAccount" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '',
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-          />
-          <Stack.Screen name="carNameEnter" options={{
-            headerShown: true,
-            headerTransparent: true,
-            headerTitle: '',
-
-            headerBackTitle: 'Back',
-            headerTintColor: '#fff',    // back button color
-          }}
-          />
         </JsStack>
         <StatusBar style="auto" />
       </GarageProvider>
