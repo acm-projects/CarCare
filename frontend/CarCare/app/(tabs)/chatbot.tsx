@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { GradientText } from "@/styles/global";
+import { globalStyles, GradientText } from "@/styles/global";
 import { chatBaseUrl } from "@/lib/chatApi";
 
 const { width, height } = Dimensions.get("window");
@@ -177,7 +177,7 @@ export default function Chatbot({ navigation }: ChatbotProps) {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={styles.header}>
-          <GradientText style={styles.headerTitle}>
+          <GradientText style={globalStyles.gradientHeader}>
             CarCare Assistant
           </GradientText>
         </View>
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
 
   assistantBubble: {
-    backgroundColor: "#DADADA",
+    backgroundColor: "#ffffff",
   },
 
   userBubble: {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     fontFamily: "Onest",
     fontSize: 16,
     lineHeight: 22,
-    color: "#747474",
+    color: "#757575",
   },
 
   userMessageText: {
