@@ -11,6 +11,7 @@ export default function Settings() {
   const { height } = useWindowDimensions();
 
   return (
+    <View style = {globalStyles.container}>
     <ScrollView
       contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
       showsVerticalScrollIndicator={false}>
@@ -85,6 +86,7 @@ export default function Settings() {
       </View>
     </View>
   </ScrollView>
+  </View>
   );
 }
 
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
   },
 
   scrollContentOverride: {
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
   },
 
   topSection: {
@@ -135,9 +137,9 @@ const styles = StyleSheet.create({
     width: 350,
     alignItems: 'center',
     shadowColor: 'black',
-    shadowOffset: { width: 1, height: 2 },
+    shadowOffset: { width: 1, height: 3 },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 2,
   },
 
 });

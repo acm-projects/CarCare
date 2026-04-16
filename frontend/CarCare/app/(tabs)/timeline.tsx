@@ -286,46 +286,9 @@ export default function Timeline() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Top car selector + scan */}
-        <View style={styles.topRow}>
-          <View style={styles.carSelectorGroup}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.carChipsRow}
-            >
-              <View style={[styles.carChip, styles.carChipActive]}>
-                <Text style={styles.carChipTitle}>My Civic Type R</Text>
-                <Text style={styles.carChipSubtitle}>2017 Honda Civic</Text>
-              </View>
-              <View style={styles.carChip}>
-                <Text style={styles.carChipTitle}>My BMW 335i</Text>
-                <Text style={styles.carChipSubtitle}>2013 BMW 335i</Text>
-              </View>
-            </ScrollView>
-          </View>
-          <TouchableOpacity
-            style={styles.scanButton}
-            activeOpacity={0.85}
-            onPress={handleScanPress}
-          >
-            <Ionicons name="scan-outline" size={26} color="#FFFFFF" />
-            <Text style={styles.scanButtonText}>Scan</Text>
-          </TouchableOpacity>
-        </View>
-
         {/* Header */}
         <View style={[globalStyles.container]}>
-          <View style={globalStyles.horizontalContainer}>
-            <GradientText
-              style={[
-                globalStyles.gradientHeader,
-                { paddingHorizontal: 0, padding: 5 },
-              ]}
-            >
-              Service Timeline
-            </GradientText>
-          </View>
+          <GradientText style = {[globalStyles.gradientHeader, {paddingBottom: 25}]}>Service Timeline</GradientText>
           <View style={[globalStyles.horizontalContainer, { gap: 10 }]}>
             <Text
               style={[globalStyles.grayP, { padding: 1, fontWeight: "500" }]}

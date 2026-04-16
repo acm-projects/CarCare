@@ -357,7 +357,7 @@ export default function Dashboard() {
         <View style={styles.dashSection}>
           <View style={styles.dashSectionHeader}>
             <View style={styles.dashSectionTitleRow}>
-              <Text style={styles.dashSectionTitle}>Need Help</Text>
+              <Text style={styles.dashSectionTitle}>Help</Text>
               <Ionicons
                 name="chatbubble-ellipses-outline"
                 size={18}
@@ -948,7 +948,7 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#f5f5f5",
     paddingHorizontal: 20,
   },
 
@@ -1104,6 +1104,7 @@ const styles = StyleSheet.create({
   nearbyMechButton: {
     flexDirection: "row",
     alignItems: "center",
+        backgroundColor: '#ffff',
     justifyContent: "center",
     borderRadius: 25,
     paddingHorizontal: 14,
@@ -1199,6 +1200,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 6,
+
   },
 
   helpTileGradientWrap: {
