@@ -13,8 +13,6 @@ import { useRef, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { globalStyles, GradientText } from "../styles/global";
 import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
-import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
 import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
 
@@ -22,8 +20,6 @@ export default function vinEnter() {
   const { height } = useWindowDimensions();
   const router = useRouter();
   const [vin, setVin] = useState("");
-  //const navigate = () => {
-  //router.push("../myGarage");
 
   const handleVinSubmit = async () => {
     const cleanedVin = vin.trim().toUpperCase();
@@ -55,9 +51,6 @@ export default function vinEnter() {
     }
   };
 
-  const handlePress = () => {
-    Alert.alert("CarCare Log In", "You have logged in successfully!");
-  };
   const slideAnim = useRef(new Animated.Value(height)).current;
 
   useEffect(() => {
@@ -120,6 +113,8 @@ export default function vinEnter() {
                   style={styles.logInBox}
                   placeholder="Enter VIN number"
                   placeholderTextColor={"#8d8d8d"}
+                  value={vin}
+                  onChangeText={setVin}
                 />
                 <Text style={globalStyles.grayP}>
                   CarCare needs your car’s VIN number to access accurate
@@ -131,7 +126,7 @@ export default function vinEnter() {
             <View>
               <TouchableOpacity
                 style={globalStyles.whiteButton}
-                onPress={() => router.push("../carNameEnter")}
+                onPress={handleVinSubmit}
               >
                 <LinearGradient
                   start={{ x: 0, y: 0 }}
