@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-  Pressable,
-  Linking,
-  Platform,
-  Dimensions,
-} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Linking,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import * as Location from 'expo-location';
+import { fetchMapBundle, type MapMechanic } from '@/lib/mapApi';
+import { MechanicMapPreview } from '@/components/MechanicMapPreview.native';
+// import MechanicMapPreview from './MechanicMapPreview';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 /** Scroll area width (screen has `paddingHorizontal: 20`) — required so top-row flex + absolute menu get real widths */
@@ -39,22 +43,10 @@ const SERVICE_ALERT_RED = '#E53935';
 const SERVICE_ALERT_BG = '#FFF5F5';
 /** Spark plug icon — same as timeline.tsx (Service Timeline → Spark plug replacement) */
 const SPARK_PLUG_ICON_COLOR = '#FFA865';
-type Mechanic = {
-  id: string;
-  name: string;
-  address: string;
-  distance: string;
-  rating: number;
-  reviewCount: number;
-  hours: string;
-  services: string[];
-  review: string;
-  phone: string;
-  lat: number;
-  lng: number;
-};
+type Mechanic = MapMechanic;
 
-const MECHANICS: Mechanic[] = [
+/** Fallback when map API is offline — same data as `backend/map-api/server.mjs` */
+const DEFAULT_MECHANICS: Mechanic[] = [
   {
     id: '1',
     name: "Baker's Spring Valley Automotive",
@@ -124,6 +116,49 @@ export default function Dashboard() {
   const [showMechanicModal, setShowMechanicModal] = useState(false);
   const [selectedCarId, setSelectedCarId] = useState<string>(GARAGE_CARS[0].id);
   const [carMenuOpen, setCarMenuOpen] = useState(false);
+  const [mapRegion, setMapRegion] = useState(MAP_REGION);
+  const [mechanics, setMechanics] = useState<Mechanic[]>(DEFAULT_MECHANICS);
+  const [mechanicsLoading, setMechanicsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!showMechanicModal) return;
+    let cancelled = false;
+    (async () => {
+      setMechanicsLoading(true);
+      try {
+        const perm = await Location.requestForegroundPermissionsAsync();
+        if (cancelled) return;
+        if (perm.status === 'granted') {
+          const pos = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced,
+          });
+          if (cancelled) return;
+          const bundle = await fetchMapBundle({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
+          if (cancelled) return;
+          setMapRegion(bundle.region);
+          setMechanics(bundle.mechanics);
+        } else {
+          const bundle = await fetchMapBundle();
+          if (cancelled) return;
+          setMapRegion(bundle.region);
+          setMechanics(bundle.mechanics);
+        }
+      } catch {
+        if (!cancelled) {
+          setMechanics(DEFAULT_MECHANICS);
+          setMapRegion(MAP_REGION);
+        }
+      } finally {
+        if (!cancelled) setMechanicsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [showMechanicModal]);
 
   const selectedCar = GARAGE_CARS.find((c) => c.id === selectedCarId) ?? GARAGE_CARS[0];
   /** Strip leading model year from subtitle, e.g. "2017 Honda Civic" → "Honda Civic" */
@@ -132,8 +167,8 @@ export default function Dashboard() {
   const openLargerMap = () => {
     const url =
       Platform.OS === 'ios'
-        ? `https://maps.apple.com/?q=${MAP_REGION.latitude},${MAP_REGION.longitude}`
-        : `https://www.google.com/maps/search/?api=1&query=${MAP_REGION.latitude},${MAP_REGION.longitude}`;
+        ? `https://maps.apple.com/?q=${mapRegion.latitude},${mapRegion.longitude}`
+        : `https://www.google.com/maps/search/?api=1&query=${mapRegion.latitude},${mapRegion.longitude}`;
     Linking.openURL(url);
   };
 
@@ -145,8 +180,15 @@ export default function Dashboard() {
     Linking.openURL(url);
   };
 
+  const openGooglePlaceListing = (m: Mechanic) => {
+    if (!m.placeId) return;
+    Linking.openURL(
+      `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(m.placeId)}`
+    );
+  };
+
   const handleScanPress = () => {
-    router.push('/myGarage');
+    router.push('/scanCamera');
   };
 
   const handleServiceTimelinePress = () => {
@@ -328,7 +370,7 @@ export default function Dashboard() {
               <TouchableOpacity
                 style={styles.helpTile}
                 activeOpacity={0.85}
-                onPress={handleScanPress}
+                onPress={() => router.push('../scanCamera')}
               >
                 <View style={styles.helpTileTopRow}>
                   <Text style={styles.helpCardTitle} numberOfLines={2}>
@@ -581,40 +623,20 @@ export default function Dashboard() {
                     </Pressable>
                   </View>
 
-                  {/* Embedded map with markers + View larger map button */}
-                  <Text style={styles.mapCardLabel}>Map</Text>
-                  <LinearGradient colors={GRADIENT_BORDER} style={styles.mapGradientWrap}>
-                    <View style={styles.mapWrap} collapsable={false}>
-                      <MapView
-                        style={styles.map}
-                        region={MAP_REGION}
-                        mapType="standard"
-                        scrollEnabled
-                        zoomEnabled
-                        pitchEnabled={false}
-                      >
-                        {MECHANICS.map((m) => (
-                          <Marker key={m.id} coordinate={{ latitude: m.lat, longitude: m.lng }} title={m.name} />
-                        ))}
-                      </MapView>
-                      <TouchableOpacity
-                        style={styles.viewLargerMapBtn}
-                        onPress={openLargerMap}
-                        activeOpacity={0.85}
-                      >
-                        <Text style={styles.viewLargerMapText}>View larger map</Text>
-                        <Ionicons name="chevron-forward" size={16} color="#5FA8D3" />
-                      </TouchableOpacity>
+                  {mechanicsLoading && (
+                    <View style={styles.mechanicsLoadingRow}>
+                      <ActivityIndicator color="#5FA8D3" />
+                      <Text style={styles.mechanicsLoadingText}>Finding shops near you…</Text>
                     </View>
-                  </LinearGradient>
+                  )}
 
-                  {/* Scrollable mechanic list */}
+                  <Text style={styles.listCardLabel}>Shops</Text>
                   <ScrollView
                     style={styles.mechanicListScroll}
                     showsVerticalScrollIndicator={false}
                     nestedScrollEnabled
                   >
-                    {MECHANICS.map((m) => (
+                    {mechanics.map((m) => (
                       <View key={m.id} style={styles.mechanicCard}>
                         <View style={styles.mechanicCardHeader}>
                           <Text style={styles.mechanicName} numberOfLines={2}>{m.name}</Text>
@@ -642,7 +664,7 @@ export default function Dashboard() {
                             })}
                           </View>
                           <Text style={styles.mechanicRatingText}>
-                            {m.rating} ({m.reviewCount} reviews)
+                            {m.rating > 0 ? `${m.rating} (${m.reviewCount} reviews)` : 'No Google rating yet'}
                           </Text>
                         </View>
                         <View style={styles.mechanicHoursRow}>
@@ -656,9 +678,11 @@ export default function Dashboard() {
                             </View>
                           ))}
                         </View>
-                        <View style={styles.reviewBox}>
-                          <Text style={styles.reviewBoxText} numberOfLines={3}>{m.review}</Text>
-                        </View>
+                        {m.review.trim().length > 0 && (
+                          <View style={styles.reviewBox}>
+                            <Text style={styles.reviewBoxText} numberOfLines={3}>{m.review}</Text>
+                          </View>
+                        )}
                         <View style={styles.mechanicActions}>
                           <TouchableOpacity
                             style={styles.directionsBtn}
@@ -668,16 +692,41 @@ export default function Dashboard() {
                             <Text style={styles.directionsBtnText}>Directions</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
-                            style={styles.callBtn}
-                            onPress={() => Linking.openURL(m.phone)}
+                            style={[
+                              styles.callBtn,
+                              !m.phone && !m.placeId ? styles.callBtnDisabled : null,
+                            ]}
+                            disabled={!m.phone && !m.placeId}
+                            onPress={() => {
+                              if (m.phone) Linking.openURL(m.phone);
+                              else openGooglePlaceListing(m);
+                            }}
                           >
-                            <Ionicons name="call-outline" size={18} color="#FFF" />
-                            <Text style={styles.callBtnText}>Call</Text>
+                            <Ionicons
+                              name={m.phone ? 'call-outline' : 'logo-google'}
+                              size={18}
+                              color="#FFF"
+                            />
+                            <Text style={styles.callBtnText}>{m.phone ? 'Call' : 'Google'}</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
                     ))}
                   </ScrollView>
+                  <Text style={[styles.mapCardLabel, styles.mapCardLabelAfterList]}>Map</Text>
+                  <LinearGradient colors={GRADIENT_BORDER} style={styles.mapGradientWrap}>
+                    <View style={styles.mapWrap} collapsable={false}>
+                      <MechanicMapPreview style={styles.map} region={mapRegion} mechanics={mechanics} />
+                      <TouchableOpacity
+                        style={styles.viewLargerMapBtn}
+                        onPress={openLargerMap}
+                        activeOpacity={0.85}
+                      >
+                        <Text style={styles.viewLargerMapText}>View larger map</Text>
+                        <Ionicons name="chevron-forward" size={16} color="#5FA8D3" />
+                      </TouchableOpacity>
+                    </View>
+                  </LinearGradient>
                 </View>
               </LinearGradient>
             </Pressable>
@@ -1135,12 +1184,37 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
+  mechanicsLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 8,
+    marginBottom: 4,
+  },
+
+  mechanicsLoadingText: {
+    fontSize: 13,
+    color: GRAY,
+  },
+
+  listCardLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#5FA8D3',
+    marginTop: 4,
+    marginBottom: 4,
+  },
+
   mapCardLabel: {
     fontSize: 14,
     fontWeight: '600',
     color: '#5FA8D3',
     marginTop: 8,
     marginBottom: 4,
+  },
+
+  mapCardLabelAfterList: {
+    marginTop: 14,
   },
 
   mapGradientWrap: {
@@ -1204,8 +1278,8 @@ const styles = StyleSheet.create({
   },
 
   mechanicListScroll: {
-    maxHeight: 320,
-    marginTop: 10,
+    maxHeight: 300,
+    marginTop: 0,
   },
 
   mechanicCard: {
@@ -1345,6 +1419,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 12,
     gap: 6,
+  },
+
+  callBtnDisabled: {
+    opacity: 0.45,
   },
 
   callBtnText: {

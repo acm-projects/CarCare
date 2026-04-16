@@ -70,5 +70,19 @@ public class CarStoreService {
     } catch (Exception e) {
         throw new RuntimeException("Failed to get cars: " + e.getMessage(), e);
     }
-}
+    }
+
+    public void deleteCarForUser(String uid, String vehicleId) {
+        try {
+            firestore
+                    .collection("users")
+                    .document(uid)
+                    .collection("cars")
+                    .document(vehicleId)
+                    .delete()
+                    .get();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete car: " + e.getMessage(), e);
+        }
+    }
 }

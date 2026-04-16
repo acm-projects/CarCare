@@ -18,8 +18,6 @@ export default function TabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
 
-        
-
         tabBarStyle: {
           height: 70,
           justifyContent: 'center',
@@ -60,6 +58,15 @@ export default function TabLayout() {
           title: 'settings',
           tabBarIcon: ({ focused }) => <Ionicons
            name={focused ? "settings" : "settings-outline"}  size={32} color='#fff' />,
+        }}
+      />
+      <Tabs.Screen
+        name="mapbot"
+        options={{
+          title: 'mapbot',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons name={focused ? "map" : "map-outline"} size={32} color="#fff" />
+          ),
         }}
       />
       

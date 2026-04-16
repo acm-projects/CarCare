@@ -1,41 +1,77 @@
 package com.example.demo.inspections.controller;
 
-import com.example.demo.inspections.dto.OcrResult;
+import com.example.demo.inspections.dto.ConfirmInspectionRequest;
+import com.example.demo.inspections.dto.EstimateItem;
+import com.example.demo.inspections.dto.InspectionHeader;
+import com.example.demo.inspections.dto.InspectionSectionItem;
+import com.example.demo.inspections.dto.ParsedInspectionResult;
+import com.example.demo.inspections.dto.ReminderSuggestion;
+import com.example.demo.inspections.service.InspectionAiParsingService;
 import com.example.demo.inspections.service.InspectionOcrService;
-import com.example.demo.inspections.service.OcrParsingService;
+import com.example.demo.inspections.service.InspectionParserService;
+import com.example.demo.inspections.service.InspectionStorageService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/inspections")
 public class InspectionImportController {
 
     private final InspectionOcrService ocrService;
-    private final OcrParsingService ocrParsingService;
+    private final InspectionParserService parserService;
+    private final InspectionAiParsingService aiParsingService;
+    private final InspectionStorageService storageService;
 
     public InspectionImportController(
             InspectionOcrService ocrService,
-            OcrParsingService ocrParsingService
+            InspectionParserService parserService,
+            InspectionAiParsingService aiParsingService,
+            InspectionStorageService storageService
     ) {
         this.ocrService = ocrService;
-        this.ocrParsingService = ocrParsingService;
+        this.parserService = parserService;
+        this.aiParsingService = aiParsingService;
+        this.storageService = storageService;
     }
 
     @PostMapping(value = "/ocr/dev", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public OcrResult devOcr(@RequestPart("file") MultipartFile file) throws Exception {
-        OcrResult result = ocrService.extractOcrResult(
-                file.getBytes(),
-                file.getOriginalFilename()
+    public ParsedInspectionResult devOcr(@RequestPart("file") MultipartFile file) throws Exception {
+        String text = ocrService.extractTextFromBytes(file.getBytes());
+
+        InspectionHeader header = parserService.extractHeader(text);
+        List<InspectionSectionItem> inspectionSections = parserService.extractInspectionSections(text);
+        List<EstimateItem> estimates = parserService.extractEstimates(text);
+        String summary = parserService.generateSummary(header, estimates);
+        List<ReminderSuggestion> reminders = parserService.buildReminderSuggestions(estimates);
+
+        ParsedInspectionResult result = new ParsedInspectionResult(
+                file.getOriginalFilename() == null ? "upload" : file.getOriginalFilename(),
+                text,
+                header,
+                inspectionSections,
+                estimates,
+                summary,
+                reminders
         );
 
-        String parsedText = ocrParsingService.parseWithAI(result.getRawText());
+        return aiParsingService.enrichResult(result);
+    }
 
-        return new OcrResult(
-                result.isSuccess(),
-                result.getFilename(),
-                parsedText,
-                "OCR extracted and passed through parsing layer"
+    @PostMapping("/confirm")
+    public Map<String, String> confirmInspection(@RequestBody ConfirmInspectionRequest request) throws Exception {
+        String inspectionId = storageService.saveInspection(
+                request.getUserId(),
+                request.getCarId(),
+                request.getInspection()
+        );
+
+        return Map.of(
+                "message", "Inspection saved successfully",
+                "inspectionId", inspectionId
         );
     }
 }

@@ -2,26 +2,26 @@
  * My Garage — lists vehicles from `useGarage()`.
  */
 
+import AnimatedGradientBackground from '@/components/animatedBackground';
+import { useGarage } from '@/context/GarageContext';
+import { resolveVehicleImageSource } from '@/lib/garage/resolveVehicleImage';
+import { selectGarageTags } from '@/lib/garage/selectGarageTags';
+import { globalStyles, GradientText } from '@/styles/global';
+import type { GarageVehicle, ServiceSeverity, VehicleServiceItem } from '@/types/garage';
+import { Ionicons } from '@expo/vector-icons';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   ActivityIndicator,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
-import AnimatedGradientBackground from '@/components/animatedBackground';
-import { GradientText } from '@/styles/global';
-import { useGarage } from '@/context/GarageContext';
-import { selectGarageTags } from '@/lib/garage/selectGarageTags';
-import { resolveVehicleImageSource } from '@/lib/garage/resolveVehicleImage';
-import type { GarageVehicle, ServiceSeverity, VehicleServiceItem } from '@/types/garage';
 
 // =============================================================================
 // Constants & small helpers — tag colors/icons and gradient for “+” icon
@@ -85,7 +85,7 @@ export default function MyGarageScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <GradientText style={styles.titleGradient}>My Garage</GradientText>
+          <GradientText style={[globalStyles.gradientTitle, {paddingTop: 50, paddingBottom:25}]}>My Garage</GradientText>
 
           {loading && (
             <View style={styles.loadingRow}>
@@ -102,11 +102,6 @@ export default function MyGarageScreen() {
 
           <NewCarCard onPress={handleCreateNew} />
         </ScrollView>
-
-        <TouchableOpacity style={styles.logoutContainer} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={26} color="#8D8D8D" />
-          <Text style={styles.logoutText}>Log out</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -126,25 +121,30 @@ function CarCard({ car, onPressView }: CarCardProps) {
   const imageSource = resolveVehicleImageSource(car);
 
   return (
-    <View style={styles.card}>
-      <View style={styles.cardLeft}>
-        <GradientText style={styles.carNameGradient}>{car.displayName}</GradientText>
-        <Text style={styles.carSubtitle}>{car.subtitle}</Text>
-
-        {tags.length > 0 && (
-          <View style={styles.statusRow}>
-            {tags.map((item) => (
-              <StatusPill key={item.id} item={item} />
-            ))}
+    <View style={styles.cardShadow}>
+      <View style={styles.card}>
+        <View style={styles.cardLeft}>
+          <GradientText style={globalStyles.gradientH2}>{car.displayName}</GradientText>
+          <View style = {{justifyContent: 'space-between', minHeight:100 }}>
+            <Text style={globalStyles.grayP2}>{car.subtitle}</Text>
+            {tags.length > 0 && (
+              <View style={styles.statusRow}>
+                {tags.map((item) => (
+                  <StatusPill key={item.id} item={item} />
+                ))}
+              </View>
+            )}
+            <TouchableOpacity onPress={onPressView}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#84D2F6', '#386FA4']} style={globalStyles.gradientViewButton}>
+                <Text style={[globalStyles.whiteH1, {paddingHorizontal: 0, alignSelf: 'center'}]}>
+                  View
+                </Text>
+              </LinearGradient> 
+            </TouchableOpacity>
           </View>
-        )}
-
-        <TouchableOpacity style={styles.viewButton} onPress={onPressView}>
-          <Text style={styles.viewButtonText}>View</Text>
-        </TouchableOpacity>
+        </View>
+        <Image source={imageSource} style={styles.carImage} contentFit="contain" />
       </View>
-
-      <Image source={imageSource} style={styles.carImage} contentFit="contain" />
     </View>
   );
 }
@@ -214,7 +214,7 @@ function NewCarCard({ onPress }: NewCarCardProps) {
   return (
     <TouchableOpacity style={styles.newCard} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.newCardTextWrap}>
-        <GradientText style={styles.newCardText}>
+        <GradientText style={globalStyles.gradientH2}>
           Create new{'\n'}car profile
         </GradientText>
       </View>
@@ -228,11 +228,10 @@ function NewCarCard({ onPress }: NewCarCardProps) {
 // =============================================================================
 
 const cardElevation = {
-  shadowColor: '#000' as const,
-  shadowOpacity: 0.12,
-  shadowRadius: 10,
-  shadowOffset: { width: 0, height: 4 },
-  elevation: 5,
+  shadowColor: 'black',
+  shadowOffset: { width: 1, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 2,
 };
 
 const styles = StyleSheet.create({
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginBottom: 14,
     marginLeft: 6,
-    marginTop: 0,
+    marginTop: 55,
     alignSelf: 'flex-start',
   },
 
@@ -279,7 +278,6 @@ const styles = StyleSheet.create({
 
   card: {
     width: '100%',
-    minHeight: 190,
     backgroundColor: '#FFFFFF',
     borderRadius: 28,
     marginBottom: 18,
@@ -288,6 +286,11 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     flexDirection: 'row',
     alignItems: 'center',
+    overflow: 'hidden',
+  },
+
+  cardShadow: {
+    width: '100%',
     ...cardElevation,
   },
 
@@ -363,7 +366,9 @@ const styles = StyleSheet.create({
   carImage: {
     width: 220,
     height: 150,
-    marginLeft: -10,
+    position: 'absolute',
+    right: -40,   // pushes it outside the card
+    resizeMode: 'contain',
   },
 
   newCard: {

@@ -22,3 +22,6 @@ gradle-app.setting
 .classpath
 /firebase-service-account.json
 **/main/resources/application.properties
+
+./map-api/.env
+./backend/.env

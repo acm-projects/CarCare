@@ -1,14 +1,13 @@
 
-import React, { useEffect, useRef } from 'react';
 import { Image } from 'expo-image';
-import { Animated, StyleSheet, Text, TextInput, Alert, Button, View, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { useRouter, Router } from 'expo-router';
-import { globalStyles, GradientText } from '../styles/global';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Animated, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { apiFetch } from "../api"; // from app/login.tsx or app/vinEnter.tsx
+import { auth } from "../firebase";
+import { globalStyles, GradientText } from '../styles/global';
 
 export default function LogIn() {
   
@@ -61,9 +60,9 @@ export default function LogIn() {
       style={{ flex: 1 }}
     >
     <View style={globalStyles.container}>
-      <TouchableOpacity style={{ alignSelf: 'flex-start',}}
+      <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
         onPress={() => { router.back() }}>
-        <Text style={globalStyles.whiteH2}>{`< Back`}</Text>
+        <Text style={globalStyles.whiteH1}>{`< Back`}</Text>
       </TouchableOpacity>
         <View style =  {{position: 'absolute', top: 100, alignItems: 'center'}}>
         <Image source = {require('../assets/images/CarCareLogoNoTextWhite.png')}
@@ -81,7 +80,7 @@ export default function LogIn() {
             // Apply the animated translateY value
             transform: [{ translateY: slideAnim }],
           }}>
-        <View style = {[styles.logInContainer, { height: .6 * height}]}>
+        <View style = {[styles.logInContainer, { height: .6 * height, width: '100%'}]}>
           <View style = {styles.subContainer}>
             <GradientText style={globalStyles.gradientH2}>Email</GradientText>
             <TextInput
@@ -102,17 +101,14 @@ export default function LogIn() {
               onChangeText={setPassword}
               />
               </View>
-              <TouchableOpacity
-                style={[globalStyles.gradientButton, {bottom: 75, position: 'absolute'}]}
-                onPress={handleLogin}
-              >
+              <TouchableOpacity style={[globalStyles.whiteButton, {bottom: 75, position: 'absolute'}]}
+                onPress={() => router.push('/vinEnter')}>
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#53c1f3', '#3272ae']} style={globalStyles.gradientButton}>
                   <Text style={globalStyles.whiteButtonText}>
                     Log In
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
-
           </View>
         </Animated.View>
       </View>
