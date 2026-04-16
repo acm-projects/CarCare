@@ -1,3 +1,6 @@
 youtube.api.key=
 youtube.api.base-url=https://www.googleapis.com/youtube/v3
 youtube.api.max-results=5
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+openai.api.key=
