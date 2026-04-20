@@ -1,9 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -16,76 +15,85 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import * as Location from 'expo-location';
-import { fetchMapBundle, type MapMechanic } from '@/lib/mapApi';
-import { MechanicMapPreview } from '@/components/MechanicMapPreview.native';
+} from "react-native";
+import * as Location from "expo-location";
+import { fetchMapBundle, type MapMechanic } from "@/lib/mapApi";
+import { MechanicMapPreview } from "@/components/MechanicMapPreview.native";
+import { GradientText } from "@/styles/global";
 // import MechanicMapPreview from './MechanicMapPreview';
+import { globalStyles } from "@/styles/global";
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 /** Scroll area width (screen has `paddingHorizontal: 20`) — required so top-row flex + absolute menu get real widths */
 const CONTENT_WIDTH = SCREEN_WIDTH - 40;
 const MODAL_MAP_WIDTH = Math.min(SCREEN_WIDTH - 24, 360 - 24);
-const GRADIENT_BORDER: readonly [string, string, string] = ['#84D2F6', '#5FA8D3', '#386FA4'];
+const GRADIENT_BORDER: readonly [string, string, string] = [
+  "#84D2F6",
+  "#5FA8D3",
+  "#386FA4",
+];
 /** Gradient “border” thickness — shared by car dropdown, help tiles, general tips */
-const GRADIENT_FRAME = 2;
+const GRADIENT_FRAME = 0;
 const MODAL_MAP_HEIGHT = 220;
 
 /** Modal backdrop: lower = softer blur (was 80). Overlay stacks on top of BlurView. */
-const MODAL_BLUR_INTENSITY = 38;
-const MODAL_DIM_OVERLAY = 'rgba(0,0,0,0.1)';
+const MODAL_BLUR_INTENSITY = 10;
+const MODAL_DIM_OVERLAY = "rgba(0,0,0,0.1)";
 
 /** Single gray for dashboard labels, icons, and secondary text */
-const GRAY = '#8D8D8D';
-const TIP_TITLE_BLUE = '#5FA8D3';
+const GRAY = "#8D8D8D";
+const TIP_TITLE_BLUE = "#5FA8D3";
 /** Upcoming service pill — red border / pale fill (Figma) */
-const SERVICE_ALERT_RED = '#E53935';
-const SERVICE_ALERT_BG = '#FFF5F5';
+const SERVICE_ALERT_RED = "#E53935";
+const SERVICE_ALERT_BG = "#FFF5F5";
 /** Spark plug icon — same as timeline.tsx (Service Timeline → Spark plug replacement) */
-const SPARK_PLUG_ICON_COLOR = '#FFA865';
+const SPARK_PLUG_ICON_COLOR = "#FFA865";
 type Mechanic = MapMechanic;
 
 /** Fallback when map API is offline — same data as `backend/map-api/server.mjs` */
 const DEFAULT_MECHANICS: Mechanic[] = [
   {
-    id: '1',
+    id: "1",
     name: "Baker's Spring Valley Automotive",
-    address: '7821 Spring Valley Rd, Dallas, TX 75254',
-    distance: '3.4 mi',
+    address: "7821 Spring Valley Rd, Dallas, TX 75254",
+    distance: "3.4 mi",
     rating: 4.9,
     reviewCount: 579,
-    hours: 'Open • Closes 6 PM',
-    services: ['Oil Change', 'Brakes', 'Diagnostics'],
-    review: 'They are always kind and honest and get the job done well! I won\'t go anywhere else for my cars. - Haley Thomas',
-    phone: 'tel:+12145551234',
+    hours: "Open • Closes 6 PM",
+    services: ["Oil Change", "Brakes", "Diagnostics"],
+    review:
+      "They are always kind and honest and get the job done well! I won't go anywhere else for my cars. - Haley Thomas",
+    phone: "tel:+12145551234",
     lat: 32.9196,
     lng: -96.858,
   },
   {
-    id: '2',
-    name: 'Precision Auto Care',
-    address: '591 W Campbell Rd, Richardson, TX 75080',
-    distance: '1.7 mi',
+    id: "2",
+    name: "Precision Auto Care",
+    address: "591 W Campbell Rd, Richardson, TX 75080",
+    distance: "1.7 mi",
     rating: 4.7,
     reviewCount: 42,
-    hours: 'Open • Closes 6 PM',
-    services: ['Oil Change', 'Brakes', 'Diagnostics'],
-    review: 'I had the best experience with Jim! Had an easy fix on my brake right sensor and he ordered the part that day.',
-    phone: 'tel:+12145555678',
+    hours: "Open • Closes 6 PM",
+    services: ["Oil Change", "Brakes", "Diagnostics"],
+    review:
+      "I had the best experience with Jim! Had an easy fix on my brake right sensor and he ordered the part that day.",
+    phone: "tel:+12145555678",
     lat: 32.9806,
     lng: -96.7502,
   },
   {
-    id: '3',
-    name: 'Tidwell Auto Service',
-    address: '3283 Independence Pkwy, Plano, TX 75075',
-    distance: '4.1 mi',
+    id: "3",
+    name: "Tidwell Auto Service",
+    address: "3283 Independence Pkwy, Plano, TX 75075",
+    distance: "4.1 mi",
     rating: 4.6,
     reviewCount: 128,
-    hours: 'Open • Closes 7 PM',
-    services: ['Oil Change', 'Brakes', 'Diagnostics'],
-    review: 'Fast and professional. Will definitely come back for my next service.',
-    phone: 'tel:+12145559999',
+    hours: "Open • Closes 7 PM",
+    services: ["Oil Change", "Brakes", "Diagnostics"],
+    review:
+      "Fast and professional. Will definitely come back for my next service.",
+    phone: "tel:+12145559999",
     lat: 33.045,
     lng: -96.698,
   },
@@ -106,8 +114,8 @@ type GarageCar = {
 
 /** Garage vehicles — switch selection here; all routes stay on this dashboard for now */
 const GARAGE_CARS: GarageCar[] = [
-  { id: 'civic', title: 'My Civic Type R', subtitle: '2017 Honda Civic' },
-  { id: 'bmw', title: 'My BMW 335i', subtitle: '2013 BMW 335i' },
+  { id: "civic", title: "My Civic Type R", subtitle: "2017 Honda Civic" },
+  { id: "bmw", title: "My BMW 335i", subtitle: "2013 BMW 335i" },
 ];
 
 export default function Dashboard() {
@@ -128,7 +136,7 @@ export default function Dashboard() {
       try {
         const perm = await Location.requestForegroundPermissionsAsync();
         if (cancelled) return;
-        if (perm.status === 'granted') {
+        if (perm.status === "granted") {
           const pos = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced,
           });
@@ -160,13 +168,14 @@ export default function Dashboard() {
     };
   }, [showMechanicModal]);
 
-  const selectedCar = GARAGE_CARS.find((c) => c.id === selectedCarId) ?? GARAGE_CARS[0];
+  const selectedCar =
+    GARAGE_CARS.find((c) => c.id === selectedCarId) ?? GARAGE_CARS[0];
   /** Strip leading model year from subtitle, e.g. "2017 Honda Civic" → "Honda Civic" */
-  const tipsVehicleLabel = selectedCar.subtitle.replace(/^\d{4}\s+/, '');
+  const tipsVehicleLabel = selectedCar.subtitle.replace(/^\d{4}\s+/, "");
 
   const openLargerMap = () => {
     const url =
-      Platform.OS === 'ios'
+      Platform.OS === "ios"
         ? `https://maps.apple.com/?q=${mapRegion.latitude},${mapRegion.longitude}`
         : `https://www.google.com/maps/search/?api=1&query=${mapRegion.latitude},${mapRegion.longitude}`;
     Linking.openURL(url);
@@ -174,7 +183,7 @@ export default function Dashboard() {
 
   const openDirections = (m: Mechanic) => {
     const url =
-      Platform.OS === 'ios'
+      Platform.OS === "ios"
         ? `https://maps.apple.com/?daddr=${m.lat},${m.lng}`
         : `https://www.google.com/maps/dir/?api=1&destination=${m.lat},${m.lng}`;
     Linking.openURL(url);
@@ -183,16 +192,16 @@ export default function Dashboard() {
   const openGooglePlaceListing = (m: Mechanic) => {
     if (!m.placeId) return;
     Linking.openURL(
-      `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(m.placeId)}`
+      `https://www.google.com/maps/search/?api=1&query_place_id=${encodeURIComponent(m.placeId)}`,
     );
   };
 
   const handleScanPress = () => {
-    router.push('/scanCamera');
+    router.push("/scanCamera");
   };
 
   const handleServiceTimelinePress = () => {
-    router.push('/myGarage');
+    router.push("/myGarage");
   };
 
   return (
@@ -212,19 +221,25 @@ export default function Dashboard() {
                 accessibilityRole="button"
                 accessibilityLabel="Select vehicle"
               >
-                <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownFrame}>
+                <LinearGradient
+                  colors={GRADIENT_BORDER}
+                  style={styles.carDropdownFrame}
+                >
                   <View style={styles.carDropdownInner}>
                     <View style={styles.carDropdownTriggerRow}>
                       <View style={styles.carDropdownTriggerText}>
                         <Text style={styles.carDropdownTitle} numberOfLines={1}>
                           {selectedCar.title}
                         </Text>
-                        <Text style={styles.carDropdownSubtitle} numberOfLines={1}>
+                        <Text
+                          style={styles.carDropdownSubtitle}
+                          numberOfLines={1}
+                        >
                           {selectedCar.subtitle}
                         </Text>
                       </View>
                       <Ionicons
-                        name={carMenuOpen ? 'chevron-up' : 'chevron-down'}
+                        name={carMenuOpen ? "chevron-up" : "chevron-down"}
                         size={20}
                         color={TIP_TITLE_BLUE}
                       />
@@ -234,14 +249,23 @@ export default function Dashboard() {
               </TouchableOpacity>
 
               {carMenuOpen && (
-                <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownMenuOuter}>
-                  <View style={styles.carDropdownMenuInner} accessibilityViewIsModal>
+                <LinearGradient
+                  colors={GRADIENT_BORDER}
+                  style={styles.carDropdownMenuOuter}
+                >
+                  <View
+                    style={styles.carDropdownMenuInner}
+                    accessibilityViewIsModal
+                  >
                     {GARAGE_CARS.map((car) => {
                       const isActive = car.id === selectedCarId;
                       return (
                         <TouchableOpacity
                           key={car.id}
-                          style={[styles.carDropdownRow, isActive && styles.carDropdownRowActive]}
+                          style={[
+                            styles.carDropdownRow,
+                            isActive && styles.carDropdownRowActive,
+                          ]}
                           activeOpacity={0.85}
                           onPress={() => {
                             setSelectedCarId(car.id);
@@ -249,15 +273,25 @@ export default function Dashboard() {
                           }}
                         >
                           <View style={styles.carDropdownRowText}>
-                            <Text style={styles.carDropdownRowTitle} numberOfLines={2}>
+                            <Text
+                              style={styles.carDropdownRowTitle}
+                              numberOfLines={2}
+                            >
                               {car.title}
                             </Text>
-                            <Text style={styles.carDropdownRowSubtitle} numberOfLines={2}>
+                            <Text
+                              style={styles.carDropdownRowSubtitle}
+                              numberOfLines={2}
+                            >
                               {car.subtitle}
                             </Text>
                           </View>
                           {isActive ? (
-                            <Ionicons name="checkmark-circle" size={22} color={TIP_TITLE_BLUE} />
+                            <Ionicons
+                              name="checkmark-circle"
+                              size={22}
+                              color={TIP_TITLE_BLUE}
+                            />
                           ) : (
                             <View style={styles.carDropdownRowSpacer} />
                           )}
@@ -293,7 +327,12 @@ export default function Dashboard() {
           <View style={styles.dashSectionHeader}>
             <View style={styles.dashSectionTitleRow}>
               <Text style={styles.dashSectionTitle}>Upcoming Services</Text>
-              <Ionicons name="notifications-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
+              <Ionicons
+                name="notifications-outline"
+                size={18}
+                color={GRAY}
+                style={styles.dashSectionTitleIcon}
+              />
             </View>
           </View>
           <TouchableOpacity
@@ -318,73 +357,102 @@ export default function Dashboard() {
         <View style={styles.dashSection}>
           <View style={styles.dashSectionHeader}>
             <View style={styles.dashSectionTitleRow}>
-              <Text style={styles.dashSectionTitle}>Need Help</Text>
-              <Ionicons name="chatbubble-ellipses-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
+              <Text style={styles.dashSectionTitle}>Help</Text>
+              <Ionicons
+                name="chatbubble-ellipses-outline"
+                size={18}
+                color={GRAY}
+                style={styles.dashSectionTitleIcon}
+              />
             </View>
           </View>
           <View style={styles.helpRow}>
-          <LinearGradient colors={GRADIENT_BORDER} style={styles.helpTileGradientWrap}>
-            <View style={styles.helpTileGradientInner}>
-              <TouchableOpacity
-                style={styles.helpTile}
-                activeOpacity={0.85}
-                onPress={() => setShowAAAModal(true)}
-              >
-                <View style={styles.helpTileTopRow}>
-                  <Text style={styles.helpCardTitle} numberOfLines={2}>
-                    Call AAA Helpline
+            <View style={styles.helpTileGradientWrap}>
+              <View style={styles.helpTileGradientInner}>
+                <TouchableOpacity
+                  style={styles.helpTile}
+                  activeOpacity={0.85}
+                  onPress={() => setShowAAAModal(true)}
+                >
+                  <View style={styles.helpTileTopRow}>
+                    <Text style={styles.helpCardTitle} numberOfLines={2}>
+                      Call AAA Helpline
+                    </Text>
+                    <Ionicons name="call-outline" size={22} color={GRAY} />
+                  </View>
+                  <Text style={styles.helpCardSubtitle}>
+                    Connect to roadside assistance
                   </Text>
-                  <Ionicons name="call-outline" size={22} color={GRAY} />
-                </View>
-                <Text style={styles.helpCardSubtitle}>Connect to roadside assistance fast !</Text>
-                <View style={styles.helpTileCornerArrow}>
-                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
-                </View>
-              </TouchableOpacity>
+                  <View style={styles.helpTileCornerArrow}>
+                    <Ionicons
+                      name="chevron-forward-circle-outline"
+                      size={22}
+                      color={GRAY}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-          </LinearGradient>
 
-          <LinearGradient colors={GRADIENT_BORDER} style={styles.helpTileGradientWrap}>
-            <View style={styles.helpTileGradientInner}>
-              <TouchableOpacity
-                style={styles.helpTile}
-                activeOpacity={0.85}
-                onPress={() => setShowMechanicModal(true)}
-              >
-                <View style={styles.helpTileTopRow}>
-                  <Text style={styles.helpCardTitle} numberOfLines={2}>
-                    Nearest Mechanic
+            <LinearGradient
+              colors={GRADIENT_BORDER}
+              style={styles.helpTileGradientWrap}
+            >
+              <View style={styles.helpTileGradientInner}>
+                <TouchableOpacity
+                  style={styles.helpTile}
+                  activeOpacity={0.85}
+                  onPress={() => setShowMechanicModal(true)}
+                >
+                  <View style={styles.helpTileTopRow}>
+                    <Text style={styles.helpCardTitle} numberOfLines={2}>
+                      Nearest Mechanic
+                    </Text>
+                    <Ionicons name="map-outline" size={22} color={GRAY} />
+                  </View>
+                  <Text style={styles.helpCardSubtitle}>
+                    Find trusted mechanics near you
                   </Text>
-                  <Ionicons name="map-outline" size={22} color={GRAY} />
-                </View>
-                <Text style={styles.helpCardSubtitle}>Find trusted mechanics near you !</Text>
-                <View style={styles.helpTileCornerArrow}>
-                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
+                  <View style={styles.helpTileCornerArrow}>
+                    <Ionicons
+                      name="chevron-forward-circle-outline"
+                      size={22}
+                      color={GRAY}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </LinearGradient>
 
-          <LinearGradient colors={GRADIENT_BORDER} style={styles.helpTileGradientWrap}>
-            <View style={styles.helpTileGradientInner}>
-              <TouchableOpacity
-                style={styles.helpTile}
-                activeOpacity={0.85}
-                onPress={() => router.push('../scanCamera')}
-              >
-                <View style={styles.helpTileTopRow}>
-                  <Text style={styles.helpCardTitle} numberOfLines={2}>
-                    Scan or Add Issue
+            <LinearGradient
+              colors={GRADIENT_BORDER}
+              style={styles.helpTileGradientWrap}
+            >
+              <View style={styles.helpTileGradientInner}>
+                <TouchableOpacity
+                  style={styles.helpTile}
+                  activeOpacity={0.85}
+                  onPress={() => router.push("../scanCamera")}
+                >
+                  <View style={styles.helpTileTopRow}>
+                    <Text style={styles.helpCardTitle} numberOfLines={2}>
+                      Scan or Add Issue
+                    </Text>
+                    <Ionicons name="camera-outline" size={22} color={GRAY} />
+                  </View>
+                  <Text style={styles.helpCardSubtitle}>
+                    Get smart suggestions for any car issue
                   </Text>
-                  <Ionicons name="camera-outline" size={22} color={GRAY} />
-                </View>
-                <Text style={styles.helpCardSubtitle}>Get smart suggestions for any car issue !</Text>
-                <View style={styles.helpTileCornerArrow}>
-                  <Ionicons name="chevron-forward-circle-outline" size={22} color={GRAY} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </LinearGradient>
+                  <View style={styles.helpTileCornerArrow}>
+                    <Ionicons
+                      name="chevron-forward-circle-outline"
+                      size={22}
+                      color={GRAY}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </LinearGradient>
           </View>
         </View>
 
@@ -394,137 +462,159 @@ export default function Dashboard() {
               <Text style={styles.dashSectionTitle}>
                 General Tips for Your {tipsVehicleLabel}
               </Text>
-              <Ionicons name="information-circle-outline" size={18} color={GRAY} style={styles.dashSectionTitleIcon} />
+              <Ionicons
+                name="information-circle-outline"
+                size={18}
+                color={GRAY}
+                style={styles.dashSectionTitleIcon}
+              />
             </View>
           </View>
-          <LinearGradient colors={GRADIENT_BORDER} style={styles.tipsGradientWrap}>
+          <LinearGradient
+            colors={GRADIENT_BORDER}
+            style={styles.tipsGradientWrap}
+          >
             <View style={styles.tipsGradientInner}>
-                <View style={styles.tipCategoryRow}>
-                  <Ionicons
-                    name="warning-outline"
-                    size={18}
-                    color={GRAY}
-                    style={styles.tipCategoryIcon}
-                  />
-                  <Text style={styles.tipCategoryTitle}>Known Common Issues</Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Transmission synchro wear / gear grind reported in some models.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    AC condenser failure is a known issue (often warranty-covered).
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Fuel pump recall in some 2017–2020 Hondas may affect performance.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Turbo cooling components should be monitored for overheating stress.
-                  </Text>
-                </View>
+              <View style={styles.tipCategoryRow}>
+                <Ionicons
+                  name="warning-outline"
+                  size={18}
+                  color={GRAY}
+                  style={styles.tipCategoryIcon}
+                />
+                <Text style={styles.tipCategoryTitle}>Known Common Issues</Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Transmission synchro wear / gear grind reported in some
+                  models.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  AC condenser failure is a known issue (often
+                  warranty-covered).
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Fuel pump recall in some 2017–2020 Hondas may affect
+                  performance.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Turbo cooling components should be monitored for overheating
+                  stress.
+                </Text>
+              </View>
 
-                {/* Wear & Performance Notes */}
-                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
-                  <Ionicons
-                    name="build-outline"
-                    size={18}
-                    color={GRAY}
-                    style={styles.tipCategoryIcon}
-                  />
-                  <Text style={styles.tipCategoryTitle}>Wear & Performance Notes</Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Rear brake pads may wear faster due to torque-vectoring system.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    High-performance use can increase overall wear & tear.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    ABS warning lights may indicate sensor or brake fluid issues.
-                  </Text>
-                </View>
+              {/* Wear & Performance Notes */}
+              <View
+                style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}
+              >
+                <Ionicons
+                  name="build-outline"
+                  size={18}
+                  color={GRAY}
+                  style={styles.tipCategoryIcon}
+                />
+                <Text style={styles.tipCategoryTitle}>
+                  Wear & Performance Notes
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Rear brake pads may wear faster due to torque-vectoring
+                  system.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  High-performance use can increase overall wear & tear.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  ABS warning lights may indicate sensor or brake fluid issues.
+                </Text>
+              </View>
 
-                {/* Recommended Checks */}
-                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
-                  <Ionicons
-                    name="search-circle-outline"
-                    size={18}
-                    color={GRAY}
-                    style={styles.tipCategoryIcon}
-                  />
-                  <Text style={styles.tipCategoryTitle}>Recommended Checks</Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Inspect turbo pipes & cooling system periodically.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Ensure recall fixes (fuel pump, steering, etc.) are completed.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Watch for excessive heat if doing track-style driving.
-                  </Text>
-                </View>
+              {/* Recommended Checks */}
+              <View
+                style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}
+              >
+                <Ionicons
+                  name="search-circle-outline"
+                  size={18}
+                  color={GRAY}
+                  style={styles.tipCategoryIcon}
+                />
+                <Text style={styles.tipCategoryTitle}>Recommended Checks</Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Inspect turbo pipes & cooling system periodically.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Ensure recall fixes (fuel pump, steering, etc.) are completed.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Watch for excessive heat if doing track-style driving.
+                </Text>
+              </View>
 
-                {/* General Care Tips */}
-                <View style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}>
-                  <Ionicons
-                    name="car-outline"
-                    size={18}
-                    color={GRAY}
-                    style={styles.tipCategoryIcon}
-                  />
-                  <Text style={styles.tipCategoryTitle}>General Care Tips</Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Follow regular oil changes & inspections.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Check brake pads often; high-performance driving wears them faster.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Rotate tires regularly; stock summer tires wear quickly.
-                  </Text>
-                </View>
-                <View style={styles.tipBulletRow}>
-                  <View style={styles.tipBulletDot} />
-                  <Text style={styles.tipBulletText}>
-                    Let engine warm up before aggressive driving to protect turbo.
-                  </Text>
-                </View>
+              {/* General Care Tips */}
+              <View
+                style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}
+              >
+                <Ionicons
+                  name="car-outline"
+                  size={18}
+                  color={GRAY}
+                  style={styles.tipCategoryIcon}
+                />
+                <Text style={styles.tipCategoryTitle}>General Care Tips</Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Follow regular oil changes & inspections.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Check brake pads often; high-performance driving wears them
+                  faster.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Rotate tires regularly; stock summer tires wear quickly.
+                </Text>
+              </View>
+              <View style={styles.tipBulletRow}>
+                <View style={styles.tipBulletDot} />
+                <Text style={styles.tipBulletText}>
+                  Let engine warm up before aggressive driving to protect turbo.
+                </Text>
+              </View>
             </View>
           </LinearGradient>
         </View>
@@ -538,63 +628,95 @@ export default function Dashboard() {
         onRequestClose={() => setShowAAAModal(false)}
       >
         <View style={styles.modalBackdropWrap}>
-          <BlurView intensity={MODAL_BLUR_INTENSITY} style={styles.blurFill} tint="default" />
-          <Pressable style={styles.modalBackdrop} onPress={() => setShowAAAModal(false)}>
+          <BlurView
+            intensity={MODAL_BLUR_INTENSITY}
+            style={styles.blurFill}
+            tint="default"
+          />
+          <Pressable
+            style={styles.modalBackdrop}
+            onPress={() => setShowAAAModal(false)}
+          >
             <Pressable onPress={() => {}}>
-              <LinearGradient colors={GRADIENT_BORDER} style={styles.modalGradientWrap}>
+              <LinearGradient
+                colors={GRADIENT_BORDER}
+                style={styles.modalGradientWrap}
+              >
                 <View style={styles.modalCard}>
                   <View style={styles.modalHeader}>
                     <View style={styles.modalTitleRow}>
-                      <MaskedView
-                        maskElement={
-                          <Text style={[styles.modalTitle, styles.modalTitleMask]}>AAA</Text>
-                        }
-                      >
-                        <LinearGradient
-                          colors={GRADIENT_BORDER}
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                        >
-                          <Text style={[styles.modalTitle, styles.modalTitleGradientPlaceholder]}>
-                            AAA
-                          </Text>
-                        </LinearGradient>
-                      </MaskedView>
-                      <Text style={styles.modalTitle}> Roadside Assistance</Text>
+                      <GradientText style={styles.modalTitle}>
+                        AAA Roadside Assistance
+                      </GradientText>
                     </View>
-                    <Pressable onPress={() => setShowAAAModal(false)} hitSlop={12}>
-                      <Ionicons name="close" size={22} color="#5FA8D3" />
+                    <Pressable
+                      onPress={() => setShowAAAModal(false)}
+                      hitSlop={12}
+                    >
+                      <Ionicons name="close" size={22} color="#3272ae" />
                     </Pressable>
                   </View>
                   <View style={styles.aaaSection}>
-                    <Ionicons name="call-outline" size={20} color="#5FA8D3" style={styles.aaaIcon} />
+                    <Ionicons
+                      name="call-outline"
+                      size={20}
+                      color="#53c1f3"
+                      style={styles.aaaIcon}
+                    />
                     <View>
-                      <Text style={styles.aaaLabel}>24/7 Emergency Helpline</Text>
-                      <Text style={styles.modalBodyText}>Call: 1-800-AAA-HELP (1-800-222-4357)</Text>
-                    </View>
-                  </View>
-                  <View style={styles.aaaSection}>
-                    <Ionicons name="document-text-outline" size={20} color="#5FA8D3" style={styles.aaaIcon} />
-                    <View>
-                      <Text style={styles.aaaLabel}>Before You Call</Text>
-                      <Text style={styles.modalBodyText}>Have this ready:</Text>
-                      <Text style={styles.modalBodyText}>• Your AAA Membership Number</Text>
-                      <Text style={styles.modalBodyText}>• Your Location</Text>
-                      <Text style={styles.modalBodyText}>• Vehicle Make & Model</Text>
-                      <Text style={styles.modalBodyText}>• Brief description of the issue</Text>
-                    </View>
-                  </View>
-                  <View style={styles.aaaSection}>
-                    <Ionicons name="warning-outline" size={20} color="#F16063" style={styles.aaaIcon} />
-                    <View>
-                      <Text style={styles.aaaLabel}>Not a Member?</Text>
+                      <GradientText style={styles.aaaLabel}>
+                        24/7 Emergency Helpline
+                      </GradientText>
                       <Text style={styles.modalBodyText}>
-                        AAA may offer pay-per-service roadside help depending on availability.
+                        Call: 1-800-AAA-HELP (1-800-222-4357)
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.aaaSection}>
+                    <Ionicons
+                      name="document-text-outline"
+                      size={20}
+                      color="#53c1f3"
+                      style={styles.aaaIcon}
+                    />
+                    <View>
+                      <GradientText style={styles.aaaLabel}>
+                        Before You Call
+                      </GradientText>
+                      <Text style={styles.modalBodyText}>Have this ready:</Text>
+                      <Text style={styles.modalBodyText}>
+                        • Your AAA Membership Number
+                      </Text>
+                      <Text style={styles.modalBodyText}>• Your Location</Text>
+                      <Text style={styles.modalBodyText}>
+                        • Vehicle Make & Model
+                      </Text>
+                      <Text style={styles.modalBodyText}>
+                        • Brief description of the issue
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.aaaSection}>
+                    <Ionicons
+                      name="warning-outline"
+                      size={20}
+                      color="#53c1f3"
+                      style={styles.aaaIcon}
+                    />
+                    <View>
+                      <GradientText style={styles.aaaLabel}>
+                        Not a Member?
+                      </GradientText>
+                      <Text style={styles.modalBodyText}>
+                        AAA may offer pay-per-service roadside help depending on
+                        availability.
                       </Text>
                     </View>
                   </View>
                   <View style={styles.aaaServicesRow}>
-                    <Text style={styles.aaaServicesText}>Towing • Battery • Flat Tire • Fuel • Lockout</Text>
+                    <GradientText style={styles.aaaServicesText}>
+                      Towing • Battery • Flat Tire • Fuel • Lockout
+                    </GradientText>
                   </View>
                 </View>
               </LinearGradient>
@@ -611,14 +733,32 @@ export default function Dashboard() {
         onRequestClose={() => setShowMechanicModal(false)}
       >
         <View style={styles.modalBackdropWrap}>
-          <BlurView intensity={MODAL_BLUR_INTENSITY} style={styles.blurFill} tint="default" />
-          <Pressable style={styles.modalBackdrop} onPress={() => setShowMechanicModal(false)}>
-            <Pressable style={styles.mechanicModalCard} onPress={(e) => e.stopPropagation()}>
-              <LinearGradient colors={GRADIENT_BORDER} style={styles.mechanicModalGradientWrap}>
+          <BlurView
+            intensity={MODAL_BLUR_INTENSITY}
+            style={styles.blurFill}
+            tint="default"
+          />
+          <Pressable
+            style={styles.modalBackdrop}
+            onPress={() => setShowMechanicModal(false)}
+          >
+            <Pressable
+              style={styles.mechanicModalCard}
+              onPress={(e) => e.stopPropagation()}
+            >
+              <LinearGradient
+                colors={GRADIENT_BORDER}
+                style={styles.mechanicModalGradientWrap}
+              >
                 <View style={styles.mechanicModalInner}>
                   <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Nearby Mechanics</Text>
-                    <Pressable onPress={() => setShowMechanicModal(false)} hitSlop={12}>
+                    <GradientText style={styles.modalTitle}>
+                      Nearby Mechanics
+                    </GradientText>
+                    <Pressable
+                      onPress={() => setShowMechanicModal(false)}
+                      hitSlop={12}
+                    >
                       <Ionicons name="close" size={22} color="#5FA8D3" />
                     </Pressable>
                   </View>
@@ -626,11 +766,15 @@ export default function Dashboard() {
                   {mechanicsLoading && (
                     <View style={styles.mechanicsLoadingRow}>
                       <ActivityIndicator color="#5FA8D3" />
-                      <Text style={styles.mechanicsLoadingText}>Finding shops near you…</Text>
+                      <Text style={styles.mechanicsLoadingText}>
+                        Finding shops near you…
+                      </Text>
                     </View>
                   )}
 
-                  <Text style={styles.listCardLabel}>Shops</Text>
+                  <GradientText style={styles.listCardLabel}>
+                    Shops
+                  </GradientText>
                   <ScrollView
                     style={styles.mechanicListScroll}
                     showsVerticalScrollIndicator={false}
@@ -639,24 +783,43 @@ export default function Dashboard() {
                     {mechanics.map((m) => (
                       <View key={m.id} style={styles.mechanicCard}>
                         <View style={styles.mechanicCardHeader}>
-                          <Text style={styles.mechanicName} numberOfLines={2}>{m.name}</Text>
+                          <Text style={styles.mechanicName} numberOfLines={2}>
+                            {m.name}
+                          </Text>
                           <View style={styles.distancePill}>
-                            <Text style={styles.distancePillText}>{m.distance}</Text>
+                            <Text style={styles.distancePillText}>
+                              {m.distance}
+                            </Text>
                           </View>
                         </View>
                         <View style={styles.mechanicAddressRow}>
-                          <Ionicons name="location-outline" size={14} color="#8D8D8D" />
-                          <Text style={styles.mechanicAddress}>{m.address}</Text>
+                          <Ionicons
+                            name="location-outline"
+                            size={14}
+                            color="#8D8D8D"
+                          />
+                          <Text style={styles.mechanicAddress}>
+                            {m.address}
+                          </Text>
                         </View>
                         <View style={styles.mechanicRatingRow}>
                           <View style={styles.starRow}>
                             {[1, 2, 3, 4, 5].map((i) => {
                               const full = i <= Math.floor(m.rating);
-                              const half = !full && i === Math.floor(m.rating) + 1 && m.rating % 1 >= 0.5;
+                              const half =
+                                !full &&
+                                i === Math.floor(m.rating) + 1 &&
+                                m.rating % 1 >= 0.5;
                               return (
                                 <Ionicons
                                   key={i}
-                                  name={full ? 'star' : half ? 'star-half' : 'star-outline'}
+                                  name={
+                                    full
+                                      ? "star"
+                                      : half
+                                        ? "star-half"
+                                        : "star-outline"
+                                  }
                                   size={14}
                                   color="#FFB800"
                                 />
@@ -664,23 +827,36 @@ export default function Dashboard() {
                             })}
                           </View>
                           <Text style={styles.mechanicRatingText}>
-                            {m.rating > 0 ? `${m.rating} (${m.reviewCount} reviews)` : 'No Google rating yet'}
+                            {m.rating > 0
+                              ? `${m.rating} (${m.reviewCount} reviews)`
+                              : "No Google rating yet"}
                           </Text>
                         </View>
                         <View style={styles.mechanicHoursRow}>
-                          <Ionicons name="time-outline" size={14} color="#4CAF50" />
+                          <Ionicons
+                            name="time-outline"
+                            size={14}
+                            color="#4CAF50"
+                          />
                           <Text style={styles.mechanicHours}>{m.hours}</Text>
                         </View>
                         <View style={styles.servicePillsRow}>
                           {m.services.map((s) => (
                             <View key={s} style={styles.servicePillSmall}>
-                              <Text style={styles.servicePillSmallText}>{s}</Text>
+                              <Text style={styles.servicePillSmallText}>
+                                {s}
+                              </Text>
                             </View>
                           ))}
                         </View>
                         {m.review.trim().length > 0 && (
                           <View style={styles.reviewBox}>
-                            <Text style={styles.reviewBoxText} numberOfLines={3}>{m.review}</Text>
+                            <Text
+                              style={styles.reviewBoxText}
+                              numberOfLines={3}
+                            >
+                              {m.review}
+                            </Text>
                           </View>
                         )}
                         <View style={styles.mechanicActions}>
@@ -688,42 +864,74 @@ export default function Dashboard() {
                             style={styles.directionsBtn}
                             onPress={() => openDirections(m)}
                           >
-                            <Ionicons name="navigate-outline" size={18} color="#FFF" />
-                            <Text style={styles.directionsBtnText}>Directions</Text>
+                            <LinearGradient
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
+                              colors={["#53c1f3", "#3272ae"]}
+                              style={styles.scanButton}
+                            >
+                              <Ionicons
+                                name="navigate-outline"
+                                size={18}
+                                color="#FFF"
+                              />
+                              <Text style={styles.directionsBtnText}>
+                                Directions
+                              </Text>
+                            </LinearGradient>
                           </TouchableOpacity>
                           <TouchableOpacity
-                            style={[
-                              styles.callBtn,
-                              !m.phone && !m.placeId ? styles.callBtnDisabled : null,
-                            ]}
-                            disabled={!m.phone && !m.placeId}
-                            onPress={() => {
-                              if (m.phone) Linking.openURL(m.phone);
-                              else openGooglePlaceListing(m);
-                            }}
+                            style={styles.directionsBtn}
+                            onPress={() => openDirections(m)}
                           >
-                            <Ionicons
-                              name={m.phone ? 'call-outline' : 'logo-google'}
+                            <LinearGradient
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
+                              colors={["#53c1f3", "#3272ae"]}
+                              style={styles.scanButton}
+                            >
+                               <Ionicons
+                              name={m.phone ? "call-outline" : "logo-google"}
                               size={18}
                               color="#FFF"
                             />
-                            <Text style={styles.callBtnText}>{m.phone ? 'Call' : 'Google'}</Text>
+                            <Text style={styles.callBtnText}>
+                              {m.phone ? "Call" : "Google"}
+                            </Text>
+                            </LinearGradient>
                           </TouchableOpacity>
                         </View>
                       </View>
                     ))}
                   </ScrollView>
-                  <Text style={[styles.mapCardLabel, styles.mapCardLabelAfterList]}>Map</Text>
-                  <LinearGradient colors={GRADIENT_BORDER} style={styles.mapGradientWrap}>
+                  <GradientText
+                    style={[styles.mapCardLabel, styles.mapCardLabelAfterList]}
+                  >
+                    Map
+                  </GradientText>
+                  <LinearGradient
+                    colors={GRADIENT_BORDER}
+                    style={styles.mapGradientWrap}
+                  >
                     <View style={styles.mapWrap} collapsable={false}>
-                      <MechanicMapPreview style={styles.map} region={mapRegion} mechanics={mechanics} />
+                      <MechanicMapPreview
+                        style={styles.map}
+                        region={mapRegion}
+                        mechanics={mechanics}
+                      />
                       <TouchableOpacity
                         style={styles.viewLargerMapBtn}
                         onPress={openLargerMap}
                         activeOpacity={0.85}
                       >
-                        <Text style={styles.viewLargerMapText}>View larger map</Text>
-                        <Ionicons name="chevron-forward" size={16} color="#5FA8D3" />
+                        <Text style={styles.viewLargerMapText}>
+                          View larger map
+                        </Text>
+                        <Ionicons
+                          name="chevron-forward"
+                          size={16}
+                          color="#5FA8D3"
+                        />
                       </TouchableOpacity>
                     </View>
                   </LinearGradient>
@@ -740,7 +948,7 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F3F3F3',
+    backgroundColor: "#f5f5f5",
     paddingHorizontal: 20,
   },
 
@@ -750,7 +958,7 @@ const styles = StyleSheet.create({
     paddingBottom: 72,
     /** Without this, rows inside ScrollView can shrink-wrap and the car menu collapses to ~0 width */
     width: CONTENT_WIDTH,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
 
   heroOuter: {
@@ -758,11 +966,11 @@ const styles = StyleSheet.create({
   },
 
   topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 12,
-    width: '100%',
+    width: "100%",
   },
 
   /**
@@ -778,33 +986,33 @@ const styles = StyleSheet.create({
   },
 
   carDropdownAnchor: {
-    position: 'relative',
-    width: '100%',
+    position: "relative",
+    width: "100%",
   },
 
   carDropdownHit: {
-    width: '100%',
+    width: "100%",
   },
 
   carDropdownFrame: {
     padding: GRADIENT_FRAME,
     borderRadius: 999,
-    overflow: 'hidden',
-    width: '100%',
+    overflow: "hidden",
+    width: "100%",
   },
 
   carDropdownInner: {
     borderRadius: 999,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   carDropdownTriggerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     gap: 8,
   },
 
@@ -815,7 +1023,7 @@ const styles = StyleSheet.create({
 
   carDropdownTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: TIP_TITLE_BLUE,
   },
 
@@ -826,17 +1034,17 @@ const styles = StyleSheet.create({
   },
 
   carDropdownMenuOuter: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
-    top: '100%',
+    top: "100%",
     marginTop: 8,
     padding: GRADIENT_FRAME,
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
     zIndex: 40,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 8,
@@ -844,20 +1052,20 @@ const styles = StyleSheet.create({
 
   carDropdownMenuInner: {
     borderRadius: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingVertical: 4,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   carDropdownRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
 
   carDropdownRowActive: {
-    backgroundColor: '#F5FAFF',
+    backgroundColor: "#F5FAFF",
   },
 
   carDropdownRowText: {
@@ -867,7 +1075,7 @@ const styles = StyleSheet.create({
 
   carDropdownRowTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: TIP_TITLE_BLUE,
   },
 
@@ -884,29 +1092,39 @@ const styles = StyleSheet.create({
 
   /** Same as timeline.tsx — blue pill, white scan icon + label */
   scanButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#84D2F6',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#84D2F6",
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
 
+  nearbyMechButton: {
+    flexDirection: "row",
+    alignItems: "center",
+        backgroundColor: '#ffff',
+    justifyContent: "center",
+    borderRadius: 25,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+
   scanButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 6,
   },
 
   heroImagePlaceholder: {
-    width: '100%',
+    width: "100%",
     height: 170,
     borderRadius: 18,
-    backgroundColor: '#E8E8E8',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#E8E8E8",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   heroPlaceholderText: {
@@ -924,15 +1142,15 @@ const styles = StyleSheet.create({
   },
 
   dashSectionTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    maxWidth: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    maxWidth: "100%",
   },
 
   dashSectionTitle: {
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: "700",
     color: GRAY,
     flexShrink: 1,
   },
@@ -942,8 +1160,8 @@ const styles = StyleSheet.create({
   },
 
   servicePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: SERVICE_ALERT_BG,
     borderRadius: 999,
     paddingVertical: 12,
@@ -963,14 +1181,14 @@ const styles = StyleSheet.create({
 
   serviceTitle: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
     color: GRAY,
     marginLeft: 1,
   },
 
   serviceSubtitle: {
     fontSize: 13,
-    fontWeight: '400',
+    fontWeight: "400",
     color: GRAY,
     marginTop: 2,
     marginLeft: 1,
@@ -979,48 +1197,54 @@ const styles = StyleSheet.create({
   /* Help section row with 3 tiles */
 
   helpRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     gap: 6,
+
   },
 
   helpTileGradientWrap: {
     flex: 1,
     padding: GRADIENT_FRAME,
     borderRadius: 17,
-    overflow: 'hidden',
+    overflow: "hidden",
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2.5,
+    elevation: 4,
   },
 
   helpTileGradientInner: {
     flex: 1,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    overflow: 'hidden',
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
   },
 
   helpTile: {
-    position: 'relative',
+    position: "relative",
     flex: 1,
     minHeight: 118,
     paddingVertical: 12,
     paddingHorizontal: 8,
     paddingBottom: 28,
-    backgroundColor: 'transparent',
-    alignItems: 'stretch',
-    justifyContent: 'flex-start',
+    backgroundColor: "transparent",
+    alignItems: "stretch",
+    justifyContent: "flex-start",
   },
 
   helpTileTopRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
     gap: 6,
   },
 
   helpCardTitle: {
     flex: 1,
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: "700",
     color: GRAY,
     lineHeight: 16,
   },
@@ -1035,7 +1259,7 @@ const styles = StyleSheet.create({
   },
 
   helpTileCornerArrow: {
-    position: 'absolute',
+    position: "absolute",
     right: 6,
     bottom: 6,
   },
@@ -1043,19 +1267,19 @@ const styles = StyleSheet.create({
   tipsGradientWrap: {
     padding: GRADIENT_FRAME,
     borderRadius: 24,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   tipsGradientInner: {
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   tipCategoryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   tipCategoryRowAfterBlock: {
@@ -1069,13 +1293,13 @@ const styles = StyleSheet.create({
   tipCategoryTitle: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: TIP_TITLE_BLUE,
   },
 
   tipBulletRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginTop: 4,
   },
 
@@ -1096,7 +1320,7 @@ const styles = StyleSheet.create({
   },
 
   blurFill: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     right: 0,
     top: 0,
@@ -1105,35 +1329,35 @@ const styles = StyleSheet.create({
 
   modalBackdropWrap: {
     flex: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   modalBackdrop: {
     flex: 1,
     backgroundColor: MODAL_DIM_OVERLAY,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 12,
   },
 
   modalGradientWrap: {
     padding: GRADIENT_FRAME,
     borderRadius: 24,
-    overflow: 'hidden',
-    width: '100%',
+    overflow: "hidden",
+    width: "100%",
     maxWidth: 360,
   },
 
   modalCard: {
     margin: GRADIENT_FRAME,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 22,
     padding: 14,
   },
 
   aaaSection: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     marginTop: 12,
   },
 
@@ -1144,8 +1368,8 @@ const styles = StyleSheet.create({
 
   aaaLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
     marginBottom: 4,
   },
 
@@ -1153,40 +1377,40 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: '#E8F6FF',
+    borderTopColor: "#E8F6FF",
   },
 
   aaaServicesText: {
     fontSize: 13,
-    color: '#5FA8D3',
-    fontWeight: '500',
+    color: "#5FA8D3",
+    fontWeight: "500",
   },
 
   mechanicModalCard: {
-    width: '100%',
+    width: "100%",
     maxWidth: 360,
-    maxHeight: '88%',
-    overflow: 'hidden',
+    maxHeight: "88%",
+    overflow: "hidden",
   },
 
   mechanicModalGradientWrap: {
     padding: GRADIENT_FRAME,
     borderRadius: 24,
-    overflow: 'hidden',
-    width: '100%',
+    overflow: "hidden",
+    width: "100%",
   },
 
   mechanicModalInner: {
     margin: GRADIENT_FRAME,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 22,
     padding: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
 
   mechanicsLoadingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
     marginTop: 8,
     marginBottom: 4,
@@ -1199,16 +1423,16 @@ const styles = StyleSheet.create({
 
   listCardLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
     marginTop: 4,
     marginBottom: 4,
   },
 
   mapCardLabel: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
     marginTop: 8,
     marginBottom: 4,
   },
@@ -1220,61 +1444,61 @@ const styles = StyleSheet.create({
   mapGradientWrap: {
     padding: GRADIENT_FRAME,
     borderRadius: 16,
-    overflow: 'hidden',
-    width: '100%',
+    overflow: "hidden",
+    width: "100%",
   },
 
   mapWrap: {
-    width: '100%',
+    width: "100%",
     minHeight: MODAL_MAP_HEIGHT - 4,
     height: MODAL_MAP_HEIGHT - 4,
     borderRadius: 14,
-    overflow: 'hidden',
-    backgroundColor: '#D0E8F4',
+    overflow: "hidden",
+    backgroundColor: "#D0E8F4",
   },
 
   map: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
 
   viewLargerMapBtn: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#84D2F6',
+    borderColor: "#84D2F6",
     gap: 4,
   },
 
   viewLargerMapText: {
     fontSize: 13,
-    color: '#5FA8D3',
-    fontWeight: '500',
+    color: "#5FA8D3",
+    fontWeight: "500",
   },
 
   mapZoomControls: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
     right: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
-    overflow: 'hidden',
+    borderColor: "#E0E0E0",
+    overflow: "hidden",
   },
 
   mapZoomBtn: {
     paddingVertical: 8,
     paddingHorizontal: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   mechanicListScroll: {
@@ -1286,19 +1510,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE',
+    borderBottomColor: "#EEEEEE",
     paddingVertical: 4,
   },
 
   mechanicCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     gap: 8,
   },
 
   distancePill: {
-    backgroundColor: '#E8F6FF',
+    backgroundColor: "#E8F6FF",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 999,
@@ -1306,60 +1530,60 @@ const styles = StyleSheet.create({
 
   distancePillText: {
     fontSize: 12,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
   },
 
   mechanicAddressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 6,
     gap: 4,
   },
 
   mechanicAddress: {
     fontSize: 12,
-    color: '#8D8D8D',
+    color: "#8D8D8D",
     flex: 1,
   },
 
   mechanicRatingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 6,
     gap: 6,
   },
 
   starRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 
   mechanicRatingText: {
     fontSize: 12,
-    color: '#8D8D8D',
+    color: "#8D8D8D",
   },
 
   mechanicHoursRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 4,
     gap: 4,
   },
 
   mechanicHours: {
     fontSize: 12,
-    color: '#8D8D8D',
+    color: "#8D8D8D",
   },
 
   servicePillsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 6,
     marginTop: 8,
   },
 
   servicePillSmall: {
-    backgroundColor: '#E8F6FF',
+    backgroundColor: "#E8F6FF",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -1367,55 +1591,56 @@ const styles = StyleSheet.create({
 
   servicePillSmallText: {
     fontSize: 11,
-    fontWeight: '500',
-    color: '#5FA8D3',
+    fontWeight: "500",
+    color: "#5FA8D3",
   },
 
   reviewBox: {
-    backgroundColor: '#E8F6FF',
+    backgroundColor: "#E8F6FF",
     borderRadius: 12,
     padding: 10,
     marginTop: 10,
     borderLeftWidth: 3,
-    borderLeftColor: '#5FA8D3',
+    borderLeftColor: "#5FA8D3",
   },
 
   reviewBoxText: {
     fontSize: 12,
-    color: '#5A5A5A',
+    color: "#5A5A5A",
     lineHeight: 18,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
 
   mechanicActions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
     marginTop: 12,
   },
 
   directionsBtn: {
+    justifyContent: "center",
+    borderRadius: 50,
+    width: 300,
+    height: 60,
+    backgroundColor: "transparent",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 2,
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#5FA8D3',
-    paddingVertical: 10,
-    borderRadius: 12,
-    gap: 6,
   },
 
   directionsBtnText: {
-    color: '#FFF',
-    fontWeight: '600',
+    color: "#FFF",
+    fontWeight: "600",
     fontSize: 14,
   },
 
   callBtn: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#5FA8D3',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#5FA8D3",
     paddingVertical: 10,
     borderRadius: 12,
     gap: 6,
@@ -1426,31 +1651,31 @@ const styles = StyleSheet.create({
   },
 
   callBtnText: {
-    color: '#FFF',
-    fontWeight: '600',
+    color: "#FFF",
+    fontWeight: "600",
     fontSize: 14,
   },
 
   modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 6,
   },
 
   modalTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   modalTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
   },
 
   modalTitleMask: {
-    color: '#000',
+    color: "#000",
   },
 
   modalTitleGradientPlaceholder: {
@@ -1459,50 +1684,50 @@ const styles = StyleSheet.create({
 
   modalBodyText: {
     fontSize: 14,
-    color: '#4A4A4A',
+    color: "#4A4A4A",
     lineHeight: 20,
   },
 
   mapPlaceholder: {
     height: 160,
     borderRadius: 16,
-    backgroundColor: '#E8E8E8',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#E8E8E8",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
   },
 
   mapPlaceholderInner: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     minHeight: 180,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
     gap: 8,
     paddingVertical: 16,
   },
 
   mapPlaceholderTitle: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#5FA8D3',
+    fontWeight: "600",
+    color: "#5FA8D3",
   },
 
   mapPlaceholderSubtext: {
     fontSize: 13,
-    color: '#8D8D8D',
+    color: "#8D8D8D",
   },
 
   mapPlaceholderBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.95)",
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#84D2F6',
+    borderColor: "#84D2F6",
     gap: 6,
     marginTop: 4,
   },
@@ -1513,12 +1738,12 @@ const styles = StyleSheet.create({
 
   mechanicName: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#333333',
+    fontWeight: "600",
+    color: "#333333",
   },
 
   mechanicMeta: {
     fontSize: 13,
-    color: '#8D8D8D',
+    color: "#8D8D8D",
   },
 });

@@ -37,6 +37,7 @@ export const globalStyles = StyleSheet.create ({
     flex: 1,
     justifyContent: 'center',
     textAlign: 'center',
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     gap: 15,
   },
