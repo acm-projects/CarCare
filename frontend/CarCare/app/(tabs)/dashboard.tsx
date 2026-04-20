@@ -19,6 +19,7 @@ import {
 import * as Location from "expo-location";
 import { fetchMapBundle, type MapMechanic } from "@/lib/mapApi";
 import { MechanicMapPreview } from "@/components/MechanicMapPreview.native";
+import { CarModelViewer } from "@/components/CarModelViewer";
 import { GradientText } from "@/styles/global";
 // import MechanicMapPreview from './MechanicMapPreview';
 import { globalStyles } from "@/styles/global";
@@ -204,6 +205,21 @@ export default function Dashboard() {
     router.push("/myGarage");
   };
 
+  /**
+   * Drop your `.glb` files into `frontend/CarCare/assets/models/` and update
+   * these `require(...)` paths.
+   */
+  const modelAsset = (() => {
+    switch (selectedCarId) {
+      // case "civic":
+      //   return require("@/assets/models/civic.glb");
+      // case "bmw":
+      //   return require("@/assets/models/bmw.glb");
+      default:
+        return undefined;
+    }
+  })();
+
   return (
     <View style={styles.screen}>
       <ScrollView
@@ -317,9 +333,7 @@ export default function Dashboard() {
         {/* Car snapshot — grey block only on screen bg (no white wrapper) */}
         <View style={styles.heroOuter}>
           <View style={styles.heroImagePlaceholder}>
-            <Text style={styles.heroPlaceholderText}>
-              {selectedCar.title} — snapshot
-            </Text>
+            <CarModelViewer modelAsset={modelAsset} />
           </View>
         </View>
 
