@@ -24,3 +24,4 @@ gradle-app.setting
 **/main/resources/application.properties
 
 ./map-api/.env
+./backend/.env
