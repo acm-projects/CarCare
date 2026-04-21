@@ -53,20 +53,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="chatbot"
+        options={{
+          title: 'chatbot',
+          tabBarIcon: ({ focused }) => <Ionicons 
+          name={focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} size={32} color='#fff' />,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'settings',
           tabBarIcon: ({ focused }) => <Ionicons
            name={focused ? "settings" : "settings-outline"}  size={32} color='#fff' />,
-        }}
-      />
-      <Tabs.Screen
-        name="mapbot"
-        options={{
-          title: 'mapbot',
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name={focused ? "map" : "map-outline"} size={32} color="#fff" />
-          ),
         }}
       />
       

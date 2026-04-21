@@ -47,11 +47,11 @@ export default function Settings() {
               </TouchableOpacity>
 
               {/* Nav to the notification settings */}
-              <TouchableOpacity onPress={ () => router.push('/notifications')}>
+              <TouchableOpacity onPress={ () => router.push('/garageManagement')}>
                 <View style = {[styles.settingsContainer, {alignContent: 'space-evenly'}]}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                    <Ionicons name="notifications-outline" size={30} color="#8d8d8d" />
-                    <Text style={globalStyles.grayP}>Notifications</Text>
+                    <Ionicons name="car-outline" size={30} color="#8d8d8d" />
+                    <Text style={globalStyles.grayP}>Garage Management</Text>
                   </View>
                   <Ionicons name="chevron-forward-outline" size={25} color='#8d8d8d' />
                 </View>
