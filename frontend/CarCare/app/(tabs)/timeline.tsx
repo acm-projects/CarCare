@@ -5,16 +5,35 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  Animated,
   Modal,
   TextInput,
   Pressable,
+  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { globalStyles, GradientText } from "@/styles/global";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { LinearGradient } from "expo-linear-gradient";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const CONTENT_WIDTH = SCREEN_WIDTH - 40;
+const GRADIENT_BORDER: readonly [string, string, string] = ["#84D2F6", "#5FA8D3", "#386FA4"];
+const GRADIENT_FRAME = 0;
+const GRAY = "#8D8D8D";
+const TIP_TITLE_BLUE = "#5FA8D3";
 
 type IoniconsGlyphs = ComponentProps<typeof Ionicons>["name"];
+
+type GarageCar = {
+  id: string;
+  title: string;
+  subtitle: string;
+};
+
+const GARAGE_CARS: GarageCar[] = [
+  { id: "civic", title: "My Civic Type R", subtitle: "2017 Honda Civic" },
+  { id: "bmw", title: "My BMW 335i", subtitle: "2013 BMW 335i" },
+];
 
 type Service = {
   id: number;
@@ -23,12 +42,10 @@ type Service = {
   icon: IoniconsGlyphs;
   iconColor: string;
   cost: string;
+  finished?: boolean;
 };
 
 const INITIAL_SERVICES: Service[] = [
-
-  // Cases
-
   {
     id: 1,
     title: "Oil change",
@@ -36,6 +53,7 @@ const INITIAL_SERVICES: Service[] = [
     icon: "water",
     iconColor: "#FF6565",
     cost: "$45 – $85",
+    finished: false,
   },
   {
     id: 2,
@@ -44,6 +62,7 @@ const INITIAL_SERVICES: Service[] = [
     icon: "flash",
     iconColor: "#FFA865",
     cost: "$100 – $200",
+    finished: false,
   },
   {
     id: 3,
@@ -52,10 +71,9 @@ const INITIAL_SERVICES: Service[] = [
     icon: "folder",
     iconColor: "#9DE38F",
     cost: "$20 – $50",
+    finished: false,
   },
 ];
-
-// Dropdown menu
 
 function ServiceDropdown({ cost }: { cost: string }) {
   return (
@@ -73,56 +91,29 @@ function ServiceDropdown({ cost }: { cost: string }) {
   );
 }
 
-function ServiceCard({
-  service,
-  onDelete,
-}: {
-  service: Service;
-  onDelete?: () => void;
-}) {
+function ServiceCard({ service }: { service: Service }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View
-      style={[
-        styles.serviceContainer,
-        expanded && styles.serviceContainerExpanded,
-      ]}
-    >
-      {/* Main row */}
+    <View style={[styles.serviceContainer, expanded && styles.serviceContainerExpanded]}>
       <TouchableOpacity
         style={styles.subContainer}
         activeOpacity={0.85}
         onPress={() => setExpanded((prev) => !prev)}
       >
         <View style={styles.cardLeft}>
-          <Ionicons
-            name={service.icon}
-            size={35}
-            color={service.iconColor}
-            style={{ paddingRight: 5 }}
-          />
+          <Ionicons name={service.icon} size={35} color={service.iconColor} style={{ paddingRight: 5 }} />
           <View style={globalStyles.verticalContainer}>
-            <GradientText style={globalStyles.gradientH1}>
-              {service.title}
-            </GradientText>
+            <GradientText style={globalStyles.gradientH1}>{service.title}</GradientText>
             <Text style={globalStyles.grayP2}>{service.due}</Text>
           </View>
         </View>
-        <Ionicons
-          name={expanded ? "chevron-up" : "chevron-down"}
-          size={24}
-          color="#386FA4"
-        />
+        <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={24} color="#386FA4" />
       </TouchableOpacity>
-
-      {/* Dropdown */}
       {expanded && <ServiceDropdown cost={service.cost} />}
     </View>
   );
 }
-
-// Icon options for the "Add Service" modal
 
 const ICON_OPTIONS: { name: IoniconsGlyphs; color: string }[] = [
   { name: "water", color: "#FF6565" },
@@ -134,8 +125,6 @@ const ICON_OPTIONS: { name: IoniconsGlyphs; color: string }[] = [
   { name: "settings", color: "#64B6AC" },
   { name: "speedometer", color: "#F4A261" },
 ];
-
-// Modal for adding a new service (DOENT ACTUALLY WORK)
 
 function AddServiceModal({
   visible,
@@ -149,10 +138,7 @@ function AddServiceModal({
   const [title, setTitle] = useState("");
   const [due, setDue] = useState("");
   const [cost, setCost] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState<{
-    name: IoniconsGlyphs;
-    color: string;
-  }>(ICON_OPTIONS[3]);
+  const [selectedIcon, setSelectedIcon] = useState<{ name: IoniconsGlyphs; color: string }>(ICON_OPTIONS[3]);
 
   const handleAdd = () => {
     if (!title.trim()) return;
@@ -163,6 +149,7 @@ function AddServiceModal({
       icon: selectedIcon.name as IoniconsGlyphs,
       iconColor: selectedIcon.color,
       cost: cost.trim() || "N/A",
+      finished: false,
     });
     setTitle("");
     setDue("");
@@ -171,20 +158,10 @@ function AddServiceModal({
     onClose();
   };
 
-  // Add new service pop up screen
-
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}
-    >
+    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <Pressable style={styles.modalOverlay} onPress={onClose}>
-        <Pressable
-          style={styles.modalSheet}
-          onPress={(e) => e.stopPropagation()}
-        >
+        <Pressable style={styles.modalSheet} onPress={(e) => e.stopPropagation()}>
           <Text style={styles.modalTitle}>Add New Service</Text>
 
           <Text style={styles.modalLabel}>Service Name *</Text>
@@ -238,10 +215,7 @@ function AddServiceModal({
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[
-                styles.addConfirmButton,
-                !title.trim() && { opacity: 0.4 },
-              ]}
+              style={[styles.addConfirmButton, !title.trim() && { opacity: 0.4 }]}
               onPress={handleAdd}
               disabled={!title.trim()}
             >
@@ -254,56 +228,170 @@ function AddServiceModal({
   );
 }
 
+type FilterType = "all" | "upcoming" | "finished";
+
+const FILTER_PILLS: { label: string; value: FilterType }[] = [
+  { label: "All", value: "all" },
+  { label: "Upcoming", value: "upcoming" },
+  { label: "Finished", value: "finished" },
+];
+
 export default function Timeline() {
   const router = useRouter();
   const [services, setServices] = useState<Service[]>(INITIAL_SERVICES);
   const [modalVisible, setModalVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [selectedCarId, setSelectedCarId] = useState<string>(GARAGE_CARS[0].id);
+  const [carMenuOpen, setCarMenuOpen] = useState(false);
 
-  const handleScanPress = () => router.push("/myGarage");
+  const selectedCar = GARAGE_CARS.find((c) => c.id === selectedCarId) ?? GARAGE_CARS[0];
 
-  const handleAddService =
-    (newService: Service) =>
-    (newService: {
-      id: number;
-      title: string;
-      due: string;
-      icon: string;
-      iconColor: string;
-      cost: string;
-    }) => {
-      setServices((prev) => [
-        ...prev,
-        { ...newService, icon: newService.icon as IoniconsGlyphs },
-      ]);
-    };
+  const filteredServices = services.filter((s) => {
+    if (activeFilter === "upcoming") return !s.finished;
+    if (activeFilter === "finished") return s.finished;
+    return true;
+  });
+
+  const handleAddService = (newService: Service) => {
+    setServices((prev) => [...prev, newService]);
+  };
 
   return (
     <View style={[styles.screen, styles.screenOverride]}>
       <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          styles.scrollContentOverride,
-        ]}
+        contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <View style={[globalStyles.container]}>
-          <GradientText style = {[globalStyles.gradientHeader, {paddingBottom: 25}]}>Service Timeline</GradientText>
-          <View style={[globalStyles.horizontalContainer, { gap: 10 }]}>
-            <Text
-              style={[globalStyles.grayP, { padding: 1, fontWeight: "500" }]}
+
+          {/* Top row: car dropdown + scan button */}
+          <View style={styles.topRow}>
+            <View style={styles.carSelectorGroup}>
+              <View style={styles.carDropdownAnchor}>
+                <TouchableOpacity
+                  style={styles.carDropdownHit}
+                  activeOpacity={0.9}
+                  onPress={() => setCarMenuOpen((o) => !o)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Select vehicle"
+                >
+                  <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownFrame}>
+                    <View style={styles.carDropdownInner}>
+                      <View style={styles.carDropdownTriggerRow}>
+                        <View style={styles.carDropdownTriggerText}>
+                          <Text style={styles.carDropdownTitle} numberOfLines={1}>
+                            {selectedCar.title}
+                          </Text>
+                          <Text style={styles.carDropdownSubtitle} numberOfLines={1}>
+                            {selectedCar.subtitle}
+                          </Text>
+                        </View>
+                        <Ionicons
+                          name={carMenuOpen ? "chevron-up" : "chevron-down"}
+                          size={20}
+                          color={TIP_TITLE_BLUE}
+                        />
+                      </View>
+                    </View>
+                  </LinearGradient>
+                </TouchableOpacity>
+
+                {carMenuOpen && (
+                  <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownMenuOuter}>
+                    <View style={styles.carDropdownMenuInner} accessibilityViewIsModal>
+                      {GARAGE_CARS.map((car) => {
+                        const isActive = car.id === selectedCarId;
+                        return (
+                          <TouchableOpacity
+                            key={car.id}
+                            style={[styles.carDropdownRow, isActive && styles.carDropdownRowActive]}
+                            activeOpacity={0.85}
+                            onPress={() => {
+                              setSelectedCarId(car.id);
+                              setCarMenuOpen(false);
+                            }}
+                          >
+                            <View style={styles.carDropdownRowText}>
+                              <Text style={styles.carDropdownRowTitle} numberOfLines={2}>
+                                {car.title}
+                              </Text>
+                              <Text style={styles.carDropdownRowSubtitle} numberOfLines={2}>
+                                {car.subtitle}
+                              </Text>
+                            </View>
+                            {isActive ? (
+                              <Ionicons name="checkmark-circle" size={22} color={TIP_TITLE_BLUE} />
+                            ) : (
+                              <View style={styles.carDropdownRowSpacer} />
+                            )}
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </LinearGradient>
+                )}
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.scanButton}
+              activeOpacity={0.85}
+              onPress={() => router.push("/scanCamera")}
             >
-              My 2017 Honda Civic
+              <Ionicons name="scan-outline" size={26} color="#FFFFFF" />
+              <Text style={styles.scanButtonText}>Scan</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Subtitle row */}
+          <View style={[globalStyles.horizontalContainer, { gap: 10 }]}>
+            <Text style={[globalStyles.grayP, { padding: 1, fontWeight: "500" }]}>
+              {selectedCar.subtitle}
             </Text>
             <GradientText style={globalStyles.gradientP}>See all</GradientText>
           </View>
 
+          {/* Filter Pills */}
+          <View style={styles.pillRow}>
+            {FILTER_PILLS.map((pill) => {
+              const isActive = activeFilter === pill.value;
+              return isActive ? (
+                <LinearGradient
+                  key={pill.value}
+                  colors={["#386FA4", "#84D2F6"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.pillGradient}
+                >
+                  <TouchableOpacity onPress={() => setActiveFilter(pill.value)}>
+                    <Text style={styles.pillTextActive}>{pill.label}</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              ) : (
+                <TouchableOpacity
+                  key={pill.value}
+                  style={styles.pillInactive}
+                  onPress={() => setActiveFilter(pill.value)}
+                >
+                  <Text style={styles.pillTextInactive}>{pill.label}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
           {/* Service cards */}
-          {services.map((service) => (
-            <View key={service.id} style={globalStyles.horizontalContainer}>
-              <ServiceCard service={service} />
+          {filteredServices.length > 0 ? (
+            filteredServices.map((service) => (
+              <View key={service.id} style={globalStyles.horizontalContainer}>
+                <ServiceCard service={service} />
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="checkmark-circle-outline" size={40} color="#B0CDE0" />
+              <Text style={styles.emptyStateText}>No services here yet.</Text>
             </View>
-          ))}
+          )}
 
           {/* Add New Service button */}
           <View style={[globalStyles.horizontalContainer, { marginTop: 6 }]}>
@@ -319,7 +407,6 @@ export default function Timeline() {
         </View>
       </ScrollView>
 
-      {/* Add Service Modal */}
       <AddServiceModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -332,7 +419,7 @@ export default function Timeline() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#f5f5f5",
   },
   screenOverride: {
     paddingHorizontal: 10,
@@ -343,6 +430,180 @@ const styles = StyleSheet.create({
   },
   scrollContentOverride: {
     paddingHorizontal: 0,
+  },
+
+  // ── Top row ───────────────────────────────────────────
+  topRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 12,
+    width: "100%",
+    zIndex: 30,
+  },
+  carSelectorGroup: {
+    flex: 1,
+    flexShrink: 0,
+    minWidth: Math.round(CONTENT_WIDTH * 0.42),
+    maxWidth: Math.round(CONTENT_WIDTH * 0.78),
+    marginRight: 10,
+    zIndex: 30,
+  },
+  carDropdownAnchor: {
+    position: "relative",
+    width: "100%",
+  },
+  carDropdownHit: {
+    width: "100%",
+  },
+  carDropdownFrame: {
+    padding: GRADIENT_FRAME,
+    borderRadius: 999,
+    overflow: "hidden",
+    width: "100%",
+  },
+  carDropdownInner: {
+    borderRadius: 999,
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    overflow: "hidden",
+  },
+  carDropdownTriggerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  carDropdownTriggerText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  carDropdownTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: TIP_TITLE_BLUE,
+  },
+  carDropdownSubtitle: {
+    fontSize: 11,
+    color: GRAY,
+    marginTop: 2,
+  },
+  carDropdownMenuOuter: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: "100%",
+    marginTop: 8,
+    padding: GRADIENT_FRAME,
+    borderRadius: 16,
+    overflow: "hidden",
+    zIndex: 40,
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+  },
+  carDropdownMenuInner: {
+    borderRadius: 14,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 4,
+    overflow: "hidden",
+  },
+  carDropdownRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  carDropdownRowActive: {
+    backgroundColor: "#F5FAFF",
+  },
+  carDropdownRowText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  carDropdownRowTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: TIP_TITLE_BLUE,
+  },
+  carDropdownRowSubtitle: {
+    fontSize: 11,
+    color: GRAY,
+    marginTop: 2,
+  },
+  carDropdownRowSpacer: {
+    width: 22,
+    height: 22,
+  },
+  scanButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#84D2F6",
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  scanButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "500",
+    marginLeft: 6,
+  },
+
+  pillRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 5,
+    marginBottom: 5,
+    alignSelf: "flex-start",
+  },
+  pillGradient: {
+    borderRadius: 999,
+    paddingHorizontal: 18,
+    
+  },
+  pillTextActive: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    paddingVertical:8,
+    shadowRadius: 1,
+    overflow:'hidden',
+  },
+  pillInactive: {
+    borderRadius: 999,
+    paddingHorizontal: 18,
+    backgroundColor: "#fff",
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    paddingVertical:8,
+    shadowRadius: 1,
+  },
+  pillTextInactive: {
+    color: "#8D8D8D",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+
+  // ── Empty state ───────────────────────────────────────
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 40,
+    gap: 10,
+  },
+  emptyStateText: {
+    color: "#B0CDE0",
+    fontSize: 15,
+    fontWeight: "500",
   },
 
   // ── Service Card ──────────────────────────────────────
@@ -431,59 +692,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#5FA8D3",
-  },
-
-  // ── Top row ───────────────────────────────────────────
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  carSelectorGroup: {
-    flex: 1,
-    marginRight: 10,
-  },
-  carChipsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  carChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: "#D6D6D6",
-    backgroundColor: "#FFFFFF",
-  },
-  carChipActive: {
-    borderColor: "#84D2F6",
-    backgroundColor: "#E8F6FF",
-  },
-  carChipTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#5FA8D3",
-  },
-  carChipSubtitle: {
-    fontSize: 11,
-    color: "#8D8D8D",
-  },
-  scanButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#84D2F6",
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-  },
-  scanButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "500",
-    marginLeft: 6,
   },
 
   // ── Modal ─────────────────────────────────────────────
