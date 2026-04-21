@@ -45,7 +45,8 @@ public class CarStoreService {
             ApiFuture<?> write = doc.set(data);
             write.get();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save car: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to save car", e);
         }
     }
 

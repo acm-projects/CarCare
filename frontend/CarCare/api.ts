@@ -1,7 +1,7 @@
 /** Shared `fetch` wrapper — Firebase Bearer token. Used by `services/garageApi` and others. */
 import { auth } from "./firebase";
 
-const BASE_URL = "http://localhost:8081"; 
+const BASE_URL = "http://10.0.2.2:8080";
 
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
@@ -15,6 +15,10 @@ export async function apiFetch(path: string, options: RequestInit = {}) {
   };
 
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+
+  console.log(res.body)
+  console.log(res.status)
+  console.log(res.statusText)
 
   // helpful error text
   if (!res.ok) {

@@ -32,26 +32,39 @@ public class CarController {
     }
 
     @PostMapping("/{vin}")
-    public VehicleInfoDto addCar(HttpServletRequest request, @PathVariable String vin) {
-        FirebaseToken token = (FirebaseToken) request.getAttribute(FirebaseAuthFilter.ATTR_FIREBASE_TOKEN);
-        if (token == null) {
-            throw new RuntimeException("Unauthorized: missing Firebase token");
-        }
+public VehicleInfoDto addCar(HttpServletRequest request, @PathVariable String vin) {
+    System.out.println("=== addCar started ===");
 
-        String uid = token.getUid();
+    FirebaseToken token = (FirebaseToken) request.getAttribute(FirebaseAuthFilter.ATTR_FIREBASE_TOKEN);
+    System.out.println("Step 1 - token: " + token);
 
-        VehicleInfoDto dto = vinService.decodeVin(vin);
-
-        Car car = new Car();
-        car.setVin(dto.getVin());
-        car.setYear(dto.getYear());
-        car.setMake(dto.getMake());
-        car.setModel(dto.getModel());
-
-        carStoreService.saveCarForUser(uid, car);
-
-        return dto;
+    if (token == null) {
+        throw new RuntimeException("Unauthorized: missing Firebase token");
     }
+
+    String uid = token.getUid();
+    System.out.println("Step 2 - uid: " + uid);
+
+    VehicleInfoDto dto = vinService.decodeVin(vin);
+    System.out.println("Step 3 - dto: " + dto);
+
+    Car car = new Car();
+    car.setVin(dto.getVin());
+    car.setYear(dto.getYear());
+    car.setMake(dto.getMake());
+    car.setModel(dto.getModel());
+
+    System.out.println("Step 4 - car created");
+    System.out.println("car vin: " + car.getVin());
+    System.out.println("car year: " + car.getYear());
+    System.out.println("car make: " + car.getMake());
+    System.out.println("car model: " + car.getModel());
+
+    carStoreService.saveCarForUser(uid, car);
+    System.out.println("Step 5 - saveCarForUser finished");
+
+    return dto;
+}
 
     @GetMapping
     public List<Map<String, Object>> getMyCars(HttpServletRequest request) {
