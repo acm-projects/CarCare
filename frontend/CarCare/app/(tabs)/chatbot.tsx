@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
   },
 
   assistantBubble: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#DCDCDC",
   },
 
   userBubble: {
@@ -375,6 +375,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     minHeight: 60,
+    backgroundColor: "#f5f5f5",
     borderWidth: 1,
     borderColor: "#8d8d8d",
     borderRadius: 32,
