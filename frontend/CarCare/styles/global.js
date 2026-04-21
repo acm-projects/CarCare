@@ -42,6 +42,14 @@ export const globalStyles = StyleSheet.create ({
     gap: 15,
   },
 
+  container2: {
+    flex: 1,
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 15,
+  },
+
   horizontalContainer: {
     width: '100%',
     flexDirection: 'row',

@@ -76,7 +76,7 @@ export default function vinEnter() {
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}
     >
-      <View style={globalStyles.container}>
+      <View style={globalStyles.container2}>
         <TouchableOpacity
           style={{ alignSelf: "flex-start", bottom: 350, right: 10 }}
           onPress={() => {
