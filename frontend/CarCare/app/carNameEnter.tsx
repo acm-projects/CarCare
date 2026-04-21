@@ -60,7 +60,7 @@ export default function carNameEnter() {
       start={{ x: 1, y: 0.5 }}
       end={{ x: 0, y: 0.5 }}
       style={{ flex: 1 }}>
-    <View style={globalStyles.container}>
+    <View style={globalStyles.container2}>
       <TouchableOpacity style={{ alignSelf: 'flex-start', bottom: 350, right: 10}}
         onPress={() => { router.back() }}>
         <Text style={globalStyles.whiteH1}>{`< Back`}</Text>
