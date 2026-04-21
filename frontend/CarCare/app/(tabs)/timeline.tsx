@@ -31,8 +31,7 @@ type GarageCar = {
 };
 
 const GARAGE_CARS: GarageCar[] = [
-  { id: "civic", title: "My Civic Type R", subtitle: "2017 Honda Civic" },
-  { id: "bmw", title: "My BMW 335i", subtitle: "2013 BMW 335i" },
+  { id: "civic", title: "My Rolla", subtitle: "2014 Toyota Corolla" },
 ];
 
 type Service = {
@@ -49,7 +48,7 @@ const INITIAL_SERVICES: Service[] = [
   {
     id: 1,
     title: "Oil change",
-    due: "Due March 30, 2026",
+    due: "Due May 5, 2026",
     icon: "water",
     iconColor: "#FF6565",
     cost: "$45 – $85",
@@ -58,7 +57,7 @@ const INITIAL_SERVICES: Service[] = [
   {
     id: 2,
     title: "Spark plug replacement",
-    due: "Due April 16, 2026",
+    due: "Due May 30, 2026",
     icon: "flash",
     iconColor: "#FFA865",
     cost: "$100 – $200",
@@ -67,7 +66,7 @@ const INITIAL_SERVICES: Service[] = [
   {
     id: 3,
     title: "Yearly Emissions Inspection",
-    due: "Due April 29, 2027",
+    due: "Due July 19, 2026",
     icon: "folder",
     iconColor: "#9DE38F",
     cost: "$20 – $50",
@@ -432,7 +431,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
 
-  // ── Top row ───────────────────────────────────────────
   topRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -499,11 +497,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: "hidden",
     zIndex: 40,
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
+
   },
   carDropdownMenuInner: {
     borderRadius: 14,
@@ -564,28 +558,23 @@ const styles = StyleSheet.create({
   pillGradient: {
     borderRadius: 999,
     paddingHorizontal: 18,
-    
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    overflow: 'hidden',
   },
   pillTextActive: {
     color: "#fff",
     fontSize: 14,
     fontWeight: "600",
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.3,
     paddingVertical:8,
-    shadowRadius: 1,
-    overflow:'hidden',
   },
   pillInactive: {
     borderRadius: 999,
     paddingHorizontal: 18,
     backgroundColor: "#fff",
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.3,
     paddingVertical:8,
-    shadowRadius: 1,
   },
   pillTextInactive: {
     color: "#8D8D8D",
@@ -613,11 +602,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     width: "98%",
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
-    marginBottom: 2,
+
   },
   serviceContainerExpanded: {
     borderColor: "#84D2F6",

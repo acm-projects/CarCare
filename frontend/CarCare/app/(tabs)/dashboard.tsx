@@ -47,7 +47,7 @@ const TIP_TITLE_BLUE = "#5FA8D3";
 const SERVICE_ALERT_RED = "#E53935";
 const SERVICE_ALERT_BG = "#FFF5F5";
 /** Spark plug icon — same as timeline.tsx (Service Timeline → Spark plug replacement) */
-const SPARK_PLUG_ICON_COLOR = "#FFA865";
+const SPARK_PLUG_ICON_COLOR = "#FF6565";
 type Mechanic = MapMechanic;
 
 /** Fallback when map API is offline — same data as `backend/map-api/server.mjs` */
@@ -114,8 +114,7 @@ type GarageCar = {
 
 /** Garage vehicles — switch selection here; all routes stay on this dashboard for now */
 const GARAGE_CARS: GarageCar[] = [
-  { id: "civic", title: "My Civic Type R", subtitle: "2017 Honda Civic" },
-  { id: "bmw", title: "My BMW 335i", subtitle: "2013 BMW 335i" },
+  { id: "civic", title: "My Rolla", subtitle: "2014 Toyota Corolla" },
 ];
 
 export default function Dashboard() {
@@ -341,14 +340,14 @@ export default function Dashboard() {
             onPress={handleServiceTimelinePress}
           >
             <Ionicons
-              name="flash"
+              name="water"
               size={35}
               color={SPARK_PLUG_ICON_COLOR}
               style={styles.serviceSparkIcon}
             />
             <View style={styles.serviceTextBlock}>
-              <Text style={styles.serviceTitle}>Spark plug replacement</Text>
-              <Text style={styles.serviceSubtitle}>in 2 days</Text>
+              <Text style={styles.serviceTitle}>Oil Change</Text>
+              <Text style={styles.serviceSubtitle}>Due in 5 days</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={GRAY} />
           </TouchableOpacity>
@@ -510,71 +509,6 @@ export default function Dashboard() {
                 <Text style={styles.tipBulletText}>
                   Turbo cooling components should be monitored for overheating
                   stress.
-                </Text>
-              </View>
-
-              {/* Wear & Performance Notes */}
-              <View
-                style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}
-              >
-                <Ionicons
-                  name="build-outline"
-                  size={18}
-                  color={GRAY}
-                  style={styles.tipCategoryIcon}
-                />
-                <Text style={styles.tipCategoryTitle}>
-                  Wear & Performance Notes
-                </Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  Rear brake pads may wear faster due to torque-vectoring
-                  system.
-                </Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  High-performance use can increase overall wear & tear.
-                </Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  ABS warning lights may indicate sensor or brake fluid issues.
-                </Text>
-              </View>
-
-              {/* Recommended Checks */}
-              <View
-                style={[styles.tipCategoryRow, styles.tipCategoryRowAfterBlock]}
-              >
-                <Ionicons
-                  name="search-circle-outline"
-                  size={18}
-                  color={GRAY}
-                  style={styles.tipCategoryIcon}
-                />
-                <Text style={styles.tipCategoryTitle}>Recommended Checks</Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  Inspect turbo pipes & cooling system periodically.
-                </Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  Ensure recall fixes (fuel pump, steering, etc.) are completed.
-                </Text>
-              </View>
-              <View style={styles.tipBulletRow}>
-                <View style={styles.tipBulletDot} />
-                <Text style={styles.tipBulletText}>
-                  Watch for excessive heat if doing track-style driving.
                 </Text>
               </View>
 

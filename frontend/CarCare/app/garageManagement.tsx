@@ -12,7 +12,7 @@ import { useRouter } from "expo-router";
 import { globalStyles, GradientText } from "@/styles/global";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export default function notifications() {
+export default function garageManagement() {
   const router = useRouter();
   const { height } = useWindowDimensions();
 
@@ -38,13 +38,16 @@ export default function notifications() {
           </GradientText>
         </TouchableOpacity>
         <View
-          style={[styles.whiteContainer, { height: 0.5 * height, padding: 25, marginTop:25 }]}
+          style={[
+            styles.whiteContainer,
+            { height: 0.5 * height, padding: 25, marginTop: 25 },
+          ]}
         >
           <View style={[styles.subContainer]}>
             <GradientText
               style={[globalStyles.gradientH2, { paddingVertical: 15 }]}
             >
-              Notification Settings
+              Garage Management
             </GradientText>
           </View>
         </View>
