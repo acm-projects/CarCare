@@ -4,20 +4,20 @@ import type { GarageVehicle } from '@/types/garage';
 export const DEV_MOCK_VEHICLES: GarageVehicle[] = [
   {
     id: '1',
-    vin: '19XFC2F59GE000001',
-    displayName: 'My Honda Civic',
-    subtitle: '2017 Honda Civic',
+    vin: '5YFBURHE8EP064592',
+    displayName: 'My Rolla',
+    subtitle: '2014 Toyota Corolla',
     imageUrl: null,
-    imageAsset: require('../../assets/images/TypeR_HondaCivic_2017.png'),
+    imageAsset: require('../../assets/images/toyotaCorolla.webp'),
     services: [],
   },
   {
     id: '2',
     vin: 'WBA3B5C50FD123456',
-    displayName: 'My BMW 335i',
-    subtitle: '2013 BMW 335i',
+    displayName: 'My Bibic',
+    subtitle: '2017 Honda Civic',
     imageUrl: null,
-    imageAsset: require('../../assets/images/335i_BMW.png'),
+    imageAsset: require('../../assets/images/TypeR_HondaCivic_2017.png'),
     services: [
       {
         id: 'svc-1',

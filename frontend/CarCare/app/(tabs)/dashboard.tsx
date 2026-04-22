@@ -15,6 +15,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image
 } from "react-native";
 import * as Location from "expo-location";
 import { fetchMapBundle, type MapMechanic } from "@/lib/mapApi";
@@ -115,6 +116,8 @@ type GarageCar = {
 /** Garage vehicles — switch selection here; all routes stay on this dashboard for now */
 const GARAGE_CARS: GarageCar[] = [
   { id: "civic", title: "My Rolla", subtitle: "2014 Toyota Corolla" },
+  { id: "bibic", title: "My Bibic", subtitle: "2017 Honda Civic" },
+
 ];
 
 export default function Dashboard() {
@@ -313,14 +316,17 @@ export default function Dashboard() {
           </TouchableOpacity>
         </View>
 
-        {/* Car snapshot — grey block only on screen bg (no white wrapper) */}
-        <View style={styles.heroOuter}>
+        {/* WIP!!!! 
+        Car snapshot — grey block only on screen bg (no white wrapper) */}
+        {/* <View style={styles.heroOuter}>
           <View style={styles.heroImagePlaceholder}>
             <Text style={styles.heroPlaceholderText}>
               {selectedCar.title} — snapshot
             </Text>
           </View>
-        </View>
+        </View> */}
+
+        <Image source ={require("../../assets/images/toyotaCorolla.webp")} style = {{width: 300, height:200, alignSelf:'center'}}/>
 
         <View style={styles.dashSection}>
           <View style={styles.dashSectionHeader}>

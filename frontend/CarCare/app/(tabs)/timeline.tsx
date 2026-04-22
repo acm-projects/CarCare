@@ -32,6 +32,8 @@ type GarageCar = {
 
 const GARAGE_CARS: GarageCar[] = [
   { id: "civic", title: "My Rolla", subtitle: "2014 Toyota Corolla" },
+  { id: "bibic", title: "My Bibic", subtitle: "2017 Honda Civic" },
+
 ];
 
 type Service = {
