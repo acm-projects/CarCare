@@ -21,7 +21,7 @@ export default function GarageManagement() {
   const { vehicles, loading, error } = useGarage();
 
   return (
-    <View style={{ flex: 1, width: '100%', paddingHorizontal: 20, }}>
+    <View style={{ flex: 1, width: "100%", paddingHorizontal: 20 }}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -37,15 +37,26 @@ export default function GarageManagement() {
         </TouchableOpacity>
 
         {/* Title */}
-        <GradientText style={[globalStyles.gradientH2, { paddingVertical: 18 }]}>
+        <GradientText
+          style={[globalStyles.gradientH2, { paddingVertical: 18 }]}
+        >
           Garage Management
         </GradientText>
 
         {/* Vehicle cards */}
         {!loading &&
-          vehicles.map((car) => (
-            <ManageCarCard key={car.id} car={car} />
-          ))}
+          vehicles.map((car) => <ManageCarCard key={car.id} car={car} />)}
+        {/* Add New Service button */}
+        <View style={[globalStyles.horizontalContainer, { marginTop: 6 }]}>
+          <TouchableOpacity
+            onPress={() => router.push('/vinEnter')}
+            style={styles.addServiceButton}
+            activeOpacity={0.85}
+          >
+            <Ionicons name="add-circle-outline" size={22} color="#5FA8D3" />
+            <Text style={styles.addServiceButtonText}>Add New Vehicle</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -78,7 +89,10 @@ function ManageCarCard({ car }: { car: any }) {
 
           <View style={styles.actionsRow}>
             {/* Delete */}
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={handleDelete}
+            >
               <Ionicons name="alert-circle" color="#FF6565" size={18} />
               <Text style={styles.deleteText}>Delete</Text>
             </TouchableOpacity>
@@ -109,12 +123,12 @@ function ManageCarCard({ car }: { car: any }) {
   );
 }
 
-
 const cardElevation = {
-  shadowColor: "black",
-  shadowOffset: { width: 1, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 2,
+    shadowColor: '#363535',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2.5,
+    elevation: 5,
 };
 
 const styles = StyleSheet.create({
@@ -131,8 +145,8 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: '100%',
-    alignSelf: 'stretch',
+    width: "100%",
+    alignSelf: "stretch",
     backgroundColor: "#FFFFFF",
     borderRadius: 28,
     paddingLeft: 16,
@@ -200,4 +214,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -30,
   },
+    addServiceButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderColor: "#84D2F6",
+    backgroundColor: "#F0F9FF",
+    width: "98%",
+    paddingVertical: 16,
+  },
+  addServiceButtonText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#5FA8D3",
+  },
+
 });

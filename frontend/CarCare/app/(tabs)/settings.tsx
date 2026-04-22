@@ -204,6 +204,14 @@ export default function Settings() {
   );
 }
 
+const cardElevation = {
+      shadowColor: '#363535',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2.5,
+    elevation: 5,
+};
+
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 60,
@@ -249,9 +257,6 @@ const styles = StyleSheet.create({
     padding: 35,
     width: 350,
     alignItems: "center",
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
+    ...cardElevation,
   },
 });

@@ -36,6 +36,7 @@ const GARAGE_CARS: GarageCar[] = [
 
 ];
 
+
 type Service = {
   id: number;
   title: string;
@@ -263,7 +264,7 @@ export default function Timeline() {
         contentContainerStyle={[styles.scrollContent, styles.scrollContentOverride]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[globalStyles.container]}>
+        <View style={[globalStyles.container, {width: CONTENT_WIDTH, alignSelf: 'center'}]}>
 
           {/* Top row: car dropdown + scan button */}
           <View style={styles.topRow}>
@@ -276,7 +277,7 @@ export default function Timeline() {
                   accessibilityRole="button"
                   accessibilityLabel="Select vehicle"
                 >
-                  <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownFrame}>
+                  <View style={styles.carDropdownFrame}>
                     <View style={styles.carDropdownInner}>
                       <View style={styles.carDropdownTriggerRow}>
                         <View style={styles.carDropdownTriggerText}>
@@ -294,11 +295,11 @@ export default function Timeline() {
                         />
                       </View>
                     </View>
-                  </LinearGradient>
+                    </View>
                 </TouchableOpacity>
 
                 {carMenuOpen && (
-                  <LinearGradient colors={GRADIENT_BORDER} style={styles.carDropdownMenuOuter}>
+                  <View style={styles.carDropdownMenuOuter}>
                     <View style={styles.carDropdownMenuInner} accessibilityViewIsModal>
                       {GARAGE_CARS.map((car) => {
                         const isActive = car.id === selectedCarId;
@@ -329,7 +330,7 @@ export default function Timeline() {
                         );
                       })}
                     </View>
-                  </LinearGradient>
+                  </View>
                 )}
               </View>
             </View>
@@ -357,17 +358,18 @@ export default function Timeline() {
             {FILTER_PILLS.map((pill) => {
               const isActive = activeFilter === pill.value;
               return isActive ? (
-                <LinearGradient
-                  key={pill.value}
-                  colors={["#386FA4", "#84D2F6"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.pillGradient}
-                >
-                  <TouchableOpacity onPress={() => setActiveFilter(pill.value)}>
-                    <Text style={styles.pillTextActive}>{pill.label}</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
+                <View key={pill.value} style = {styles.shadowWrapper}>
+                  <LinearGradient
+                    colors={["#84D2F6", "#4bb0e4"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={styles.pillGradient}
+                  >
+                    <TouchableOpacity onPress={() => setActiveFilter(pill.value)}>
+                      <Text style={styles.pillTextActive}>{pill.label}</Text>
+                    </TouchableOpacity>
+                  </LinearGradient>
+                </View>
               ) : (
                 <TouchableOpacity
                   key={pill.value}
@@ -417,6 +419,15 @@ export default function Timeline() {
   );
 }
 
+
+const cardElevation = {
+    shadowColor: '#363535',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2.5,
+    elevation: 5,
+};
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -452,6 +463,7 @@ const styles = StyleSheet.create({
   carDropdownAnchor: {
     position: "relative",
     width: "100%",
+    ...cardElevation,
   },
   carDropdownHit: {
     width: "100%",
@@ -496,10 +508,8 @@ const styles = StyleSheet.create({
     top: "100%",
     marginTop: 8,
     padding: GRADIENT_FRAME,
-    borderRadius: 16,
-    overflow: "hidden",
     zIndex: 40,
-
+    ...cardElevation,
   },
   carDropdownMenuInner: {
     borderRadius: 14,
@@ -542,6 +552,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10,
+    ...cardElevation,
   },
   scanButtonText: {
     color: "#FFFFFF",
@@ -560,11 +571,12 @@ const styles = StyleSheet.create({
   pillGradient: {
     borderRadius: 999,
     paddingHorizontal: 18,
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 1,
     overflow: 'hidden',
+  },
+
+  shadowWrapper: {
+    borderRadius:999,
+    ...cardElevation,
   },
   pillTextActive: {
     color: "#fff",
@@ -577,6 +589,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     backgroundColor: "#fff",
     paddingVertical:8,
+    ...cardElevation,
   },
   pillTextInactive: {
     color: "#8D8D8D",
@@ -604,7 +617,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#fff",
     width: "98%",
-
+    ...cardElevation,
   },
   serviceContainerExpanded: {
     borderColor: "#84D2F6",

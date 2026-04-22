@@ -32,6 +32,15 @@ export function GradientText({ children, style }) {
   );
 }
 
+
+const cardElevation = {
+    shadowColor: '#363535',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
+};
+
 export const globalStyles = StyleSheet.create ({
   container: {
     flex: 1,
@@ -227,9 +236,7 @@ export const globalStyles = StyleSheet.create ({
     height: 60,
     backgroundColor:'#fff',
     shadowColor: 'gray',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
+    ...cardElevation,
   },
 
   gradientButton: {
@@ -238,10 +245,7 @@ export const globalStyles = StyleSheet.create ({
     width: 300,
     height: 60,
     backgroundColor:'transparent',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
-    
+    ...cardElevation,
   },
   
   gradientViewButton: {
@@ -250,5 +254,6 @@ export const globalStyles = StyleSheet.create ({
     width: 85,
     height: 35,
     backgroundColor:'transparent',
+    
   },
 });

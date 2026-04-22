@@ -15,7 +15,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image
+  Image,
 } from "react-native";
 import * as Location from "expo-location";
 import { fetchMapBundle, type MapMechanic } from "@/lib/mapApi";
@@ -117,7 +117,6 @@ type GarageCar = {
 const GARAGE_CARS: GarageCar[] = [
   { id: "civic", title: "My Rolla", subtitle: "2014 Toyota Corolla" },
   { id: "bibic", title: "My Bibic", subtitle: "2017 Honda Civic" },
-
 ];
 
 export default function Dashboard() {
@@ -223,8 +222,7 @@ export default function Dashboard() {
                 accessibilityRole="button"
                 accessibilityLabel="Select vehicle"
               >
-                <LinearGradient
-                  colors={GRADIENT_BORDER}
+                <View
                   style={styles.carDropdownFrame}
                 >
                   <View style={styles.carDropdownInner}>
@@ -247,12 +245,11 @@ export default function Dashboard() {
                       />
                     </View>
                   </View>
-                </LinearGradient>
+                </View>
               </TouchableOpacity>
 
               {carMenuOpen && (
-                <LinearGradient
-                  colors={GRADIENT_BORDER}
+                <View
                   style={styles.carDropdownMenuOuter}
                 >
                   <View
@@ -301,7 +298,7 @@ export default function Dashboard() {
                       );
                     })}
                   </View>
-                </LinearGradient>
+                </View>
               )}
             </View>
           </View>
@@ -326,7 +323,10 @@ export default function Dashboard() {
           </View>
         </View> */}
 
-        <Image source ={require("../../assets/images/toyotaCorolla.webp")} style = {{width: 300, height:200, alignSelf:'center'}}/>
+        <Image
+          source={require("../../assets/images/toyotaCorolla.webp")}
+          style={{ width: 300, height: 200, alignSelf: "center" }}
+        />
 
         <View style={styles.dashSection}>
           <View style={styles.dashSectionHeader}>
@@ -372,7 +372,7 @@ export default function Dashboard() {
             </View>
           </View>
           <View style={styles.helpRow}>
-            <View style={styles.helpTileGradientWrap}>
+            <View style={styles.shadowWrapper}>
               <View style={styles.helpTileGradientInner}>
                 <TouchableOpacity
                   style={styles.helpTile}
@@ -398,11 +398,7 @@ export default function Dashboard() {
                 </TouchableOpacity>
               </View>
             </View>
-
-            <LinearGradient
-              colors={GRADIENT_BORDER}
-              style={styles.helpTileGradientWrap}
-            >
+            <View style={styles.shadowWrapper}>
               <View style={styles.helpTileGradientInner}>
                 <TouchableOpacity
                   style={styles.helpTile}
@@ -411,7 +407,7 @@ export default function Dashboard() {
                 >
                   <View style={styles.helpTileTopRow}>
                     <Text style={styles.helpCardTitle} numberOfLines={2}>
-                      Nearest Mechanic
+                      Nearest Mechanics
                     </Text>
                     <Ionicons name="map-outline" size={22} color={GRAY} />
                   </View>
@@ -427,12 +423,8 @@ export default function Dashboard() {
                   </View>
                 </TouchableOpacity>
               </View>
-            </LinearGradient>
-
-            <LinearGradient
-              colors={GRADIENT_BORDER}
-              style={styles.helpTileGradientWrap}
-            >
+            </View>
+            <View style={styles.shadowWrapper}>
               <View style={styles.helpTileGradientInner}>
                 <TouchableOpacity
                   style={styles.helpTile}
@@ -441,12 +433,12 @@ export default function Dashboard() {
                 >
                   <View style={styles.helpTileTopRow}>
                     <Text style={styles.helpCardTitle} numberOfLines={2}>
-                      Scan or Add Issue
+                      Scan Issue
                     </Text>
                     <Ionicons name="camera-outline" size={22} color={GRAY} />
                   </View>
                   <Text style={styles.helpCardSubtitle}>
-                    Get smart suggestions for any car issue
+                    Get smart suggestions for any car issues
                   </Text>
                   <View style={styles.helpTileCornerArrow}>
                     <Ionicons
@@ -457,7 +449,7 @@ export default function Dashboard() {
                   </View>
                 </TouchableOpacity>
               </View>
-            </LinearGradient>
+            </View>
           </View>
         </View>
 
@@ -475,8 +467,7 @@ export default function Dashboard() {
               />
             </View>
           </View>
-          <LinearGradient
-            colors={GRADIENT_BORDER}
+          <View
             style={styles.tipsGradientWrap}
           >
             <View style={styles.tipsGradientInner}>
@@ -556,7 +547,7 @@ export default function Dashboard() {
                 </Text>
               </View>
             </View>
-          </LinearGradient>
+          </View>
         </View>
       </ScrollView>
 
@@ -830,14 +821,14 @@ export default function Dashboard() {
                               colors={["#53c1f3", "#3272ae"]}
                               style={styles.scanButton}
                             >
-                               <Ionicons
-                              name={m.phone ? "call-outline" : "logo-google"}
-                              size={18}
-                              color="#FFF"
-                            />
-                            <Text style={styles.callBtnText}>
-                              {m.phone ? "Call" : "Google"}
-                            </Text>
+                              <Ionicons
+                                name={m.phone ? "call-outline" : "logo-google"}
+                                size={18}
+                                color="#FFF"
+                              />
+                              <Text style={styles.callBtnText}>
+                                {m.phone ? "Call" : "Google"}
+                              </Text>
                             </LinearGradient>
                           </TouchableOpacity>
                         </View>
@@ -885,6 +876,14 @@ export default function Dashboard() {
   );
 }
 
+const cardElevation = {
+  shadowColor: "#363535",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.1,
+  shadowRadius: 2.5,
+  elevation: 5,
+};
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -894,9 +893,7 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     paddingTop: 60,
-    /** Tight bottom inset so scroll stops near the General Tips card + tab bar */
     paddingBottom: 72,
-    /** Without this, rows inside ScrollView can shrink-wrap and the car menu collapses to ~0 width */
     width: CONTENT_WIDTH,
     alignSelf: "center",
   },
@@ -913,9 +910,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  /**
-   * Fills space left of Scan. Min/max use CONTENT_WIDTH so the trigger + absolute menu stay readable.
-   */
   carSelectorGroup: {
     flex: 1,
     flexShrink: 0,
@@ -928,6 +922,7 @@ const styles = StyleSheet.create({
   carDropdownAnchor: {
     position: "relative",
     width: "100%",
+    ...cardElevation,
   },
 
   carDropdownHit: {
@@ -939,6 +934,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: "hidden",
     width: "100%",
+    ...cardElevation,
   },
 
   carDropdownInner: {
@@ -1039,12 +1035,13 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10,
+    ...cardElevation,
   },
 
   nearbyMechButton: {
     flexDirection: "row",
     alignItems: "center",
-        backgroundColor: '#ffff',
+    backgroundColor: "#ffff",
     justifyContent: "center",
     borderRadius: 25,
     paddingHorizontal: 14,
@@ -1075,6 +1072,7 @@ const styles = StyleSheet.create({
   /** Upcoming / Need Help / General Tips — equal vertical rhythm */
   dashSection: {
     marginVertical: 20,
+    ...cardElevation,
   },
 
   dashSectionHeader: {
@@ -1108,6 +1106,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderWidth: 1,
     borderColor: SERVICE_ALERT_RED,
+    ...cardElevation,
   },
 
   serviceSparkIcon: {
@@ -1140,7 +1139,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 6,
-
   },
 
   helpTileGradientWrap: {
@@ -1162,6 +1160,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
+  shadowWrapper: {
+    ...cardElevation,
+    width: 113,
+  },
+
+  shadowWrapperBig: {
+    ...cardElevation,
+  },
   helpTile: {
     position: "relative",
     flex: 1,

@@ -111,6 +111,15 @@ export default function ProfileSettings() {
   );
 }
 
+
+const cardElevation = {
+    shadowColor: '#363535',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2.5,
+    elevation: 5,
+};
+
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 60,
@@ -150,9 +159,6 @@ const styles = StyleSheet.create({
     width: 350,
     gap: 125,
     alignItems: "center",
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 2,
+    ...cardElevation,
   },
 });
