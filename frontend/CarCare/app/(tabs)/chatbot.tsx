@@ -71,18 +71,7 @@ export default function Chatbot({ navigation }: ChatbotProps) {
       text: "Hi! I'm your personal assistant. What can I help you with today?",
       
     },
-    {
-      id: "2",
-      sender: "user",
-      text: "How do I do an oil change on my car?",
-      
-    },
-    {
-      id: "3",
-      sender: "assistant",
-      text: "To perform an oil change on your 2014 Toyota Corolla, Warm up the engine, then lift the car safely and remove the drain plug under the oil pan to let the old oil drain out. Replace the drain plug, swap in a new oil filter, then add fresh oil (about 4.4 quarts of 0W-20). Start the engine, check for leaks, and make sure the oil level is correct.",
-      
-    },
+
   ]);
 
   useEffect(() => {

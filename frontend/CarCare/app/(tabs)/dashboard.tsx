@@ -353,7 +353,7 @@ export default function Dashboard() {
             />
             <View style={styles.serviceTextBlock}>
               <Text style={styles.serviceTitle}>Oil Change</Text>
-              <Text style={styles.serviceSubtitle}>Due in 5 days</Text>
+              <Text style={styles.serviceSubtitle}>Due in 13 days</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={GRAY} />
           </TouchableOpacity>
